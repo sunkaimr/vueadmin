@@ -1,18 +1,14 @@
 import axios from "../common/axios";
 import * as api from "../api";
 import defaultValue from "./default";
-import {SOURCE_LIST_GET} from "../api";
 
 export function login (params) {
   return new Promise((resolve, reject) => {
     axios.put(api.LOGIN, { username:params.username, password: params.password}).then(response => {
-      resolve(response.data);
-    }, err => {
-      resolve(defaultValue.login);
+        resolve(response.data);
+    }).catch((error) => {
+      reject(error);
     })
-      .catch((error) => {
-        resolve(defaultValue.login)
-      })
   })
 }
 export function msgList (params) {
@@ -69,9 +65,9 @@ export function roleList (params) {
 }
 
 export function userList (params) {
-  const userList = {total:defaultValue.userList.total,records:defaultValue.userList.records.reverse()}
+  const userList = {}
   return new Promise((resolve, reject) => {
-    axios.get(api.SYS_USER_PAGE, { params }).then(response => {
+    axios.get(api.SYS_USER_GET, { params }).then(response => {
       resolve(response.data);
     }, err => {
       resolve(userList);
@@ -86,7 +82,7 @@ export function userList (params) {
 export function sourceList (params) {
   const sourceList = {}
   return new Promise((resolve, reject) => {
-    axios.get(api.SOURCE_LIST_GET, { params }).then(response => {
+    axios.get(api.SOURCE_LIST, { params }).then(response => {
       resolve(response.data);
     }, err => {
       resolve(sourceList);
@@ -97,3 +93,58 @@ export function sourceList (params) {
   })
 }
 
+export function policyList (params) {
+  const sourceList = {}
+  return new Promise((resolve, reject) => {
+    axios.get(api.POLICY_LIST_GET, { params }).then(response => {
+      resolve(response.data);
+    }, err => {
+      resolve(sourceList);
+    })
+      .catch((error) => {
+        resolve(sourceList)
+      })
+  })
+}
+
+export function taskList (params) {
+  const sourceList = {}
+  return new Promise((resolve, reject) => {
+    axios.get(api.TASK_LIST_GET, { params }).then(response => {
+      resolve(response.data);
+    }, err => {
+      resolve(sourceList);
+    })
+      .catch((error) => {
+        resolve(sourceList)
+      })
+  })
+}
+
+export function connList (params) {
+  const sourceList = {}
+  return new Promise((resolve, reject) => {
+    axios.get(api.CONN_LIST_GET, { params }).then(response => {
+      resolve(response.data);
+    }, err => {
+      resolve(sourceList);
+    })
+      .catch((error) => {
+        resolve(sourceList)
+      })
+  })
+}
+
+export function destList (params) {
+  const sourceList = {}
+  return new Promise((resolve, reject) => {
+    axios.get(api.DEST_LIST_GET, { params }).then(response => {
+      resolve(response.data);
+    }, err => {
+      resolve(sourceList);
+    })
+      .catch((error) => {
+        resolve(sourceList)
+      })
+  })
+}

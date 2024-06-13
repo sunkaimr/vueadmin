@@ -22,57 +22,17 @@
         :data="tableData.rows"
         border
         style="width: 100%"
+        size="small"
         v-loading="listLoading"
         @selection-change="handleSelectionChange">
-        <!--checkbox 适当加宽，否则IE下面有省略号 https://github.com/ElemeFE/element/issues/1563-->
-        <el-table-column
-          prop="id"
-          type="selection"
-          width="50">
-        </el-table-column>
-<!--        <el-table-column-->
-<!--          label="照片" width="76">-->
-<!--          <template slot-scope="scope">-->
-<!--            <img :src='scope.row.avatar' style="height: 35px;vertical-align: middle;" alt="">-->
-<!--          </template>-->
-<!--        </el-table-column>-->
-        <el-table-column
-          prop="nickName"
-          label="用户名">
-        </el-table-column>
-        <el-table-column
-          prop="name"
-          label="姓名">
-        </el-table-column>
-        <el-table-column
-          prop="email"
-          label="邮箱">
-        </el-table-column>
-        <el-table-column
-          label="状态">
+        <el-table-column prop="id" label="ID" width="100"> </el-table-column>
+        <el-table-column prop="username" label="姓名"> </el-table-column>
+        <el-table-column prop="email" label="邮箱"> </el-table-column>
+        <el-table-column prop="is_ldap" label="域账号"> </el-table-column>
+        <el-table-column label="操作" width="180">
           <template slot-scope="scope">
-            {{ scope.row.status===1 ? '已激活' : '未激活' }}
-          </template>
-        </el-table-column>
-        <el-table-column label="操作" width="200">
-          <template slot-scope="scope">
-            <el-button
-              size="small"
-              type="default"
-              icon="edit"
-              @click="handleEdit(scope.$index, scope.row)">编辑
-            </el-button>
-<!--            <el-button-->
-<!--              size="small"-->
-<!--              type="info"-->
-<!--              icon="setting"-->
-<!--              @click="handleRoleConfig(scope.$index, scope.row)">配置角色-->
-<!--            </el-button>-->
-            <el-button
-              size="small"
-              type="danger"
-              @click="handleDelete(scope.$index, scope.row)">删除
-            </el-button>
+            <el-button size="small" type="default" icon="edit" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
+            <el-button size="small" type="danger" @click="handleDelete(scope.$index, scope.row)">删除 </el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -203,8 +163,8 @@
             pageNo: this.tableData.pagination.pageNo
           })
           .then(res => {
-            this.tableData.rows = res.records;
-            this.tableData.pagination.total = res.total;
+            this.tableData.rows = res.data.items;
+            this.tableData.pagination.total = res.data.total;
           });
       }
     },

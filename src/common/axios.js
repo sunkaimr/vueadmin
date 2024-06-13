@@ -2,7 +2,7 @@ import axios from "axios";
 import qs from "qs";
 import auth from "./auth";
 import { getBaseUrl } from "../common/utils";
-import { MessageBox } from "element-ui";
+import { MessageBox, Message } from "element-ui";
 
 // axios 配置
 axios.defaults.timeout = 5000;
@@ -14,30 +14,34 @@ axios.defaults.headers.common[ 'authSid' ] = auth.getSid();
 
 //POST传参序列化
 axios.interceptors.request.use((config) => {
-  if (config.method === 'post') {
-    config.data = qs.stringify(config.data);
+  // if (config.method === 'post') {
+  //   config.data = qs.stringify(config.data);
+  // }
+  return config;
+},
+  (error) => {
+  return Promise.reject(error);
+});
+
+axios.interceptors.request.use(config => {
+  const token = window.localStorage.getItem('token');
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`; // 假设你使用的是JWT token
   }
   return config;
-}, (error) => {
+}, error => {
+  // 处理请求错误
   return Promise.reject(error);
 });
 
 //返回状态判断
 axios.interceptors.response.use(
   response => {
-    if (response.data && response.data.code) {
-      if (response.data.code === '2001') {
-        auth.logout()
-      }
-    }
     return response;
   },
   error => {
-    if (error.response) {
-      //全局ajax错误信息提示
-      //MessageBox({type:"error",message:error.response.data,title:"温馨提示",});
-    }
-    //return Promise.reject(error);
+    Message({ type:"error", message: error.response.data.message});
+    return Promise.reject(error);
   });
 
 export function fetch (url, config = { method: 'get' }) {

@@ -43,20 +43,20 @@ export default {
     return '';
   },
   login (token, callback) {
-    window.localStorage.setItem('imp-sid',token);
+    window.localStorage.setItem('token',token);
     if (callback) callback();
   },
 
   getToken () {
-    return window.localStorage.getItem('imp-sid');
+    return window.localStorage.getItem('token');
   },
 
   logout (cb) {
-    window.localStorage.removeItem('imp-sid');
+    window.localStorage.removeItem('token');
     if (cb) cb()
   },
 
   loggedIn () {
-    return !!window.localStorage.getItem('imp-sid');
+    return !!window.localStorage.getItem('token');
   }
 }

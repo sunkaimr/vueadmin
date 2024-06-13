@@ -22,61 +22,27 @@
         :data="tableData.rows"
         border
         style="width: 100%"
+        size="small"
         v-loading="listLoading"
         @selection-change="handleSelectionChange">
-        <!--checkbox 适当加宽，否则IE下面有省略号 https://github.com/ElemeFE/element/issues/1563-->
-        <el-table-column
-          prop="id"
-          type="selection"
-          width="50">
-        </el-table-column>
-<!--        <el-table-column-->
-<!--          label="照片" width="76">-->
-<!--          <template slot-scope="scope">-->
-<!--            <img :src='scope.row.avatar' style="height: 35px;vertical-align: middle;" alt="">-->
-<!--          </template>-->
-<!--        </el-table-column>-->
-        <el-table-column
-          prop="nickName"
-          label="用户名">
-        </el-table-column>
-        <el-table-column
-          prop="name"
-          label="姓名">
-        </el-table-column>
-        <el-table-column
-          prop="email"
-          label="邮箱">
-        </el-table-column>
-        <el-table-column
-          label="状态">
+        <el-table-column prop="id" label="ID" width="100"> </el-table-column>
+        <el-table-column prop="name" label="任务名称"> </el-table-column>
+        <el-table-column prop="bu" label="BU"> </el-table-column>
+        <el-table-column prop="enable" label="开启"> </el-table-column>
+        <el-table-column prop="src_id" label="源ID"> </el-table-column>
+        <el-table-column prop="dest_id" label="目标ID"> </el-table-column>
+        <el-table-column prop="execute_date" label="计划执行日期"> </el-table-column>
+        <el-table-column prop="govern" label="数据治理方式"> </el-table-column>
+        <el-table-column prop="cleaning_speed" label="清理速度"> </el-table-column>
+        <el-table-column prop="execute_window" label="执行窗口"> </el-table-column>
+        <el-table-column prop="task_status" label="任务状态"> </el-table-column>
+        <el-table-column label="操作" width="180">
           <template slot-scope="scope">
-            {{ scope.row.status===1 ? '已激活' : '未激活' }}
-          </template>
-        </el-table-column>
-        <el-table-column label="操作" width="200">
-          <template slot-scope="scope">
-            <el-button
-              size="small"
-              type="default"
-              icon="edit"
-              @click="handleEdit(scope.$index, scope.row)">编辑
-            </el-button>
-<!--            <el-button-->
-<!--              size="small"-->
-<!--              type="info"-->
-<!--              icon="setting"-->
-<!--              @click="handleRoleConfig(scope.$index, scope.row)">配置角色-->
-<!--            </el-button>-->
-            <el-button
-              size="small"
-              type="danger"
-              @click="handleDelete(scope.$index, scope.row)">删除
-            </el-button>
+            <el-button size="small" type="default" icon="edit" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
+            <el-button size="small" type="danger" @click="handleDelete(scope.$index, scope.row)">删除 </el-button>
           </template>
         </el-table-column>
       </el-table>
-
       <el-pagination
         @size-change="handleSizeChange"
         @current-change="handleCurrentChange"
@@ -120,6 +86,7 @@
   import * as api from "../api"
   import testData from "../../static/data/data.json"
   import * as sysApi from '../services/sys'
+  import {taskList} from "../services/sys";
 
   export default {
     components: {
@@ -197,14 +164,14 @@
         });
       },
       loadData(){
-          sysApi.userList({
+          sysApi.taskList({
             key: this.searchKey,
             pageSize: this.tableData.pagination.pageSize,
             pageNo: this.tableData.pagination.pageNo
           })
           .then(res => {
-            this.tableData.rows = res.records;
-            this.tableData.pagination.total = res.total;
+            this.tableData.rows = res.data.items;
+            this.tableData.pagination.total = res.data.total;
           });
       }
     },

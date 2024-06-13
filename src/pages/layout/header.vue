@@ -3,53 +3,32 @@
     <a href="#" class="logo">
       <span class="logo-lg"><i class="fa fa-diamond"></i>&nbsp; <b style="font-size: 14px;">MySQL数据清理平台</b></span>
     </a>
-    <nav class="navbar">
-      <a href="#" class="sidebar-toggle" data-toggle="offcanvas" role="button"
-         @click.stop.prevent="toggleMenu(!sidebar.collapsed,device.isMobile)">
-        <span class="sr-only">Toggle navigation</span>
-      </a>
-      <div class="navbar-custom-menu">
-<!--        <el-dropdown class="navbar-dropdown" trigger="click">-->
-<!--          <div class="el-dropdown-link" style="height: auto;line-height: inherit">-->
-<!--            <el-badge :value="count" class="item">-->
-<!--            <i class="fa fa-envelope-o"></i>-->
-<!--            </el-badge>-->
+<!--    <nav class="navbar">-->
+<!--      <a href="#" class="sidebar-toggle" data-toggle="offcanvas" role="button"-->
+<!--         @click.stop.prevent="toggleMenu(!sidebar.collapsed,device.isMobile)">-->
+<!--        <span class="sr-only">Toggle navigation</span>-->
+<!--      </a>-->
+<!--      <div class="navbar-custom-menu">-->
+<!--        <el-dropdown trigger="click" class="navbar-dropdown">-->
+<!--          <div class="el-dropdown-link">-->
+<!--            <img :src='userInfo.avatar' style="width: 25px;height: 25px;border-radius: 50%; vertical-align: middle;" alt="U">-->
+<!--            admin-->
 <!--          </div>-->
-<!--          <el-dropdown-menu>-->
-<!--            <ul class="message-list">-->
-<!--            <li v-for="(item,index) in list">&lt;!&ndash; start message &ndash;&gt;-->
-<!--            <router-link :to="{path:'/sys/message',query:{id:item.id}}">-->
-<!--            <p>{{index + 1}}. {{item.title}}</p>-->
-<!--            </router-link>-->
-<!--            </li>-->
-<!--            </ul>-->
+<!--          <el-dropdown-menu style="padding: 0px">-->
+<!--            <div>-->
+<!--              <div class="message-list">-->
+<!--                <router-link :to="{ path: '/resetPwd' }">-->
+<!--                  <el-button type="default">修改密码</el-button>-->
+<!--                </router-link>-->
+<!--              </div>-->
+<!--              <div class="message-list">-->
+<!--                <el-button type="default" @click="logout">退出</el-button>-->
+<!--              </div>-->
+<!--            </div>-->
 <!--          </el-dropdown-menu>-->
 <!--        </el-dropdown>-->
-        <el-dropdown trigger="click" class="navbar-dropdown">
-          <div class="el-dropdown-link">
-            <img :src='userInfo.avatar' style="width: 25px;height: 25px;border-radius: 50%; vertical-align: middle;" alt="U">
-            {{userInfo.name}}
-          </div>
-          <el-dropdown-menu style="padding: 0px">
-            <div>
-<!--              <div class="header-pic">-->
-<!--                <img :src='userInfo.avatar' class="img-circle" alt="User Image" >-->
-<!--                <p>{{userInfo.name}}</p>-->
-<!--              </div>-->
-              <div class="message-list">
-                <router-link :to="{ path: '/resetPwd' }">
-                  <el-button type="default">修改密码</el-button>
-                </router-link>
-              </div>
-              <div class="message-list">
-                <el-button type="default" @click="logout">退出</el-button>
-              </div>
-            </div>
-          </el-dropdown-menu>
-        </el-dropdown>
-      </div>
-
-    </nav>
+<!--      </div>-->
+<!--    </nav>-->
 
   </header>
 </template>
@@ -84,16 +63,10 @@
         }
       },
       logout(){
-        this.$http.get(api.LOGOUT)
-          .then(res => {
-            auth.logout();
-            this.$http.defaults.headers.common['authSid'] = '';
-            this.$router.push({path: '/login'});
-          }).catch(error => {
-            auth.logout();
-            this.$http.defaults.headers.common['authSid'] = '';
-            this.$router.push({path: '/login'});
-        })
+        auth.logout();
+        this.$http.defaults.headers.common['authSid'] = '';
+        this.$router.push({path: '/login'});
+
       },
       ...mapMutations({
         toggleSidebar: types.TOGGLE_SIDEBAR,
@@ -122,20 +95,20 @@
       }
       this.count = 0;
       this.list = [];
-      sysApi.msgList()
-        .then(res => {
-            if (res && res.length>0){
-                this.count = res.length;
-                this.list = res;
-            }
-        })
+      // sysApi.msgList()
+      //   .then(res => {
+      //       if (res && res.length>0){
+      //           this.count = res.length;
+      //           this.list = res;
+      //       }
+      //   })
     },
-    mounted() {
-      document.addEventListener('click', this.autoHide, false)
-    },
-    destroyed() {
-      document.removeEventListener('click', this.autoHide, false)
-    }
+    // mounted() {
+    //   document.addEventListener('click', this.autoHide, false)
+    // },
+    // destroyed() {
+    //   document.removeEventListener('click', this.autoHide, false)
+    // }
   }
 </script>
 <style scoped>

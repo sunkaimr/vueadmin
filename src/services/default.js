@@ -219,16 +219,16 @@ export default {
     "total": 99
   },
   menuList:[
-    {
-      "id": 1,
-      "parentId": null,
-      "sort": 0,
-      "name": "仪表盘",
-      "href": "/index",
-      "icon": "fa fa-area-chart",
-      "children": [],
-      "isShow": "0"
-    },
+    // {
+    //   "id": 1,
+    //   "parentId": null,
+    //   "sort": 0,
+    //   "name": "仪表盘",
+    //   "href": "/index",
+    //   "icon": "fa fa-area-chart",
+    //   "children": [],
+    //   "isShow": "0"
+    // },
     {
       "id": 21,
       "parentId": null,

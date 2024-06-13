@@ -4,22 +4,15 @@
     <h3 class="box-title" slot="header" style="width: 100%;">
       <el-row style="width: 100%;">
         <el-col :span="12">
-          <router-link :to="{ path: 'addSource'}">
+          <router-link :to="{ path: 'userAdd'}">
             <el-button type="primary" icon="plus">新增</el-button>
           </router-link>
         </el-col>
         <el-col :span="12">
           <div class="el-input" style="width: 400px; float: right;">
-            <el-input
-              placeholder="输入源端名称"
-              v-model="searchKey"
-              @keyup.enter="search($event)"
-              suffix-icon="el-icon-search"
-              clearable
-            >
-            </el-input>
-<!--            <i class="el-input__icon el-icon-search"></i>-->
-<!--            <input type="text" placeholder="输入用户名称" v-model="searchKey" @keyup.enter="search($event)" class="el-input__inner">-->
+            <i class="el-input__icon el-icon-search"></i>
+            <input type="text" placeholder="输入用户名称" v-model="searchKey" @keyup.enter="search($event)"
+                   class="el-input__inner">
           </div>
         </el-col>
       </el-row>
@@ -29,10 +22,11 @@
         :data="tableData.rows"
         border
         style="width: 100%"
+        size="small"
         v-loading="listLoading"
         @selection-change="handleSelectionChange">
         <!--checkbox 适当加宽，否则IE下面有省略号 https://github.com/ElemeFE/element/issues/1563-->
-        <el-table-column prop="id" label="ID" width="50"> </el-table-column>
+        <el-table-column prop="id" label="ID" width="100"> </el-table-column>
         <el-table-column prop="name" label="源端名称"> </el-table-column>
         <el-table-column prop="bu" label="BU"> </el-table-column>
         <el-table-column prop="cluster_name" label="集群名称"> </el-table-column>
@@ -62,9 +56,10 @@
 </template>
 
 <script>
-  import panel from "../components/panel.vue"
-  import * as api from "../api"
-  import * as sysApi from '../services/sys'
+import panel from "../../components/panel.vue"
+import * as api from "../../api"
+import * as sysApi from '../../services/sys'
+import {connList} from "../../services/sys";
 
   export default {
     components: {
@@ -109,27 +104,15 @@
         this.loadData();
       },
       handleEdit(index, row){
-        this.$router.push({path: 'editSource', query: {id: row.id}})
+        this.$router.push({path: 'userAdd', query: {id: row.id}})
       },
       handleDelete(index, row){
-        this.$confirm('确定要执行删除操作, 是否继续?', '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }).then(() => {
-          this.$http.delete(api.SOURCE_LIST,{
-            data: JSON.stringify({id: row.id}),
-            headers: {
-              'Content-Type': 'application/json'
-            }
-          }).then(res => {
-            this.loadData();
-          });
-        }).catch(() => {
+        this.$http.get(api.SYS_USER_DELETE + "?userIds=" + row.id).then(res => {
+          this.loadData();
         });
       },
       loadData(){
-          sysApi.sourceList({
+          sysApi.destList({
             key: this.searchKey,
             pageSize: this.tableData.pagination.pageSize,
             page: this.tableData.pagination.pageNo

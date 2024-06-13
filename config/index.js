@@ -31,11 +31,11 @@ module.exports = {
     proxyTable: {
       // http://localhost:9000/api/menuList => http://localhost:3000/menuList
       '/mysql-enhance-pack/api/v1': {
-        target: 'http://10.2.7.26:31009',
+        target: 'http://10.2.7.26:31009/',
         changeOrigin: true,
-        // pathRewrite: {
-        //   '^/api' : '',     // rewrite path
-        // },
+        pathRewrite: {
+          // '^/api' : '',     // rewrite path
+        },
       }
     },
     // CSS Sourcemaps off by default because relative paths are "buggy"

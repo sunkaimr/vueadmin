@@ -67,14 +67,14 @@
           redirectUrl = this.$route.query.redirect;
         }
         sysApi.login(this.form).then(res => {
-          this.loginSuccess({...res,redirectUrl})
+            this.loginSuccess({data:res.data, redirectUrl})
         })
       },
-      loginSuccess({sid,user,redirectUrl}){
-        auth.login(sid);
-        window.sessionStorage.setItem("user-info", JSON.stringify(user));
-        this.setUserInfo(user);
-        this.$http.defaults.headers.common['authSid'] = sid;
+      loginSuccess({data,redirectUrl}){
+        auth.login(data.token);
+        window.sessionStorage.setItem("user-info", JSON.stringify(data));
+        this.setUserInfo(data);
+        this.$http.defaults.headers.common['authSid'] = data.user_id;
         this.loadMenuList();
         redirectUrl && this.$router.push({path: redirectUrl});
       }
