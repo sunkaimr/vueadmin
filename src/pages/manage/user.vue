@@ -10,9 +10,7 @@
         </el-col>
         <el-col :span="12">
           <div class="el-input" style="width: 400px; float: right;">
-            <i class="el-input__icon el-icon-search"></i>
-            <input type="text" placeholder="输入用户名称" v-model="searchKey" @keyup.enter="search($event)"
-                   class="el-input__inner">
+            <el-input placeholder="输入名称" v-model="searchKey" @keyup.enter="search($event)" suffix-icon="el-icon-search" clearable></el-input>
           </div>
         </el-col>
       </el-row>
@@ -22,17 +20,18 @@
         :data="tableData.rows"
         border
         style="width: 100%"
-        size="small"
+        size="mini"
         v-loading="listLoading"
         @selection-change="handleSelectionChange">
         <el-table-column prop="id" label="ID" width="100"> </el-table-column>
-        <el-table-column prop="username" label="姓名"> </el-table-column>
+        <el-table-column prop="username" label="用户名"> </el-table-column>
+        <el-table-column prop="real_name" label="姓名"> </el-table-column>
         <el-table-column prop="email" label="邮箱"> </el-table-column>
         <el-table-column prop="is_ldap" label="域账号"> </el-table-column>
         <el-table-column label="操作" width="180">
           <template slot-scope="scope">
-            <el-button size="small" type="default" icon="edit" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
-            <el-button size="small" type="danger" @click="handleDelete(scope.$index, scope.row)">删除 </el-button>
+            <el-button size="mini" type="default" icon="edit" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
+            <el-button size="mini" type="danger" @click="handleDelete(scope.$index, scope.row)">删除 </el-button>
           </template>
         </el-table-column>
       </el-table>

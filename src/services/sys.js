@@ -1,6 +1,7 @@
 import axios from "../common/axios";
 import * as api from "../api";
 import defaultValue from "./default";
+import {MYSQL_CLUSTER_LIST, MYSQL_DATABASE_LIST, MYSQL_TABLE_LIST} from "../api";
 
 export function login (params) {
   return new Promise((resolve, reject) => {
@@ -146,5 +147,46 @@ export function destList (params) {
       .catch((error) => {
         resolve(sourceList)
       })
+  })
+}
+
+export function mysqlClusterList () {
+  const clusterList = {}
+  return new Promise((resolve, reject) => {
+    axios.get(api.MYSQL_CLUSTER_LIST).then(response => {
+      resolve(response.data);
+    }, err => {
+      resolve(clusterList);
+    }).catch((error) => {
+        resolve(clusterList)
+      })
+  })
+}
+
+export function mysqlDatabaseList (clusterID) {
+  const databaseList = {}
+  const url = api.MYSQL_DATABASE_LIST.replace('{mysql}', clusterID);
+  return new Promise((resolve, reject) => {
+    axios.get(url).then(response => {
+      resolve(response.data);
+    }, err => {
+      resolve(databaseList);
+    }).catch((error) => {
+      resolve(databaseList)
+    })
+  })
+}
+
+export function mysqlTableList (clusterID, database) {
+  const tableList = {}
+  const url = api.MYSQL_TABLE_LIST.replace('{mysql}', clusterID).replace('{database}', database);
+  return new Promise((resolve, reject) => {
+    axios.get(url).then(response => {
+      resolve(response.data);
+    }, err => {
+      resolve(tableList);
+    }).catch((error) => {
+      resolve(tableList)
+    })
   })
 }

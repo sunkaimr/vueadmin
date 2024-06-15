@@ -6,7 +6,7 @@ import store from "./store";
 import axios from "./common/axios";
 import filters from "./filters";
 import VueProgressBar from "vue-progressbar";
-import Element from "element-ui";
+import Element from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
 import ImpPanel from "./components/panel.vue";
 

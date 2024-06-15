@@ -10,8 +10,6 @@ import resetPwd from "../pages/resetPwd.vue";
 import source from "../pages/source.vue";
 import policy from "../pages/policy.vue";
 import task from "../pages/task.vue";
-import addSource from "../pages/addSource.vue";
-import editSource from "../pages/editSource.vue";
 // Routes
 const routes = [
   {
@@ -27,9 +25,6 @@ const routes = [
     path: '', component: app, children:
       [
         { path: '/source', component: source },
-        { path: '/addSource', component: addSource },
-        { path: '/editSource', component: editSource },
-
         { path: '/policy', component: policy },
         { path: '/task', component: task },
         { path: '/resetPwd', component: resetPwd  },

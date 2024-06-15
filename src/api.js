@@ -19,6 +19,9 @@ export const TEST_DATA = CONTEXT + '/static/data/data.json';
 
 export const LOGIN = CONTEXT + '/user/login/';
 export const SOURCE_LIST = CONTEXT + '/source/';
+export const MYSQL_CLUSTER_LIST = CONTEXT + '/source/mysql/';
+export const MYSQL_DATABASE_LIST = CONTEXT + '/source/mysql/{mysql}/databases/';
+export const MYSQL_TABLE_LIST = CONTEXT + '/source/mysql/{mysql}/{database}/tables';
 export const SOURCE_ADD = CONTEXT + '/source/';
 export const POLICY_LIST_GET = CONTEXT + '/policy/';
 export const TASK_LIST_GET = CONTEXT + '/task/';
