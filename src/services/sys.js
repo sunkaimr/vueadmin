@@ -79,7 +79,6 @@ export function userList (params) {
   })
 }
 
-
 export function sourceList (params) {
   const sourceList = {}
   return new Promise((resolve, reject) => {
@@ -97,7 +96,7 @@ export function sourceList (params) {
 export function policyList (params) {
   const sourceList = {}
   return new Promise((resolve, reject) => {
-    axios.get(api.POLICY_LIST_GET, { params }).then(response => {
+    axios.get(api.POLICY_LIST, { params }).then(response => {
       resolve(response.data);
     }, err => {
       resolve(sourceList);
