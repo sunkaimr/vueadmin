@@ -32,7 +32,7 @@
         </el-table-column>
         <el-table-column prop="mysql_host" label="地址" align="center" sortable></el-table-column>
         <el-table-column prop="mysql_port" label="端口" align="center" sortable></el-table-column>
-        <el-table-column prop="mysql_user" label="用户名" align="center" width="100px" sortable></el-table-column>
+        <el-table-column prop="mysql_user" label="用户名" align="center" sortable></el-table-column>
         <el-table-column label="操作" width="130" align="center">
           <template slot-scope="scope">
             <el-button size="mini" @click="handleEdit(scope.$index, scope.row)" class="el-icon-edit"></el-button>
