@@ -1,51 +1,50 @@
 <template>
-
   <imp-panel>
-    <h3 class="box-title" slot="header" style="width: 100%;">
-      <el-row style="width: 100%;">
-        <el-col :span="12">
-          <router-link :to="{ path: 'userAdd'}">
-            <el-button type="primary" icon="plus">新增</el-button>
-          </router-link>
-        </el-col>
-        <el-col :span="12">
-          <div class="el-input" style="width: 400px; float: right;">
-            <i class="el-input__icon el-icon-search"></i>
-            <input type="text" placeholder="输入用户名称" v-model="searchKey" @keyup.enter="search($event)" class="el-input__inner">
+    <h4 class="box-title" slot="header" style="width: 100%;">
+      <el-row style="width: 100%; display: flex; align-items: flex-end;">
+        <el-col :span="24" style="display: flex; align-items: flex-end;">
+          <div style="display: flex; margin-left: auto; ustify-items: center; align-items: center;">
+            <el-input size="small" placeholder="请输入内容" v-model="searchVal" @clear="handleSearch" @keyup.enter.native="handleSearch" class="input-with-select" clearable>
+              <el-select v-model="searchKey" slot="prepend" placeholder="请选择">
+                <el-option v-for="item in connSearchOption" :key="item.value" :label="item.name" :value="item.value"></el-option>
+              </el-select>
+              <el-button size="small" slot="append" icon="el-icon-search" @click="handleSearch"></el-button>
+            </el-input>
+            <el-button size="small" icon="el-icon-refresh" @click="handleSearch" style="margin-left: 10px;"/>
           </div>
         </el-col>
       </el-row>
-    </h3>
+    </h4>
     <div slot="body">
       <el-table
         :data="tableData.rows"
         border
-        style="width: 100%"
-        size="small"
+        style="width: 100%;"
+        size="mini"
+        stripe
         v-loading="listLoading"
         @selection-change="handleSelectionChange">
-        <!--checkbox 适当加宽，否则IE下面有省略号 https://github.com/ElemeFE/element/issues/1563-->
-        <el-table-column prop="id" label="ID" width="100"> </el-table-column>
-        <el-table-column prop="name" label="源端名称"> </el-table-column>
-        <el-table-column prop="bu" label="BU"> </el-table-column>
-        <el-table-column prop="cluster_name" label="集群名称"> </el-table-column>
-        <el-table-column prop="cluster_id" label="集群ID"> </el-table-column>
-        <el-table-column prop="database_name" label="源库名"> </el-table-column>
-        <el-table-column prop="tables_name" label="源表名"> </el-table-column>
-        <el-table-column prop="columns" label="列名"> </el-table-column>
-        <el-table-column label="操作" width="180">
+        <el-table-column prop="id" label="ID" width="80px" align="center" sortable> </el-table-column>
+        <el-table-column prop="name" label="连接名称" align="center"  sortable> </el-table-column>
+        <el-table-column prop="bu" label="BU"  align="center" sortable> </el-table-column>
+        <el-table-column prop="storage" label="归档介质" align="center" sortable>
+          <template slot-scope="scope">{{ getOptionName(storageOption, scope.row.storage) }}</template>
+        </el-table-column>
+        <el-table-column prop="mysql_host" label="地址" align="center" sortable></el-table-column>
+        <el-table-column prop="mysql_port" label="端口" align="center" sortable></el-table-column>
+        <el-table-column prop="mysql_user" label="用户名" align="center" width="100px" sortable></el-table-column>
+        <el-table-column label="操作" width="130" align="center">
           <template slot-scope="scope">
-            <el-button size="small" type="default" icon="edit" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
-            <el-button size="small" type="danger" @click="handleDelete(scope.$index, scope.row)">删除 </el-button>
+            <el-button size="mini" @click="handleEdit(scope.$index, scope.row)" class="el-icon-edit"></el-button>
+            <el-button size="mini" @click="handleDelete(scope.$index, scope.row)" class="el-icon-delete" style="color: red;"></el-button>
           </template>
         </el-table-column>
       </el-table>
-
       <el-pagination
         @size-change="handleSizeChange"
         @current-change="handleCurrentChange"
         :current-page="tableData.pagination.pageNo"
-        :page-sizes="[5, 10, 20, 50]"
+        :page-sizes="[5, 10, 20, 50, 100]"
         :page-size="tableData.pagination.pageSize"
         layout="total, sizes, prev, pager, next, jumper"
         :total="tableData.pagination.total">
@@ -56,9 +55,8 @@
 
 <script>
   import panel from "../../components/panel.vue"
-  import * as api from "../../api"
   import * as sysApi from '../../services/sys'
-  import {connList} from "../../services/sys";
+  import {connSearchOption, getOptionName, storageOption} from "../../common/utils";
 
   export default {
     components: {
@@ -66,17 +64,14 @@
     },
     data(){
       return {
-        currentRow: {},
-        dialogVisible: false,
-        dialogLoading: false,
-        defaultProps: {
-          children: 'children',
-          label: 'name',
-          id: "id",
-        },
-        roleTree: [],
+        storageOption,
+        connSearchOption,
+        searchKey: 'name',
+        searchVal: '',
+        dialogEditFormVisible: false,
+        dialogAddFormVisible: false,
+        fullscreenLoading: false,
         listLoading: false,
-        searchKey: '',
         tableData: {
           pagination: {
             total: 0,
@@ -89,10 +84,13 @@
       }
     },
     methods: {
-      search(target){
+      getOptionName,
+      handleSearch(){
         this.loadData();
       },
+
       handleSelectionChange(val){
+        this.loadData();
       },
       handleSizeChange(val) {
         this.tableData.pagination.pageSize = val;
@@ -103,23 +101,21 @@
         this.loadData();
       },
       handleEdit(index, row){
-        this.$router.push({path: 'userAdd', query: {id: row.id}})
+
       },
       handleDelete(index, row){
-        this.$http.get(api.SYS_USER_DELETE + "?userIds=" + row.id).then(res => {
-          this.loadData();
-        });
+
       },
       loadData(){
-          sysApi.connList({
-            key: this.searchKey,
-            pageSize: this.tableData.pagination.pageSize,
-            page: this.tableData.pagination.pageNo
-          })
-          .then(res => {
-            this.tableData.rows = res.data.items;
-            this.tableData.pagination.total = res.data.total;
-          });
+        let para = {
+          [this.searchKey]: this.searchVal,
+          pageSize: this.tableData.pagination.pageSize,
+          page: this.tableData.pagination.pageNo
+        }
+        sysApi.connList(para).then(res => {
+          this.tableData.rows = res.data.items;
+          this.tableData.pagination.total = res.data.total;
+        });
       }
     },
     created(){
@@ -128,8 +124,59 @@
   }
 </script>
 <style>
-  .el-pagination {
-    float: right;
-    margin-top: 15px;
-  }
+.input-with-select .el-input-group__prepend {
+  background-color: #fff;
+  width: 120px;
+}
+
+.el-pagination {
+  float: right;
+  margin-top: 15px;
+}
+
+.el-table .cell-ellipsis {
+  display: inline-block;
+  width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.table-expand .el-form-item {
+  margin-right: 40px;
+  margin-left: 40px;
+  margin-bottom: 0;
+  width: 45%;
+}
+.table-expand, .table-expand * {
+  font-size: 12px;
+  margin-right: 20px;
+  margin-left: 20px;
+}
+
+.el-checkbox__label {
+  font-size: 12px;
+}
+
+.el-form-item__label{
+  min-width: 80px;
+}
+
+.table-expand .el-form-item__label {
+  text-align: right;
+  font-size: 12px;
+  padding-right: 0;
+  width: auto;
+  min-width: 80px;
+  font-weight: bolder;
+}
+
+.table-expand .el-form--label-left .el-form-item__label {
+  text-align: right;
+  min-width: 100px;
+}
+
+.word-wrap {
+  word-break: break-all;
+}
 </style>
