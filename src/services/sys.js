@@ -110,7 +110,7 @@ export function policyList (params) {
 export function taskList (params) {
   const sourceList = {}
   return new Promise((resolve, reject) => {
-    axios.get(api.TASK_LIST_GET, { params }).then(response => {
+    axios.get(api.TASK_LIST, { params }).then(response => {
       resolve(response.data);
     }, err => {
       resolve(sourceList);

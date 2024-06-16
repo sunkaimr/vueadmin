@@ -96,6 +96,17 @@ export const policySearchOption = [
   {name:"目标端ID", value:"dest_id" }
 ]
 
+export const taskSearchOption = [
+  {name:"ID", value:"id" },
+  {name:"策略名称", value:"name" },
+  {name:"清理频率", value:"period" },
+  {name:"清理速度", value:"cleaning_speed" },
+  {name:"治理方式", value:"govern" },
+  {name:"治理条件", value:"condition" },
+  {name:"源端ID", value:"src_id" },
+  {name:"目标端ID", value:"dest_id" }
+]
+
 export const periodOption=[
   {name:"一次", value:"once"},
   {name:"每天", value:"day"},
@@ -114,6 +125,7 @@ export const governOption = [
   {name:"归档数据", value:"archive", background:"#90EE90"},
   {name:"重建表", value:"recreate", background:"#ADD8E6"},
 ]
+
 export const cleaningSpeedOption = [
   {name:"稳定优先", value:"steady"},
   {name:"速度适中", value:"balanced"},
@@ -125,6 +137,17 @@ export const notifyPolicyOption = [
   {name:"成功时通知", value:"success"},
   {name:"失败时通知", value:"failed"},
   {name:"成功失败通知", value:"always"},
+]
+
+export const taskStatusOption = [
+  {name:"已排期", value:"scheduled", background:"#FFFFE0" },
+  {name:"任务创建失败", value:"create_failed", background:"#FFAAAA" },
+  {name:"等待执行", value:"waiting", background:"#DDA0DD"},
+  {name:"执行前检查失败", value:"exec_check_failed", background:"#FFAAAA"},
+  {name:"执行中", value:"executing", background:"#ADD8E6"},
+  {name:"执行成功", value:"success", background:"#90EE90"},
+  {name:"执行失败", value:"exec_failed", background:"#FFAAAA"},
+  {name:"执行超时", value:"timeout", background:"#FFAAAA"},
 ]
 
 export function getOptionBackground(optionsArray, propValue) {

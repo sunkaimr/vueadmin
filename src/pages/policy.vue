@@ -275,6 +275,10 @@
         policySearchOption,
         searchKey: 'id',
         searchVal: '',
+        dialogEditFormVisible: false,
+        dialogAddFormVisible: false,
+        fullscreenLoading: false,
+        listLoading: false,
         form: {
           name: "",
           enable:true,
@@ -290,10 +294,6 @@
           notify_policy: "failed",
           relevant: "",
         },
-        dialogEditFormVisible: false,
-        dialogAddFormVisible: false,
-        fullscreenLoading: false,
-        listLoading: false,
         tableData: {
           pagination: {
             total: 0,
@@ -500,12 +500,7 @@
         }
 
         if (this.displayEnablePolicy) {
-          para = {
-            enable: true,
-            [this.searchKey]: this.searchVal,
-            pageSize: this.tableData.pagination.pageSize,
-            page: this.tableData.pagination.pageNo
-          }
+          para.enable = true;
         }
         sysApi.policyList(para).then(res => {
           this.tableData.rows = res.data.items;
@@ -545,6 +540,8 @@
   }
   .table-expand, .table-expand * {
     font-size: 12px;
+    margin-right: 20px;
+    margin-left: 20px;
   }
 
   .el-checkbox__label {
