@@ -75,3 +75,65 @@ export function getCurrentMenu (location, arrayMenu) {
   return null;
 }
 
+export const sourceSearchOption = [
+  {name:"ID", value:"id" },
+  {name:"源端名称", value:"name" },
+  {name:"BU", value:"bu" },
+  {name:"集群名称", value:"cluster_name" },
+  {name:"集群ID", value:"cluster_id" },
+  {name:"源库名", value:"database_name" },
+  {name:"源表名", value:"table_name" }
+]
+
+export const policySearchOption = [
+  {name:"ID", value:"id" },
+  {name:"策略名称", value:"name" },
+  {name:"清理频率", value:"period" },
+  {name:"清理速度", value:"cleaning_speed" },
+  {name:"治理方式", value:"govern" },
+  {name:"治理条件", value:"condition" },
+  {name:"源端ID", value:"src_id" },
+  {name:"目标端ID", value:"dest_id" }
+]
+
+export const periodOption=[
+  {name:"一次", value:"once"},
+  {name:"每天", value:"day"},
+  {name:"两天", value:"two-day"},
+  {name:"一周", value:"weekly"},
+  {name:"每月", value:"monthly"},
+  {name:"每季", value:"quarterly"},
+  {name:"半年", value:"six-months"},
+  {name:"每年", value:"yearly"},
+]
+
+export const governOption = [
+  {name:"清空数据", value:"truncate", background:"#FFAAAA"},
+  {name:"删除数据", value:"delete", background:"#FFFFE0"},
+  {name:"备份删除", value:"backup-delete", background:"#DDA0DD"},
+  {name:"归档数据", value:"archive", background:"#90EE90"},
+  {name:"重建表", value:"recreate", background:"#ADD8E6"},
+]
+export const cleaningSpeedOption = [
+  {name:"稳定优先", value:"steady"},
+  {name:"速度适中", value:"balanced"},
+  {name:"速度优先", value:"swift"},
+]
+
+export const notifyPolicyOption = [
+  {name:"不通知", value:"silence"},
+  {name:"成功时通知", value:"success"},
+  {name:"失败时通知", value:"failed"},
+  {name:"成功失败通知", value:"always"},
+]
+
+export function getOptionBackground(optionsArray, propValue) {
+  const foundOption = optionsArray.find(option => option.value === propValue);
+  return foundOption ? foundOption.background : "#fff";
+}
+
+export function getOptionName(optionsArray, propValue) {
+  const foundOption = optionsArray.find(option => option.value === propValue);
+  return foundOption ? foundOption.name : propValue;
+}
+

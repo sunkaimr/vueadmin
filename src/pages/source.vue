@@ -2,19 +2,14 @@
   <imp-panel>
     <h4 class="box-title" slot="header" style="width: 100%;">
       <el-row style="width: 100%; display: flex; align-items: flex-end;">
-        <el-col :span="12" style="display: flex; align-items: flex-end;">
+        <el-col :span="8" style="display: flex; align-items: flex-end;">
             <el-button size="small" type="primary" @click="addSource" icon="plus">新增</el-button>
         </el-col>
-        <el-col :span="12" style="display: flex; align-items: flex-end;">
+        <el-col :span="16" style="display: flex; align-items: flex-end;">
           <div style="margin-top: 15px; margin-left: auto;">
             <el-input size="small" placeholder="请输入内容" v-model="searchVal" @clear="handleSearch" @keyup.enter.native="handleSearch" class="input-with-select" clearable>
               <el-select v-model="searchKey" slot="prepend" placeholder="请选择">
-                <el-option label="ID" value="id"></el-option>
-                <el-option label="源端名称" value="name"></el-option>
-                <el-option label="BU" value="bu"></el-option>
-                <el-option label="集群名称" value="cluster_name"></el-option>
-                <el-option label="源库名" value="database_name"></el-option>
-                <el-option label="源表名" value="table_name"></el-option>
+                <el-option v-for="item in sourceSearchOption" :key="item.value" :label="item.name" :value="item.value"></el-option>
               </el-select>
               <el-button slot="append" icon="el-icon-search" @click="handleSearch"></el-button>
             </el-input>
@@ -24,8 +19,8 @@
     </h4>
     <div slot="body">
       <el-dialog title="添加源" :visible.sync="dialogAddFormVisible" style="width: 100%;">
-        <el-form :model="form" :rules="rules" ref="form">
-          <el-form-item class="el-form-item-label" label="源端名称" prop="name" label-width="80px">
+        <el-form size="mini" :model="form" :rules="rules" ref="form">
+          <el-form-item label="源端名称" prop="name" label-width="80px">
             <el-input v-model="form.name" autocomplete="off" clearable/>
           </el-form-item>
           <el-form-item  label="说明"  label-width="80px">
@@ -64,17 +59,16 @@
           </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
-          <el-button @click="cancelAddSubmit('form')">取 消</el-button>
-          <el-button type="primary" @click="onAddSubmit('form')" v-loading.fullscreen.lock="fullscreenLoading">确 定</el-button>
+          <el-button size="mini" @click="cancelAddSubmit('form')">取 消</el-button>
+          <el-button size="mini" type="primary" @click="onAddSubmit('form')" v-loading.fullscreen.lock="fullscreenLoading">确 定</el-button>
         </div>
       </el-dialog>
-      <div slot="body">
-        <el-dialog title="修改源端信息" :visible.sync="dialogEditFormVisible" style="width: 100%;">
-          <el-form :model="form" :rules="rules" ref="form">
-            <el-form-item class="el-form-item-label" label="源端名称" prop="name" label-width="80px">
+      <el-dialog title="修改源端信息" :visible.sync="dialogEditFormVisible" style="width: 100%;">
+          <el-form size="mini" :model="form" :rules="rules" ref="form">
+            <el-form-item label="源端名称" prop="name" label-width="80px">
               <el-input v-model="form.name" autocomplete="off" clearable/>
             </el-form-item>
-            <el-form-item  label="说明"  label-width="80px">
+            <el-form-item  label="说明" label-width="80px">
               <el-input type="textarea" :rows="2" v-model="form.description" clearable/>
             </el-form-item>
             <el-form-item label="集群ID" label-width="80px">
@@ -95,18 +89,17 @@
             <el-button type="primary" @click="onEditSubmit('form')" v-loading.fullscreen.lock="fullscreenLoading">确 定</el-button>
           </div>
         </el-dialog>
-      </div>
       <el-table
         :data="tableData.rows"
         border
         style="width: 100%"
-        size="small"
+        size="mini"
         stripe
         v-loading="listLoading"
         @selection-change="handleSelectionChange">
         <el-table-column type="expand">
           <template slot-scope="props">
-            <el-form size="small" label-position="left" inline class="table-expand">
+            <el-form size="mini" label-position="left" inline class="table-expand">
               <el-row :span="24">
                 <el-col :span="12">
                   <el-form-item label="ID："><span>{{ props.row.id }}</span></el-form-item>
@@ -152,9 +145,9 @@
             </el-form>
           </template>
         </el-table-column>
-        <el-table-column prop="id" label="ID" width="80px" sortable> </el-table-column>
+        <el-table-column prop="id" label="ID" width="80px" align="center" sortable> </el-table-column>
         <el-table-column prop="name" label="源端名称" sortable> </el-table-column>
-        <el-table-column prop="bu" label="BU" sortable> </el-table-column>
+        <el-table-column prop="bu" label="BU" sortable></el-table-column>
         <el-table-column prop="cluster_name" width="200px" label="集群名称" sortable> </el-table-column>
         <el-table-column prop="cluster_id" label="集群ID" sortable> </el-table-column>
         <el-table-column prop="database_name" label="源库名" sortable> </el-table-column>
@@ -188,6 +181,7 @@
   import panel from "../components/panel.vue"
   import * as api from "../api"
   import * as sysApi from '../services/sys'
+  import {sourceSearchOption} from '../common/utils'
 
   export default {
     components: {
@@ -195,6 +189,7 @@
     },
     data(){
       return {
+        sourceSearchOption,
         dialogEditFormVisible: false,
         dialogAddFormVisible: false,
         fullscreenLoading: false,
@@ -268,6 +263,7 @@
         this.selectedClusterId = "";
         this.tableNameFilter = "";
         this.filteredTableList = [];
+        this.form = {};
         sysApi.mysqlClusterList().then(res => {
           this.clusterList = res.data;
         });
@@ -411,6 +407,7 @@
     background-color: #fff;
     width: 120px;
   }
+
   .el-table .cell-ellipsis {
     display: inline-block;
     width: 100%;
@@ -423,6 +420,7 @@
     float: right;
     margin-top: 15px;
   }
+
   .table-expand .el-form-item {
     margin-right: 40px;
     margin-left: 40px;
