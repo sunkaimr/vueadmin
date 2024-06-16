@@ -27,6 +27,6 @@ export const POLICY_LIST = CONTEXT + '/policy/';
 export const POLICY_ADD = CONTEXT + '/policy/';
 export const TASK_LIST_GET = CONTEXT + '/task/';
 export const CONN_LIST_GET = CONTEXT + '/dest/conn/';
-export const DEST_LIST_GET = CONTEXT + '/dest/';
+export const DEST_LIST = CONTEXT + '/dest/';
 export const SYS_USER_GET = CONTEXT + '/manage/user/';
 

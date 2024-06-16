@@ -6,13 +6,15 @@
           <el-button size="small" type="primary" @click="addPolicy" icon="plus">新增</el-button>
         </el-col>
         <el-col :span="16" style="display: flex; align-items: flex-end;">
-          <div style="margin-top: 15px; margin-left: auto;">
+          <div style="display: flex; margin-left: auto; ustify-items: center; align-items: center;">
+            <el-checkbox size="small" v-model="displayEnablePolicy" @change="handleSearch" style="margin-right: 20px;">只看开启</el-checkbox>
             <el-input size="small" placeholder="请输入内容" v-model="searchVal" @clear="handleSearch" @keyup.enter.native="handleSearch" class="input-with-select" clearable>
               <el-select v-model="searchKey" slot="prepend" placeholder="请选择">
                 <el-option v-for="item in policySearchOption" :key="item.value" :label="item.name" :value="item.value"></el-option>
               </el-select>
               <el-button size="small" slot="append" icon="el-icon-search" @click="handleSearch"></el-button>
             </el-input>
+            <el-button size="small" icon="el-icon-refresh" @click="handleSearch" style="margin-left: 10px;"/>
           </div>
         </el-col>
       </el-row>
@@ -20,16 +22,16 @@
     <div slot="body">
       <el-dialog title="添加策略" :visible.sync="dialogAddFormVisible" :rules="rules" style="width: 100%;">
         <el-form size="mini" :model="form" :rules="rules" ref="form">
-          <el-form-item class="el-form-item-label" label="策略名称" prop="name">
+          <el-form-item class="el-form-item-label" label="策略名称" label-width="80px" prop="name">
             <el-input v-model="form.name" autocomplete="off" clearable/>
           </el-form-item>
-          <el-form-item label="说明"  label-width="80px">
+          <el-form-item label="说明" label-width="80px">
             <el-input type="textarea" :rows="2" v-model="form.description" clearable/>
           </el-form-item>
-          <el-form-item label="开启" prop="enable">
+          <el-form-item label="开启" prop="enable" label-width="80px">
             <el-switch size="mini" v-model="form.enable"  />
           </el-form-item>
-          <el-form-item label="执行频率" prop="period">
+          <el-form-item label="执行频率" prop="period" label-width="80px">
             <el-select v-model="form.period" placeholder="请选择">
               <el-option v-for="i in periodOption" :key="i.value" :label="i.name" :value="i.value"></el-option>
             </el-select>
@@ -40,7 +42,7 @@
               <span>&nbsp;日执行&nbsp;</span>
             </template>
           </el-form-item>
-          <el-form-item label="执行窗口" prop="execute_window">
+          <el-form-item label="执行窗口" prop="execute_window" label-width="80px">
             <template>
               <el-time-picker
                 placeholder="起始时间"
@@ -57,35 +59,35 @@
               </el-time-picker>
             </template>
           </el-form-item>
-          <el-form-item label="源端" prop="src_id">
-            <el-select v-model="form.src_id" filterable placeholder="请选择">
+          <el-form-item label="源端" prop="src_id" label-width="80px">
+            <el-select v-model="form.src_id" filterable placeholder="请选择" style="width: 100%;">
               <el-option v-for="i in sourceList" :key="i.id" :label="i.id + ' | ' + i.name" :value="i.id"></el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="治理方式" prop="govern">
-            <el-select v-model="form.govern" placeholder="请选择">
+          <el-form-item label="治理方式" prop="govern" label-width="80px">
+            <el-select v-model="form.govern" @change="governOptionChanged" placeholder="请选择" style="width: 100%;">
               <el-option v-for="i in governOption" :key="i.value" :label="i.name" :value="i.value"></el-option>
             </el-select>
           </el-form-item>
           <el-form-item v-if="form.govern !=='truncate' && form.govern !=='recreate'" label="治理条件" prop="condition" label-width="80px">
             <el-input type="textarea" :rows="2" v-model="form.condition" clearable/>
           </el-form-item>
-          <el-form-item label="清理速度" prop="cleaning_speed">
-            <el-select v-model="form.cleaning_speed" placeholder="请选择">
+          <el-form-item label="清理速度" label-width="80px" prop="cleaning_speed">
+            <el-select v-model="form.cleaning_speed" placeholder="请选择" style="width: 100%;">
               <el-option v-for="i in cleaningSpeedOption" :key="i.value" :label="i.name" :value="i.value"></el-option>
             </el-select>
           </el-form-item>
-          <el-form-item v-if="form.govern === 'archive'" label="目标端ID">
-            <el-select v-model="form.dest_id" placeholder="请选择">
-              <el-option v-for="i in destList" :key="i.value" :label="i.name" :value="i.value"></el-option>
+          <el-form-item v-if="form.govern === 'archive'" label-width="80px" label="目标端" >
+            <el-select v-model="form.dest_id" placeholder="请选择" style="width: 100%;">
+              <el-option v-for="i in destList" :key="i.id" :label="i.name" :value="i.id"></el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="通知策略" prop="notify_policy">
-            <el-select v-model="form.notify_policy" placeholder="请选择">
+          <el-form-item label="通知策略" label-width="80px" prop="notify_policy">
+            <el-select v-model="form.notify_policy" placeholder="请选择" style="width: 100%;">
               <el-option v-for="i in notifyPolicyOption" :key="i.value" :label="i.name" :value="i.value"></el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="关注人">
+          <el-form-item label="关注人" label-width="80px">
             <el-input v-model="form.relevant" clearable/>
           </el-form-item>
         </el-form>
@@ -169,76 +171,30 @@
         @selection-change="handleSelectionChange">
         <el-table-column type="expand">
           <template slot-scope="props">
-            <el-form size="mini" label-position="left" inline class="table-expand">
-              <el-row :span="24">
-                <el-col :span="12">
-                  <el-form-item label="ID："><span>{{ props.row.id }}</span></el-form-item>
-                </el-col>
-                <el-col :span="12">
-                  <el-form-item label="策略名称："><span>{{ props.row.name }}</span></el-form-item>
-                </el-col>
-              </el-row>
-              <el-row :span="24">
-                <el-col :span="12">
-                  <el-form-item label="创建时间："><span>{{ props.row.created_at }}</span> </el-form-item>
-                </el-col>
-                <el-col :span="12">
-                  <el-form-item label="创建人："><span>{{ props.row.creator }}</span></el-form-item>
-                </el-col>
-              </el-row>
-              <el-row :span="24">
-                <el-col :span="12">
-                  <el-form-item label="BU："><span>{{ props.row.bu }}</span></el-form-item>
-                </el-col>
-                <el-col :span="12">
-                  <el-form-item label="清理频率："><span>{{ getOptionName(periodOption, props.row.period) }}</span></el-form-item>
-                </el-col>
-              </el-row>
-              <el-row :span="24">
-                <el-col :span="12">
-                  <el-form-item label="期望执行日："><span>{{ props.row.day }}</span></el-form-item>
-                </el-col>
-                <el-col :span="12">
-                  <el-form-item label="执行窗口：">
-                    <span>{{ props.row.execute_window[0] +' - '+  props.row.execute_window[1] }}</span>
-                  </el-form-item>
-                </el-col>
-              </el-row>
-              <el-row :span="24">
-                <el-col :span="12">
-                  <el-form-item label="源端ID："><span>{{ props.row.src_id }}</span></el-form-item>
-                </el-col>
-                <el-col :span="12">
-                  <el-form-item label="目标端ID："><span>{{ props.row.dest_id }}</span></el-form-item>
-                </el-col>
-              </el-row>
-              <el-row :span="24">
-                <el-col :span="12">
-                  <el-form-item label="治理方式："><span>{{getOptionName(governOption, props.row.govern)}}</span></el-form-item>
-                </el-col>
-                <el-col :span="12">
-                  <el-form-item label="清理速度："><span>{{getOptionName(cleaningSpeedOption, props.row.cleaning_speed)}}</span></el-form-item>
-                </el-col>
-              </el-row>
-              <el-row :span="24">
-                <el-col :span="12">
-                  <el-form-item label="通知策略："><span>{{ getOptionName(notifyPolicyOption, props.row.notify_policy) }}</span></el-form-item>
-                </el-col>
-                <el-col :span="12">
-                  <el-form-item label="相关人："><span>{{ props.row.relevant.join(",") }}</span></el-form-item>
-                </el-col>
-              </el-row>
-              <el-row :span="24">
-                <el-col :span="24">
-                  <el-form-item label="清理条件："><span>{{ props.row.condition }}</span></el-form-item>
-                </el-col>
-              </el-row>
-              <el-row :span="24">
-                <el-col :span="24">
-                  <el-form-item label="说明："><span class="word-wrap">{{ props.row.description }}</span></el-form-item>
-                </el-col>
-              </el-row>
-            </el-form>
+            <el-descriptions
+              border
+              column=3
+              size="mini"
+              class="table-expand"
+              labelStyle="min-width: 80px;"
+              with="100%" >
+              <el-descriptions-item label="ID">{{ props.row.id }}</el-descriptions-item>
+              <el-descriptions-item label="策略名称">{{ props.row.name }}</el-descriptions-item>
+              <el-descriptions-item label="创建时间">{{ props.row.created_at }}</el-descriptions-item>
+              <el-descriptions-item label="创建人"> {{ props.row.creator }} </el-descriptions-item>
+              <el-descriptions-item label="BU">{{ props.row.bu }}</el-descriptions-item>
+              <el-descriptions-item label="清理频率">{{ getOptionName(periodOption, props.row.period) }}</el-descriptions-item>
+              <el-descriptions-item label="期望执行日">{{ props.row.day }}</el-descriptions-item>
+              <el-descriptions-item label="执行窗口">{{ props.row.execute_window[0] +' - '+  props.row.execute_window[1] }}</el-descriptions-item>
+              <el-descriptions-item label="源端ID">{{ props.row.src_id }}</el-descriptions-item>
+              <el-descriptions-item label="目标端ID">{{ props.row.dest_id }}</el-descriptions-item>
+              <el-descriptions-item label="治理方式">{{ getOptionName(governOption, props.row.govern) }}</el-descriptions-item>
+              <el-descriptions-item label="清理速度">{{ getOptionName(cleaningSpeedOption, props.row.cleaning_speed) }}</el-descriptions-item>
+              <el-descriptions-item label="通知策略">{{ getOptionName(notifyPolicyOption, props.row.notify_policy) }}</el-descriptions-item>
+              <el-descriptions-item label="相关人">{{ props.row.relevant.join(",") }}</el-descriptions-item>
+              <el-descriptions-item label="清理条件">{{ props.row.condition }}</el-descriptions-item>
+              <el-descriptions-item label="说明">{{ props.row.description }}</el-descriptions-item>
+            </el-descriptions>
           </template>
         </el-table-column>
         <el-table-column prop="id" label="ID" width="80px" align="center" sortable> </el-table-column>
@@ -311,6 +267,7 @@
     },
     data(){
       return {
+        displayEnablePolicy: false,
         periodOption,
         governOption,
         cleaningSpeedOption,
@@ -327,6 +284,8 @@
           execute_window: ["00:00:00","23:59:59"],
           govern: "delete",
           condition: "",
+          src_id: 0,
+          dest_id: 0,
           cleaning_speed: "steady",
           notify_policy: "failed",
           relevant: "",
@@ -478,6 +437,14 @@
           this.sourceList = res.data.items;
         });
       },
+      governOptionChanged(op){
+        // 备份删除和归档需要置顶目标地址
+        if ( op === "backup-delete" || op === "archive") {
+          sysApi.getDestList({}).then(res => {
+            this.destList = res.data.items;
+          });
+        }
+      },
       handleSearch(){
         this.loadData();
       },
@@ -526,11 +493,21 @@
         });
       },
       loadData(){
-        sysApi.policyList({
+        let para = {
           [this.searchKey]: this.searchVal,
           pageSize: this.tableData.pagination.pageSize,
           page: this.tableData.pagination.pageNo
-        }).then(res => {
+        }
+
+        if (this.displayEnablePolicy) {
+          para = {
+            enable: true,
+            [this.searchKey]: this.searchVal,
+            pageSize: this.tableData.pagination.pageSize,
+            page: this.tableData.pagination.pageNo
+          }
+        }
+        sysApi.policyList(para).then(res => {
           this.tableData.rows = res.data.items;
           this.tableData.pagination.total = res.data.total;
         });
@@ -545,6 +522,11 @@
   .input-with-select .el-input-group__prepend {
     background-color: #fff;
     width: 120px;
+  }
+
+  .el-pagination {
+    float: right;
+    margin-top: 15px;
   }
 
   .el-table .cell-ellipsis {
@@ -562,6 +544,10 @@
     width: 45%;
   }
   .table-expand, .table-expand * {
+    font-size: 12px;
+  }
+
+  .el-checkbox__label {
     font-size: 12px;
   }
 

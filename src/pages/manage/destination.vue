@@ -112,7 +112,7 @@ import {connList} from "../../services/sys";
         });
       },
       loadData(){
-          sysApi.destList({
+          sysApi.getDestList({
             key: this.searchKey,
             pageSize: this.tableData.pagination.pageSize,
             page: this.tableData.pagination.pageNo

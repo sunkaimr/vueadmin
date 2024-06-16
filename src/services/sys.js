@@ -135,10 +135,10 @@ export function connList (params) {
   })
 }
 
-export function destList (params) {
+export function getDestList (params) {
   const sourceList = {}
   return new Promise((resolve, reject) => {
-    axios.get(api.DEST_LIST_GET, { params }).then(response => {
+    axios.get(api.DEST_LIST, { params }).then(response => {
       resolve(response.data);
     }, err => {
       resolve(sourceList);
@@ -187,5 +187,20 @@ export function mysqlTableList (clusterID, database) {
     }).catch((error) => {
       resolve(tableList)
     })
+  })
+}
+
+
+export function destList (params) {
+  const destinationList = {}
+  return new Promise((resolve, reject) => {
+    axios.get(api.DEST_LIST, { params }).then(response => {
+      resolve(response.data);
+    }, err => {
+      resolve(destinationList);
+    })
+      .catch((error) => {
+        resolve(destinationList)
+      })
   })
 }

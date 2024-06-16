@@ -6,13 +6,14 @@
             <el-button size="small" type="primary" @click="addSource" icon="plus">新增</el-button>
         </el-col>
         <el-col :span="16" style="display: flex; align-items: flex-end;">
-          <div style="margin-top: 15px; margin-left: auto;">
-            <el-input size="small" placeholder="请输入内容" v-model="searchVal" @clear="handleSearch" @keyup.enter.native="handleSearch" class="input-with-select" clearable>
+          <div style="display: flex; margin-top: 15px; margin-left: auto;">
+            <el-input size="small" placeholder="请输入内容" v-model="searchVal" @clear="handleSearch" @keyup.enter.native="handleSearch" class="input-with-select" clearable style="flex: 1;">
               <el-select v-model="searchKey" slot="prepend" placeholder="请选择">
                 <el-option v-for="item in sourceSearchOption" :key="item.value" :label="item.name" :value="item.value"></el-option>
               </el-select>
-              <el-button slot="append" icon="el-icon-search" @click="handleSearch"></el-button>
+              <el-button size="small" slot="append" icon="el-icon-search" @click="handleSearch"></el-button>
             </el-input>
+            <el-button size="small" icon="el-icon-refresh" @click="handleSearch" style="margin-left: 10px;"/>
           </div>
         </el-col>
       </el-row>
@@ -93,56 +94,30 @@
         :data="tableData.rows"
         border
         style="width: 100%"
-        size="mini"
+        size="small"
         stripe
         v-loading="listLoading"
         @selection-change="handleSelectionChange">
         <el-table-column type="expand">
           <template slot-scope="props">
-            <el-form size="mini" label-position="left" inline class="table-expand">
-              <el-row :span="24">
-                <el-col :span="12">
-                  <el-form-item label="ID："><span>{{ props.row.id }}</span></el-form-item>
-                </el-col>
-                <el-col :span="12">
-                  <el-form-item label="源端名称："><span>{{ props.row.name }}</span></el-form-item>
-                </el-col>
-              </el-row>
-              <el-row :span="24">
-                <el-col :span="12">
-                  <el-form-item label="创建时间："><span>{{ props.row.created_at }}</span> </el-form-item>
-                </el-col>
-                <el-col :span="12">
-                  <el-form-item label="创建人："><span>{{ props.row.creator }}</span></el-form-item>
-                </el-col>
-              </el-row>
-              <el-row :span="24">
-                <el-col :span="12">
-                  <el-form-item label="BU："><span>{{ props.row.bu }}</span></el-form-item>
-                </el-col>
-                <el-col :span="12">
-                  <el-form-item label="集群ID："><span>{{ props.row.cluster_id }}</span></el-form-item>
-                </el-col>
-              </el-row>
-              <el-row :span="24">
-                <el-col :span="12">
-                  <el-form-item label="集群名称："><span>{{ props.row.cluster_name }}</span></el-form-item>
-                </el-col>
-                <el-col :span="12">
-                  <el-form-item label="源库名："><span>{{ props.row.database_name }}</span></el-form-item>
-                </el-col>
-              </el-row>
-              <el-row :span="24">
-                <el-col :span="24">
-                  <el-form-item label="说明："><span class="word-wrap">{{ props.row.description }}</span></el-form-item>
-                </el-col>
-              </el-row>
-              <el-row :span="24">
-                <el-col :span="24">
-                  <el-form-item label="源表名："><span class="word-wrap">{{ props.row.tables_name }}</span></el-form-item>
-                </el-col>
-              </el-row>
-            </el-form>
+            <el-descriptions
+              border
+              column=3
+              size="mini"
+              class="table-expand"
+              labelStyle="min-width: 80px;"
+              with="100%" >
+                <el-descriptions-item label="ID">{{ props.row.id }}</el-descriptions-item>
+                <el-descriptions-item label="源端名称">{{ props.row.name }}</el-descriptions-item>
+                <el-descriptions-item label="创建时间">{{ props.row.created_at }}</el-descriptions-item>
+                <el-descriptions-item label="创建人"> {{ props.row.creator }} </el-descriptions-item>
+                <el-descriptions-item label="BU">{{ props.row.bu }}</el-descriptions-item>
+                <el-descriptions-item label="集群ID">{{ props.row.cluster_id }}</el-descriptions-item>
+                <el-descriptions-item label="集群名称">{{ props.row.cluster_name }}</el-descriptions-item>
+                <el-descriptions-item label="源库名">{{ props.row.database_name }}</el-descriptions-item>
+                <el-descriptions-item label="说明">{{ props.row.description }}</el-descriptions-item>
+                <el-descriptions-item label="源表名">{{ props.row.tables_name }}</el-descriptions-item>
+            </el-descriptions>
           </template>
         </el-table-column>
         <el-table-column prop="id" label="ID" width="80px" align="center" sortable> </el-table-column>
@@ -424,11 +399,13 @@
   .table-expand .el-form-item {
     margin-right: 40px;
     margin-left: 40px;
-    margin-bottom: 0;
+    margin-bottom: 10px;
     width: 45%;
   }
   .table-expand, .table-expand * {
     font-size: 12px;
+    margin-right: 20px;
+    margin-left: 20px;
   }
 
   .table-expand .el-form-item__label {
