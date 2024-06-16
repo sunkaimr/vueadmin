@@ -150,6 +150,11 @@ export const taskStatusOption = [
   {name:"执行超时", value:"timeout", background:"#FFAAAA"},
 ]
 
+export const userSearchOption= [
+  { name:"用户名", value:"username"},
+  { name:"姓名", value:"real_name"},
+  { name:"邮箱", value:"email"},
+]
 export function getOptionBackground(optionsArray, propValue) {
   const foundOption = optionsArray.find(option => option.value === propValue);
   return foundOption ? foundOption.background : "#fff";

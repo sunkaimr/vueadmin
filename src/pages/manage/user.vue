@@ -1,73 +1,54 @@
 <template>
-
   <imp-panel>
-    <h3 class="box-title" slot="header" style="width: 100%;">
-      <el-row style="width: 100%;">
-        <el-col :span="12">
-          <router-link :to="{ path: 'userAdd'}">
-            <el-button type="primary" icon="plus">新增</el-button>
-          </router-link>
-        </el-col>
-        <el-col :span="12">
-          <div class="el-input" style="width: 400px; float: right;">
-            <el-input placeholder="输入名称" v-model="searchKey" @keyup.enter="search($event)" suffix-icon="el-icon-search" clearable></el-input>
+    <h4 class="box-title" slot="header" style="width: 100%;">
+      <el-row style="width: 100%; display: flex; align-items: flex-end;">
+        <el-col :span="24" style="display: flex; align-items: flex-end;">
+          <div style="display: flex; margin-left: auto; ustify-items: center; align-items: center;">
+            <el-input size="small" placeholder="请输入内容" v-model="searchVal" @clear="handleSearch" @keyup.enter.native="handleSearch" class="input-with-select" clearable>
+              <el-select v-model="searchKey" slot="prepend" placeholder="请选择">
+                <el-option v-for="item in userSearchOption" :key="item.value" :label="item.name" :value="item.value"></el-option>
+              </el-select>
+              <el-button size="small" slot="append" icon="el-icon-search" @click="handleSearch"></el-button>
+            </el-input>
+            <el-button size="small" icon="el-icon-refresh" @click="handleSearch" style="margin-left: 10px;"/>
           </div>
         </el-col>
       </el-row>
-    </h3>
+    </h4>
     <div slot="body">
       <el-table
         :data="tableData.rows"
         border
-        style="width: 100%"
+        style="width: 100%;"
         size="mini"
+        stripe
         v-loading="listLoading"
         @selection-change="handleSelectionChange">
-        <el-table-column prop="id" label="ID" width="100"> </el-table-column>
-        <el-table-column prop="username" label="用户名"> </el-table-column>
-        <el-table-column prop="real_name" label="姓名"> </el-table-column>
-        <el-table-column prop="email" label="邮箱"> </el-table-column>
-        <el-table-column prop="is_ldap" label="域账号"> </el-table-column>
-        <el-table-column label="操作" width="180">
+        <el-table-column prop="id" label="ID" width="100px" align="center" sortable></el-table-column>
+        <el-table-column prop="username" label="用户名" align="center" sortable> </el-table-column>
+        <el-table-column prop="real_name" label="姓名" align="center" sortable> </el-table-column>
+        <el-table-column prop="email" label="邮箱" align="center" sortable></el-table-column>
+        <el-table-column prop="is_ldap" label="账户类型" align="center" sortable>
+          <template slot-scope="scope">{{scope.row.is_ldap ? "域账号" : "本地账号" }}</template>
+        </el-table-column>
+        <el-table-column prop="last_login" label="上次登陆" width="240px" align="center" sortable>
+        </el-table-column>
+        <el-table-column label="操作" width="130" align="center">
           <template slot-scope="scope">
-            <el-button size="mini" type="default" icon="edit" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
-            <el-button size="mini" type="danger" @click="handleDelete(scope.$index, scope.row)">删除 </el-button>
+            <el-button size="mini" @click="handleEdit(scope.$index, scope.row)" class="el-icon-edit"></el-button>
+            <el-button size="mini" @click="handleDelete(scope.$index, scope.row)" class="el-icon-delete" style="color: red;"></el-button>
           </template>
         </el-table-column>
       </el-table>
-
       <el-pagination
         @size-change="handleSizeChange"
         @current-change="handleCurrentChange"
         :current-page="tableData.pagination.pageNo"
-        :page-sizes="[5, 10, 20]"
+        :page-sizes="[5, 10, 20, 50, 100]"
         :page-size="tableData.pagination.pageSize"
         layout="total, sizes, prev, pager, next, jumper"
         :total="tableData.pagination.total">
       </el-pagination>
-
-      <el-dialog title="配置用户角色" v-model="dialogVisible" size="tiny">
-        <div class="select-tree">
-          <el-scrollbar
-            tag="div"
-            class='is-empty'
-            wrap-class="el-select-dropdown__wrap"
-            view-class="el-select-dropdown__list">
-            <el-tree
-              ref="roleTree"
-              :data="roleTree"
-              show-checkbox
-              check-strictly
-              node-key="id" v-loading="dialogLoading"
-              :props="defaultProps">
-            </el-tree>
-          </el-scrollbar>
-        </div>
-        <span slot="footer" class="dialog-footer">
-          <el-button @click="dialogVisible = false">取 消</el-button>
-          <el-button type="primary" @click="configUserRoles">确 定</el-button>
-          </span>
-      </el-dialog>
     </div>
 
 
@@ -77,8 +58,8 @@
 <script>
   import panel from "../../components/panel.vue"
   import * as api from "../../api"
-  import testData from "../../../static/data/data.json"
   import * as sysApi from '../../services/sys'
+  import {userSearchOption} from "../../common/utils";
 
   export default {
     components: {
@@ -86,17 +67,13 @@
     },
     data(){
       return {
-        currentRow: {},
-        dialogVisible: false,
-        dialogLoading: false,
-        defaultProps: {
-          children: 'children',
-          label: 'name',
-          id: "id",
-        },
-        roleTree: [],
+        searchKey: 'username',
+        searchVal: '',
+        dialogEditFormVisible: false,
+        dialogAddFormVisible: false,
+        fullscreenLoading: false,
         listLoading: false,
-        searchKey: '',
+        userSearchOption,
         tableData: {
           pagination: {
             total: 0,
@@ -109,35 +86,11 @@
       }
     },
     methods: {
-      search(target){
+      handleSearch(){
         this.loadData();
       },
-      handleSelectionChange(val){
-
-      },
-      handleRoleConfig(index, row){
-        this.currentRow = row;
-        this.dialogVisible = true;
-        if (this.roleTree.length <= 0) {
-          sysApi.roleList({selectChildren:true})
-            .then(res => {
-              this.roleTree = res
-            })
-        }
-        this.$http.get(api.SYS_USER_ROLE + "?id=" + row.id)
-          .then(res => {
-            this.$refs.roleTree.setCheckedKeys(res.data);
-          }).catch(err=>{
-
-        })
-      },
-      configUserRoles(){
-        let checkedKeys = this.$refs.roleTree.getCheckedKeys();
-          this.$http.get(api.SYS_SET_USER_ROLE + "?userId=" + this.currentRow.id + "&roleIds="+checkedKeys.join(','))
-          .then(res => {
-              this.$message('修改成功');
-              this.dialogVisible = false;
-          })
+      handleSelectionChange(){
+        this.loadData();
       },
       handleSizeChange(val) {
         this.tableData.pagination.pageSize = val;
@@ -148,24 +101,22 @@
         this.loadData();
       },
       handleEdit(index, row){
-        this.$router.push({path: 'userAdd', query: {id: row.id}})
+
       },
       handleDelete(index, row){
-        this.$http.get(api.SYS_USER_DELETE + "?userIds=" + row.id).then(res => {
-          this.loadData();
-        });
+
       },
       loadData(){
-          sysApi.userList({
-            key: this.searchKey,
-            pageSize: this.tableData.pagination.pageSize,
-            pageNo: this.tableData.pagination.pageNo
-          })
-          .then(res => {
-            this.tableData.rows = res.data.items;
-            this.tableData.pagination.total = res.data.total;
-          });
-      }
+        let para = {
+          [this.searchKey]: this.searchVal,
+          pageSize: this.tableData.pagination.pageSize,
+          page: this.tableData.pagination.pageNo
+        }
+        sysApi.userList(para).then(res => {
+          this.tableData.rows = res.data.items;
+          this.tableData.pagination.total = res.data.total;
+        });
+    }
     },
     created(){
       this.loadData();
@@ -173,8 +124,59 @@
   }
 </script>
 <style>
-  .el-pagination {
-    float: right;
-    margin-top: 15px;
-  }
+.input-with-select .el-input-group__prepend {
+  background-color: #fff;
+  width: 120px;
+}
+
+.el-pagination {
+  float: right;
+  margin-top: 15px;
+}
+
+.el-table .cell-ellipsis {
+  display: inline-block;
+  width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.table-expand .el-form-item {
+  margin-right: 40px;
+  margin-left: 40px;
+  margin-bottom: 0;
+  width: 45%;
+}
+.table-expand, .table-expand * {
+  font-size: 12px;
+  margin-right: 20px;
+  margin-left: 20px;
+}
+
+.el-checkbox__label {
+  font-size: 12px;
+}
+
+.el-form-item__label{
+  min-width: 80px;
+}
+
+.table-expand .el-form-item__label {
+  text-align: right;
+  font-size: 12px;
+  padding-right: 0;
+  width: auto;
+  min-width: 80px;
+  font-weight: bolder;
+}
+
+.table-expand .el-form--label-left .el-form-item__label {
+  text-align: right;
+  min-width: 100px;
+}
+
+.word-wrap {
+  word-break: break-all;
+}
 </style>
