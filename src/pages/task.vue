@@ -21,6 +21,59 @@
       </el-row>
     </h4>
     <div slot="body">
+      <el-dialog title="修改任务" :visible.sync="dialogEditFormVisible" :rules="rules" style="width: 100%;">
+        <el-form :model="form" :rules="rules" size="mini" ref="form">
+          <el-form-item class="el-form-item-label" label="任务名称" prop="name" label-width="120px">
+            <el-input v-model="form.name" autocomplete="off" clearable/>
+          </el-form-item>
+          <el-form-item label="说明" label-width="120px">
+            <el-input type="textarea" :rows="2" v-model="form.description" clearable/>
+          </el-form-item>
+          <el-form-item label="开启" prop="enable" label-width="120px">
+            <el-switch size="mini" v-model="form.enable" />
+          </el-form-item>
+          <el-form-item label="预期执行日期" prop="execute_date" label-width="120px">
+            <template>
+              <el-date-picker
+                placeholder="预期执行日期"
+                type="date"
+                format="yyyy-MM-dd"
+                value-format="yyyy-MM-dd"
+                v-model="form.execute_date">
+              </el-date-picker>
+            </template>
+          </el-form-item>
+          <el-form-item label="执行窗口" prop="execute_window" label-width="120px">
+            <template>
+              <el-time-picker
+                placeholder="起始时间"
+                v-model="form.execute_window[0]"
+                value-format="HH:mm:ss"
+                :picker-options="{selectableRange: '00:00:00 - 23:59:59'}">
+              </el-time-picker>
+              <span>&nbsp;-&nbsp;</span>
+              <el-time-picker
+                placeholder="结束时间"
+                v-model="form.execute_window[1]"
+                value-format="HH:mm:ss"
+                :picker-options="{selectableRange: '00:00:00 - 23:59:59'}">
+              </el-time-picker>
+            </template>
+          </el-form-item>
+          <el-form-item label="通知策略" prop="notify_policy" label-width="120px">
+            <el-select v-model="form.notify_policy" placeholder="请选择">
+              <el-option v-for="i in notifyPolicyOption" :key="i.value" :label="i.name" :value="i.value"></el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="关注人" label-width="120px">
+            <el-input v-model="form.relevant" clearable/>
+          </el-form-item>
+        </el-form>
+        <div slot="footer" class="dialog-footer">
+          <el-button size="mini" @click="cancelEditSubmit('form')">取 消</el-button>
+          <el-button size="mini" type="primary" @click="onEditSubmit('form')" v-loading.fullscreen.lock="fullscreenLoading">确 定</el-button>
+        </div>
+      </el-dialog>
       <el-table
         :data="tableData.rows"
         border
@@ -39,21 +92,47 @@
               labelStyle="min-width: 80px;"
               with="100%" >
               <el-descriptions-item label="ID">{{ props.row.id }}</el-descriptions-item>
-              <el-descriptions-item label="策略名称">{{ props.row.name }}</el-descriptions-item>
+              <el-descriptions-item label="任务名称">{{ props.row.name }}</el-descriptions-item>
+              <el-descriptions-item label="说明">{{ props.row.description }}</el-descriptions-item>
+              <el-descriptions-item label="开启">{{ props.row.enable }}</el-descriptions-item>
               <el-descriptions-item label="创建时间">{{ props.row.created_at }}</el-descriptions-item>
               <el-descriptions-item label="创建人"> {{ props.row.creator }} </el-descriptions-item>
-              <el-descriptions-item label="BU">{{ props.row.bu }}</el-descriptions-item>
-              <el-descriptions-item label="清理频率">{{ getOptionName(periodOption, props.row.period) }}</el-descriptions-item>
-              <el-descriptions-item label="期望执行日">{{ props.row.day }}</el-descriptions-item>
+              <el-descriptions-item label="策略ID">{{ props.row.policy_id }}</el-descriptions-item>
+              <el-descriptions-item label="预期执行日期">{{ props.row.execute_date }}</el-descriptions-item>
               <el-descriptions-item label="执行窗口">{{ props.row.execute_window[0] +' - '+  props.row.execute_window[1] }}</el-descriptions-item>
-              <el-descriptions-item label="源端ID">{{ props.row.src_id }}</el-descriptions-item>
-              <el-descriptions-item label="目标端ID">{{ props.row.dest_id }}</el-descriptions-item>
               <el-descriptions-item label="治理方式">{{ getOptionName(governOption, props.row.govern) }}</el-descriptions-item>
               <el-descriptions-item label="清理速度">{{ getOptionName(cleaningSpeedOption, props.row.cleaning_speed) }}</el-descriptions-item>
-              <el-descriptions-item label="通知策略">{{ getOptionName(notifyPolicyOption, props.row.notify_policy) }}</el-descriptions-item>
-              <el-descriptions-item label="相关人">{{ props.row.relevant.join(",") }}</el-descriptions-item>
               <el-descriptions-item label="清理条件">{{ props.row.condition }}</el-descriptions-item>
-              <el-descriptions-item label="说明">{{ props.row.description }}</el-descriptions-item>
+
+              <el-descriptions-item label="源端ID">{{ props.row.src_id }}</el-descriptions-item>
+              <el-descriptions-item label="源端名称">{{ props.row.src_name }}</el-descriptions-item>
+              <el-descriptions-item label="集群ID">{{ props.row.cluster_id }}</el-descriptions-item>
+              <el-descriptions-item label="集群名称">{{ props.row.src_cluster_name }}</el-descriptions-item>
+              <el-descriptions-item label="源库名">{{ props.row.src_database_name }}</el-descriptions-item>
+              <el-descriptions-item label="源表名">{{ props.row.src_tables_name }}</el-descriptions-item>
+              <el-descriptions-item label="源列名">{{ props.row.src_columns }}</el-descriptions-item>
+              <el-descriptions-item label="源端磁盘剩余">{{ props.row.src_cluster_free_disk }}</el-descriptions-item>
+              <el-descriptions-item label="清理前表大小">{{ props.row.src_cluster_sum_table_size }}</el-descriptions-item>
+
+              <el-descriptions-item label="目标端ID">{{ props.row.dest_id }}</el-descriptions-item>
+              <el-descriptions-item label="目标端名称">{{ props.row.dest_name }}</el-descriptions-item>
+              <el-descriptions-item label="归档介质">{{ props.row.dest_storage }}</el-descriptions-item>
+              <el-descriptions-item label="连接ID">{{ props.row.dest_connection_id }}</el-descriptions-item>
+              <el-descriptions-item label="归档库名">{{ props.row.dest_database_name }}</el-descriptions-item>
+              <el-descriptions-item label="归档表名">{{ props.row.dest_table_name }}</el-descriptions-item>
+              <el-descriptions-item label="压缩存储">{{ props.row.dest_compress ? "是" : "否" }}</el-descriptions-item>
+
+              <el-descriptions-item label="任务状态">{{ getOptionName(taskStatusOption,props.row.task_status) }}</el-descriptions-item>
+              <el-descriptions-item label="任务执行结果">{{ props.row.task_result }}</el-descriptions-item>
+              <el-descriptions-item label="清理数据量">{{ props.row.task_result_quantity }}</el-descriptions-item>
+              <el-descriptions-item label="清理数据容量">{{ props.row.task_result_size }}</el-descriptions-item>
+              <el-descriptions-item label="任务开始时间">{{ props.row.task_start_time }}</el-descriptions-item>
+              <el-descriptions-item label="任务结束时间">{{ props.row.task_end_time }}</el-descriptions-item>
+              <el-descriptions-item label="执行时长(秒)">{{ props.row.task_duration }}</el-descriptions-item>
+              <el-descriptions-item label="工作流ID">{{ props.row.workflow }}</el-descriptions-item>
+
+              <el-descriptions-item label="相关人">{{ props.row.relevant.join(",") }}</el-descriptions-item>
+              <el-descriptions-item label="通知策略">{{ getOptionName(notifyPolicyOption, props.row.notify_policy) }}</el-descriptions-item>
             </el-descriptions>
           </template>
         </el-table-column>
@@ -148,12 +227,75 @@
             parentId: 0
           },
           rows: []
-        }
+        },
+        form:{
+          name: "",
+          description: "",
+          enable: true,
+          execute_date: "",
+          execute_window: ["00:00:00","23:59:59"],
+          notify_policy: "failed",
+          relevant: "",
+        },
+        rules: {
+          name: [
+            { required: true, message: '请输入任务名称', trigger: 'blur' },
+          ],
+          enable: [
+            { required: true, message: '是否开启', trigger: 'blur' }
+          ],
+          execute_date: [
+            { required: true, message: '请选择期望执行日期', trigger: 'blur' }
+          ],
+          execute_window: [
+            { required: true, message: '请选择执行窗口', trigger: 'blur' }
+          ],
+          notify_policy: [
+            { required: true, message: '请选择通知策略', trigger: 'blur' }
+          ]
+        },
       }
     },
     methods: {
       getOptionBackground,
       getOptionName,
+      cancelEditSubmit(formName){
+        this.$refs[formName].resetFields();
+        this.fullscreenLoading = false;
+        this.dialogEditFormVisible = false;
+      },
+      onEditSubmit(formName){
+        this.$refs[formName].validate((valid) => {
+          if (!valid) {
+            return false
+          }
+
+          this.fullscreenLoading = true;
+          setTimeout(() => {
+            this.fullscreenLoading = false;
+          }, 30000);
+
+          const para = {
+            id : this.form.id,
+            name : this.form.name,
+            description : this.form.description,
+            enable : this.form.enable,
+            execute_date: this.form.execute_date,
+            execute_window: this.form.execute_window,
+            notify_policy: this.form.notify_policy,
+            relevant: this.form.relevant.split(/[ ,;]+/),
+          }
+          this.$http.put(api.TASK_LIST, JSON.stringify(para)).then(res => {
+            this.fullscreenLoading = false;
+            this.dialogEditFormVisible = false;
+            this.$refs[formName].resetFields();
+            this.$notify({ title: '成功', message: "修改成功", type: 'success' });
+            this.loadData();
+          }).catch(()=>{
+            this.fullscreenLoading = false;
+          })
+        });
+      },
       handleSearch(){
         this.loadData();
       },
@@ -184,7 +326,15 @@
         this.loadData();
       },
       handleEdit(index, row){
-        this.$router.push({path: 'userAdd', query: {id: row.id}})
+        this.dialogEditFormVisible = true;
+        this.form.id = row.id;
+        this.form.name = row.name;
+        this.form.description = row.description;
+        this.form.enable = row.enable;
+        this.form.execute_date = row.execute_date;
+        this.form.execute_window = row.execute_window;
+        this.form.relevant = row.relevant.join(",");
+        this.form.notify_policy = row.notify_policy;
       },
       handleDelete(index, row){
         this.$confirm('确定要执行删除操作, 是否继续?', '提示', {

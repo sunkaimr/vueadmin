@@ -353,8 +353,6 @@
         })
       },
       onEditSubmit(formName){
-        this.fullscreenLoading = false;
-        this.dialogEditFormVisible = false;
         this.$refs[formName].validate((valid) => {
           if (!valid) {
             return false
