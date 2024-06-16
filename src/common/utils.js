@@ -151,10 +151,25 @@ export const taskStatusOption = [
 ]
 
 export const userSearchOption= [
-  { name:"用户名", value:"username"},
-  { name:"姓名", value:"real_name"},
-  { name:"邮箱", value:"email"},
+  { name:"用户名", value:"username" },
+  { name:"姓名", value:"real_name" },
+  { name:"邮箱", value:"email" },
 ]
+
+export const storageOption = [
+  {name:"MySQL", value:"mysql" },
+  {name:"DataBend", value:"databend" },
+]
+
+export const destSearchOption = [
+  { name:"ID", value:"id" },
+  { name:"目标端名称", value:"name" },
+  { name:"连接ID", value:"connection_id" },
+  { name:"归档介质", value:"storage" },
+  { name:"目标库名", value:"database_name" },
+  { name:"目标表名", value:"table_name" },
+]
+
 export function getOptionBackground(optionsArray, propValue) {
   const foundOption = optionsArray.find(option => option.value === propValue);
   return foundOption ? foundOption.background : "#fff";

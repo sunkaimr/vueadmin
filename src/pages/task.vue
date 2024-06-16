@@ -367,8 +367,7 @@
         } else {
           para.task_status = this.searchTaskStatus;
         }
-        sysApi.taskList(para)
-        .then(res => {
+        sysApi.taskList(para).then(res => {
           this.tableData.rows = res.data.items;
           this.tableData.pagination.total = res.data.total;
         });
