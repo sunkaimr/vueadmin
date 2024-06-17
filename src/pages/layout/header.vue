@@ -11,7 +11,7 @@
       <div class="navbar-custom-menu">
         <el-dropdown trigger="click" @command="commandHandle" class="navbar-dropdown">
           <div class="el-dropdown-link">
-            <i class="el-icon-user-solid" style="font-size: 18px;">&nbsp; {{ userInfo.username }}</i>
+            <i class="el-icon-user-solid" style="font-size: 18px;">&nbsp; {{ userInfo.real_name }}</i>
           </div>
           <el-dropdown-menu slot="dropdown">
               <el-dropdown-item command="userInfo">个人信息</el-dropdown-item>
@@ -25,7 +25,6 @@
 <script>
 import {mapGetters, mapActions, mapMutations} from 'vuex'
 import types from "../../store/mutation-types"
-import * as api from "../../api"
 import auth from '../../common/auth'
 
 export default {

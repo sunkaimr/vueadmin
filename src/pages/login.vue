@@ -10,11 +10,11 @@
             <p class="text-muted">请输入用户名/密码登录</p>
             <div class="input-group m-b-1">
               <span class="input-group-addon"><i class="fa fa-user"></i></span>
-              <input type="text" class="form-control" placeholder="user name" v-model="form.username">
+              <input type="text" class="form-control" placeholder="" v-model="form.username">
             </div>
             <div class="input-group m-b-2">
               <span class="input-group-addon"><i class="fa fa-lock"></i></span>
-              <input type="password" class="form-control" placeholder="password" v-model="form.password"
+              <input type="password" class="form-control" placeholder="" v-model="form.password"
                      @keyup.enter="login">
             </div>
             <div class="row">
@@ -38,10 +38,9 @@
 
 <script>
   import types from '../store/mutation-types'
-  import * as api from "../api"
   import  auth from '../common/auth'
   import * as sysApi from '../services/sys'
-  import {mapGetters, mapActions, mapMutations} from 'vuex'
+  import {mapActions, mapMutations} from 'vuex'
 
   export default {
     name: 'login',
@@ -157,7 +156,7 @@
   .input-group-addon {
     padding: .5rem .75rem;
     margin-bottom: 0;
-    font-size: .875rem;
+    font-size: 16px;
     font-weight: 400;
     line-height: 1.75rem;
     color: #607d8b;

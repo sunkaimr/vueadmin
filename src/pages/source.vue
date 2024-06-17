@@ -11,9 +11,9 @@
               <el-select v-model="searchKey" slot="prepend" placeholder="请选择">
                 <el-option v-for="item in sourceSearchOption" :key="item.value" :label="item.name" :value="item.value"></el-option>
               </el-select>
-              <el-button size="small" slot="append" icon="el-icon-search" @click="handleSearch"></el-button>
+              <el-button size="mini" slot="append" icon="el-icon-search" @click="handleSearch"></el-button>
             </el-input>
-            <el-button size="small" icon="el-icon-refresh" @click="handleSearch" style="margin-left: 10px;"/>
+            <el-button size="mini" icon="el-icon-refresh" @click="handleSearch" style="margin-left: 10px;"/>
           </div>
         </el-col>
       </el-row>
@@ -86,8 +86,8 @@
             </el-form-item>
           </el-form>
           <div slot="footer" class="dialog-footer">
-            <el-button @click="cancelEditSubmit('form')">取 消</el-button>
-            <el-button type="primary" @click="onEditSubmit('form')" v-loading.fullscreen.lock="fullscreenLoading">确 定</el-button>
+            <el-button size="mini" @click="cancelEditSubmit('form')">取 消</el-button>
+            <el-button size="mini" type="primary" @click="onEditSubmit('form')" v-loading.fullscreen.lock="fullscreenLoading">确 定</el-button>
           </div>
         </el-dialog>
       <el-table
