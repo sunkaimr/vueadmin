@@ -165,9 +165,9 @@ export const connSearchOption = [
   { name:"ID", value:"id" },
   { name:"连接名称", value:"name" },
   { name:"BU", value:"bu" },
-  { name:"归档介质", value:"storage" },
-  { name:"地址", value:"mysql_host" },
-  { name:"用户名", value:"mysql_user" },
+  // { name:"归档介质", value:"storage" },
+  // { name:"地址", value:"mysql_host" },
+  // { name:"用户名", value:"mysql_user" },
 ]
 
 export const destSearchOption = [
