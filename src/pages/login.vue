@@ -6,7 +6,7 @@
       <el-col :span="16" :xs="16" :sm="16" :md="16" :lg="16">
         <div class="login-form">
           <div class="card-block">
-            <h1>MySQL数据清理平台</h1>
+            <h2> </h2>
             <p class="text-muted">请输入用户名/密码登录</p>
             <div class="input-group m-b-1">
               <span class="input-group-addon"><i class="fa fa-user"></i></span>
@@ -14,16 +14,16 @@
             </div>
             <div class="input-group m-b-2">
               <span class="input-group-addon"><i class="fa fa-lock"></i></span>
-              <input type="password" class="form-control" placeholder="" v-model="form.password"
-                     @keyup.enter="login">
+              <input type="password" class="form-control" placeholder="" v-model="form.password" @keyup.enter="login">
             </div>
             <div class="row">
               <el-row>
                 <el-col :span="12">
-                  <el-button type="primary" class="btn btn-primary p-x-2" @click="login">登录</el-button>
+
                 </el-col>
                 <el-col :span="12">
-                  <el-button type="button" class="btn btn-link forgot" style="float:right;">忘记密码?</el-button>
+<!--                  <el-button  class="btn btn-link forgot" style="float:right;">忘记密码?</el-button>-->
+                  <el-button type="primary" class="btn btn-primary p-x-2" @click="login">登录</el-button>
                 </el-col>
               </el-row>
             </div>

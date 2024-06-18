@@ -98,7 +98,7 @@
       loadData(){
         if (this.$route.query && this.$route.query != null && this.$route.query.id && this.$route.query.id != null) {
           this.form.id = this.$route.query.id;
-          this.$http.get(api.SYS_USER_GET + "?id=" + this.form.id)
+          this.$http.get(api.SYS_USER + "?id=" + this.form.id)
             .then(res => {
               this.form = res.data;
             })

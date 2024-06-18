@@ -2,6 +2,9 @@
   <imp-panel>
     <h4 class="box-title" slot="header" style="width: 100%;">
       <el-row style="width: 100%; display: flex; align-items: flex-end;">
+        <el-col :span="8" style="display: flex; align-items: flex-end;">
+          <el-button size="small" type="primary" @click="addUser" icon="plus">添加用户</el-button>
+        </el-col>
         <el-col :span="24" style="display: flex; align-items: flex-end;">
           <div style="display: flex; margin-left: auto; ustify-items: center; align-items: center;">
             <el-input size="small" placeholder="请输入内容" v-model="searchVal" @clear="handleSearch" @keyup.enter.native="handleSearch" class="input-with-select" clearable>
@@ -16,6 +19,54 @@
       </el-row>
     </h4>
     <div slot="body">
+      <el-dialog title="添加用户" :visible.sync="dialogAddFormVisible" style="width: 100%;">
+        <el-form size="mini" :model="form" :rules="rules" ref="form">
+          <el-form-item label="用户名" prop="username" label-width="80px">
+            <el-input v-model="form.username" autocomplete="off" clearable/>
+          </el-form-item>
+          <el-form-item label="姓名" prop="real_name" label-width="80px">
+            <el-input v-model="form.real_name" autocomplete="off" clearable/>
+          </el-form-item>
+          <el-form-item label="邮箱" prop="email" label-width="80px">
+            <el-input v-model="form.email" autocomplete="off" clearable/>
+          </el-form-item>
+          <el-form-item label="密码" prop="password" label-width="80px">
+            <el-input v-model="form.password" placeholder="请输入密码" show-password></el-input>
+          </el-form-item>
+          <el-form-item label="确认密码" prop="passwordConfirm" label-width="80px">
+            <el-input v-model="form.passwordConfirm" placeholder="请确认密码" show-password></el-input>
+          </el-form-item>
+        </el-form>
+        <div slot="footer" class="dialog-footer">
+          <el-button size="mini" @click="cancelAddSubmit('form')">取 消</el-button>
+          <el-button size="mini" type="primary" @click="onAddSubmit('form')" v-loading.fullscreen.lock="fullscreenLoading">确 定</el-button>
+        </div>
+      </el-dialog>
+      <el-dialog title="修改用户" :visible.sync="dialogEditFormVisible" style="width: 100%;">
+        <el-form size="mini" :model="form" :rules="rules" ref="form">
+          <el-form-item label="用户名" prop="username" label-width="80px">
+            <el-input v-model="form.username" disabled autocomplete="off" clearable/>
+          </el-form-item>
+          <el-form-item label="姓名" prop="real_name" label-width="80px">
+            <el-input v-model="form.real_name" autocomplete="off" clearable/>
+          </el-form-item>
+          <el-form-item label="邮箱" label-width="80px">
+            <el-input v-model="form.email" autocomplete="off" clearable/>
+          </el-form-item>
+          <el-form-item label="密码" label-width="80px">
+            <el-input v-model="form.password" placeholder="请输入密码" show-password></el-input>
+          </el-form-item>
+          <template v-if="form.password !== ''">
+            <el-form-item label="确认密码" label-width="80px">
+              <el-input v-model="form.passwordConfirm" placeholder="请确认密码" show-password></el-input>
+            </el-form-item>
+          </template>
+        </el-form>
+        <div slot="footer" class="dialog-footer">
+          <el-button size="mini" @click="cancelEditSubmit('form')">取 消</el-button>
+          <el-button size="mini" type="primary" @click="onEditSubmit('form')" v-loading.fullscreen.lock="fullscreenLoading">确 定</el-button>
+        </div>
+      </el-dialog>
       <el-table
         :data="tableData.rows"
         border
@@ -60,12 +111,27 @@
   import * as api from "../../api"
   import * as sysApi from '../../services/sys'
   import {userSearchOption} from "../../common/utils";
+  import {SYS_USER, SYS_USER_DELETE, USER_UPDATE} from "../../api";
 
   export default {
     components: {
       'imp-panel': panel
     },
     data(){
+      const validatePassword = (rule, value, callback) => {
+        if (value !== this.form.passwordConfirm) {
+          callback(new Error('两次输入密码不一致'));
+        } else {
+          callback();
+        }
+      };
+      const validatePasswordConfirm = (rule, value, callback) => {
+        if (value !== this.form.password) {
+          callback(new Error('两次输入密码不一致'));
+        } else {
+          callback();
+        }
+      };
       return {
         searchKey: 'username',
         searchVal: '',
@@ -82,10 +148,106 @@
             parentId: 0
           },
           rows: []
-        }
+        },
+        form: {
+          username: "",
+          real_name: "",
+          email: "",
+          password: "",
+          passwordConfirm: "",
+        },
+        rules: {
+          username: [
+            { required: true, message: '请输入用户名', trigger: 'blur' },
+          ],
+          real_name: [
+            { required: true, message: '请输入姓名', trigger: 'blur' }
+          ],
+          password: [
+            { required: true, message: '请输入密码', trigger: 'blur' },
+            { validator: validatePassword, trigger: 'blur' }
+          ],
+          passwordConfirm: [
+            { required: true, message: '请确认密码', trigger: 'blur' },
+            { validator: validatePasswordConfirm, trigger: 'blur' }
+          ]
+        },
       }
     },
     methods: {
+      onAddSubmit(formName){
+        this.$refs[formName].validate((valid) => {
+          if (!valid) {
+            return false
+          }
+          this.fullscreenLoading = true;
+          setTimeout(() => {
+            this.fullscreenLoading = false;
+          }, 30000);
+
+          const para = {
+            username: this.form.username,
+            real_name: this.form.real_name,
+            email: this.form.email,
+            password: this.form.password,
+            is_ldap: 0,
+          }
+          this.$http.post(api.SYS_USER_REGISTER, JSON.stringify(para)).then(res => {
+            this.fullscreenLoading = false;
+            this.dialogAddFormVisible = false;
+            this.$refs[formName].resetFields();
+            this.$notify({ title: '成功', message: "添加成功", type: 'success' });
+            this.loadData();
+          }).catch(()=>{
+            this.fullscreenLoading = false;
+          })
+        });
+      },
+      onEditSubmit(formName){
+        this.$refs[formName].validate((valid) => {
+          if (!valid) {
+            return false
+          }
+          this.fullscreenLoading = true;
+          setTimeout(() => {
+            this.fullscreenLoading = false;
+          }, 30000);
+
+          if (this.form.password !== "" && this.form.password !== this.form.passwordConfirm){
+            this.$notify({ title: '失败', message: "两次输入密码不一致", type: 'error' });
+          }
+
+          const para = {
+            name : this.form.name,
+            real_name: this.form.real_name,
+            email: this.form.email,
+            password: this.form.password,
+          }
+          this.$http.put(api.USER_UPDATE, JSON.stringify(para)).then(res => {
+            this.fullscreenLoading = false;
+            this.dialogEditFormVisible = false;
+            this.$refs[formName].resetFields();
+            this.$notify({ title: '成功', message: "修改成功", type: 'success' });
+            this.loadData();
+          }).catch(()=>{
+            this.fullscreenLoading = false;
+          })
+        });
+      },
+      cancelAddSubmit(formName){
+        this.$refs[formName].resetFields();
+        this.fullscreenLoading = false;
+        this.dialogAddFormVisible = false;
+      },
+      cancelEditSubmit(formName){
+        this.$refs[formName].resetFields();
+        this.fullscreenLoading = false;
+        this.dialogEditFormVisible = false;
+      },
+      addUser(){
+        this.dialogAddFormVisible = true;
+        this.form = {};
+      },
       handleSearch(){
         this.loadData();
       },
@@ -101,10 +263,27 @@
         this.loadData();
       },
       handleEdit(index, row){
-
+        this.dialogEditFormVisible = true;
+        this.form.id = row.id;
+        this.form.username = row.username;
+        this.form.real_name = row.real_name;
+        this.form.email = row.email;
+        this.form.is_ldap = row.is_ldap;
       },
-      handleDelete(index, row){
 
+      handleDelete(index, row){
+        this.$confirm('确定要执行删除操作, 是否继续?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          const url = api.SYS_USER_DELETE.replace('{user}', row.username);
+          this.$http.delete(url).then(res => {
+            this.loadData();
+            this.$notify({ title: '成功', message: "删除成功", type: 'success' });
+          });
+        }).catch(() => {
+        });
       },
       loadData(){
         let para = {

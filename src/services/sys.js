@@ -68,7 +68,7 @@ export function roleList (params) {
 export function userList (params) {
   const userList = {}
   return new Promise((resolve, reject) => {
-    axios.get(api.SYS_USER_GET, { params }).then(response => {
+    axios.get(api.SYS_USER, { params }).then(response => {
       resolve(response.data);
     }, err => {
       resolve(userList);

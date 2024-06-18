@@ -1,7 +1,7 @@
 <template>
   <header class="main-header animated" :class="{closeLogo:sidebar.collapsed,mobileLogo:device.isMobile}">
     <a href="#" class="logo">
-      <span class="logo-lg"><i class="fa fa-diamond"></i>&nbsp; <b style="font-size: 14px;">MySQL数据清理平台</b></span>
+      <span class="logo-lg"><i class="fa fa-diamond"></i>&nbsp; <b style="font-size: 14px;">  </b></span>
     </a>
     <nav class="navbar">
       <a href="#" class="sidebar-toggle" data-toggle="offcanvas" role="button"
@@ -11,7 +11,7 @@
       <div class="navbar-custom-menu">
         <el-dropdown trigger="click" @command="commandHandle" class="navbar-dropdown">
           <div class="el-dropdown-link">
-            <i class="el-icon-user-solid" style="font-size: 18px;">&nbsp; {{ userInfo.real_name }}</i>
+            <i class="el-icon-user-solid" style="font-size: 16px;">&nbsp; {{ userInfo.real_name }}</i>
           </div>
           <el-dropdown-menu slot="dropdown">
               <el-dropdown-item command="userInfo">个人信息</el-dropdown-item>
@@ -230,6 +230,7 @@ body.hold-transition .main-header .logo {
 
 .navbar-custom-menu .el-dropdown-link {
   cursor: pointer;
+
   height: 50px;
   padding: 13px 5px;
   min-width: 50px;
