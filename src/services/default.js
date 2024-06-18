@@ -296,7 +296,18 @@ export default {
           "icon": "fa fa-user-plus",
           "children": [],
           "isShow": "1"
+        },
+        {
+          "id": 10,
+          "parentId": 6,
+          "sort": 3,
+          "name": "系统设置",
+          "href": "/manage/config",
+          "icon": "fa fa-cog",
+          "children": [],
+          "isShow": "1"
         }
+
       ],
       "isShow": "1"
     }

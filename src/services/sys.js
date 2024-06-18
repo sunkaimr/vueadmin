@@ -12,59 +12,6 @@ export function login (params) {
     })
   })
 }
-export function msgList (params) {
-  return new Promise((resolve, reject) => {
-    axios.post(api.MSG_TOP_TEN, { params }).then(response => {
-      resolve(response.data);
-    }, err => {
-      resolve(defaultValue.msgList);
-    })
-      .catch((error) => {
-        resolve(defaultValue.msgList)
-      })
-  })
-}
-
-
-export function menuList (params) {
-  return new Promise((resolve, reject) => {
-    axios.get(api.SYS_MENU_LIST, { params }).then(response => {
-      resolve(response.data);
-    }, err => {
-      resolve(defaultValue.menuList);
-    })
-      .catch((error) => {
-        resolve(defaultValue.menuList)
-      })
-  })
-}
-
-export function resourceList (params) {
-  return new Promise((resolve, reject) => {
-    axios.get(api.SYS_RESOURCE_LIST, { params }).then(response => {
-      resolve(response.data);
-    }, err => {
-      resolve(defaultValue.resource);
-    })
-      .catch((error) => {
-        resolve(defaultValue.resource)
-      })
-  })
-}
-
-export function roleList (params) {
-  return new Promise((resolve, reject) => {
-    axios.get(api.SYS_MENU_LIST, { params }).then(response => {
-      resolve(response.data);
-    }, err => {
-      resolve(defaultValue.roleList);
-    })
-      .catch((error) => {
-        resolve(defaultValue.roleList)
-      })
-  })
-}
-
 export function userList (params) {
   const userList = {}
   return new Promise((resolve, reject) => {
@@ -201,6 +148,19 @@ export function destList (params) {
     })
       .catch((error) => {
         resolve(destinationList)
+      })
+  })
+}
+
+export function getConfig () {
+  return new Promise((resolve, reject) => {
+    axios.get(api.SYS_CONFIG).then(response => {
+      resolve(response.data);
+    }, err => {
+      resolve(err);
+    })
+      .catch((error) => {
+        resolve(error)
       })
   })
 }
