@@ -211,14 +211,16 @@
           this.fullscreenLoading = true;
           setTimeout(() => {
             this.fullscreenLoading = false;
-          }, 30000);
+          }, 1000);
 
           if (this.form.password !== "" && this.form.password !== this.form.passwordConfirm){
             this.$notify({ title: '失败', message: "两次输入密码不一致", type: 'error' });
+            this.fullscreenLoading = false;
+            return
           }
 
           const para = {
-            name : this.form.name,
+            username : this.form.username,
             real_name: this.form.real_name,
             email: this.form.email,
             password: this.form.password,
