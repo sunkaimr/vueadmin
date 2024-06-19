@@ -98,7 +98,8 @@ export const policySearchOption = [
 
 export const taskSearchOption = [
   {name:"ID", value:"id" },
-  {name:"策略名称", value:"name" },
+  {name:"任务名称", value:"name" },
+  {name:"策略ID", value:"policy_id" },
   {name:"清理频率", value:"period" },
   {name:"清理速度", value:"cleaning_speed" },
   {name:"治理方式", value:"govern" },
@@ -111,7 +112,7 @@ export const periodOption=[
   {name:"一次", value:"once"},
   {name:"每天", value:"day"},
   {name:"两天", value:"two-day"},
-  {name:"一周", value:"weekly"},
+  {name:"每周", value:"weekly"},
   {name:"每月", value:"monthly"},
   {name:"每季", value:"quarterly"},
   {name:"半年", value:"six-months"},
@@ -141,7 +142,7 @@ export const notifyPolicyOption = [
 
 export const taskStatusOption = [
   {name:"已排期", value:"scheduled", background:"#FFFFE0" },
-  {name:"任务创建失败", value:"create_failed", background:"#FFAAAA" },
+  {name:"填充信息失败", value:"supplement_failed", background:"#FFAAAA" },
   {name:"等待执行", value:"waiting", background:"#DDA0DD"},
   {name:"执行前检查失败", value:"exec_check_failed", background:"#FFAAAA"},
   {name:"执行中", value:"executing", background:"#ADD8E6"},

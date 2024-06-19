@@ -13,7 +13,7 @@
       </el-row>
     </h4>
     <div slot="body">
-      <el-tabs v-model="tablePaneName" type="card" @tab-click="handleTablePaneChane" style="min-height: 500px;">
+      <el-tabs v-model="tablePaneName" type="card" @tab-click="handleTablePaneChane" style="min-height: 490px;">
         <el-tab-pane label="源端配置" name="source">
           <el-form size="mini" :model="form" style="width: 70%;" ref="form">
             <el-form-item label="源端库用户名" prop="src_db_user" label-width="150px">
@@ -42,6 +42,13 @@
             </el-form-item>
           </el-form>
         </el-tab-pane>
+        <el-tab-pane label="其他设置" name="other">
+          <el-form size="mini" :model="form" ref="form">
+            <el-form-item label="监控地址" prop="src_db_user" label-width="150px">
+              <el-input v-model="form.thanos_url" autocomplete="off" clearable/>
+            </el-form-item>
+          </el-form>
+        </el-tab-pane>
       </el-tabs>
     </div>
   </imp-panel>
@@ -50,9 +57,7 @@
 <script>
   import panel from "../../components/panel.vue"
   import * as sysApi from '../../services/sys'
-  import {connSearchOption, getOptionName, storageOption} from "../../common/utils";
   import * as api from "../../api";
-  import {SYS_CONFIG} from "../../api";
 
   export default {
     components: {

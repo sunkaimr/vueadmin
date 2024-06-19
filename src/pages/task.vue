@@ -86,23 +86,26 @@
           <template slot-scope="props">
             <el-descriptions
               border
-              column=3
               size="mini"
               class="table-expand"
-              labelStyle="min-width: 80px;"
+              column=3
+              labelStyle="min-width: 100px;"
+              contentStyle='min-width: 200px'
               with="100%" >
               <el-descriptions-item label="ID">{{ props.row.id }}</el-descriptions-item>
               <el-descriptions-item label="任务名称">{{ props.row.name }}</el-descriptions-item>
               <el-descriptions-item label="说明">{{ props.row.description }}</el-descriptions-item>
-              <el-descriptions-item label="开启">{{ props.row.enable }}</el-descriptions-item>
+<!--              <el-descriptions-item label="开启">{{ props.row.enable }}</el-descriptions-item>-->
+<!--              <el-descriptions-item label="创建人"> {{ props.row.creator }} </el-descriptions-item>-->
               <el-descriptions-item label="创建时间">{{ props.row.created_at }}</el-descriptions-item>
-              <el-descriptions-item label="创建人"> {{ props.row.creator }} </el-descriptions-item>
               <el-descriptions-item label="策略ID">{{ props.row.policy_id }}</el-descriptions-item>
               <el-descriptions-item label="预期执行日期">{{ props.row.execute_date }}</el-descriptions-item>
               <el-descriptions-item label="执行窗口">{{ props.row.execute_window[0] +' - '+  props.row.execute_window[1] }}</el-descriptions-item>
               <el-descriptions-item label="治理方式">{{ getOptionName(governOption, props.row.govern) }}</el-descriptions-item>
               <el-descriptions-item label="清理速度">{{ getOptionName(cleaningSpeedOption, props.row.cleaning_speed) }}</el-descriptions-item>
               <el-descriptions-item label="清理条件">{{ props.row.condition }}</el-descriptions-item>
+              <el-descriptions-item label="通知策略">{{ getOptionName(notifyPolicyOption, props.row.notify_policy) }}</el-descriptions-item>
+              <el-descriptions-item label="相关人">{{ props.row.relevant.join(",") }}</el-descriptions-item>
 
               <el-descriptions-item label="源端ID">{{ props.row.src_id }}</el-descriptions-item>
               <el-descriptions-item label="源端名称">{{ props.row.src_name }}</el-descriptions-item>
@@ -111,28 +114,26 @@
               <el-descriptions-item label="源库名">{{ props.row.src_database_name }}</el-descriptions-item>
               <el-descriptions-item label="源表名">{{ props.row.src_tables_name }}</el-descriptions-item>
               <el-descriptions-item label="源列名">{{ props.row.src_columns }}</el-descriptions-item>
-              <el-descriptions-item label="源端磁盘剩余">{{ props.row.src_cluster_free_disk }}</el-descriptions-item>
-              <el-descriptions-item label="清理前表大小">{{ props.row.src_cluster_sum_table_size }}</el-descriptions-item>
-
-              <el-descriptions-item label="目标端ID">{{ props.row.dest_id }}</el-descriptions-item>
-              <el-descriptions-item label="目标端名称">{{ props.row.dest_name }}</el-descriptions-item>
-              <el-descriptions-item label="归档介质">{{ props.row.dest_storage }}</el-descriptions-item>
-              <el-descriptions-item label="连接ID">{{ props.row.dest_connection_id }}</el-descriptions-item>
-              <el-descriptions-item label="归档库名">{{ props.row.dest_database_name }}</el-descriptions-item>
-              <el-descriptions-item label="归档表名">{{ props.row.dest_table_name }}</el-descriptions-item>
-              <el-descriptions-item label="压缩存储">{{ props.row.dest_compress ? "是" : "否" }}</el-descriptions-item>
-
+<!--              <el-descriptions-item label="源端磁盘剩余">{{ props.row.src_cluster_free_disk }}</el-descriptions-item>-->
+<!--              <el-descriptions-item label="清理前表大小">{{ props.row.src_cluster_sum_table_size }}</el-descriptions-item>-->
+              <template v-if="props.row.govern === 'archive'">
+                <el-descriptions-item label="目标端ID">{{ props.row.dest_id }}</el-descriptions-item>
+                <el-descriptions-item label="目标端名称">{{ props.row.dest_name }}</el-descriptions-item>
+                <el-descriptions-item label="归档介质">{{ props.row.dest_storage }}</el-descriptions-item>
+                <el-descriptions-item label="连接ID">{{ props.row.dest_connection_id }}</el-descriptions-item>
+                <el-descriptions-item label="归档库名">{{ props.row.dest_database_name }}</el-descriptions-item>
+                <el-descriptions-item label="归档表名">{{ props.row.dest_table_name }}</el-descriptions-item>
+                <el-descriptions-item label="压缩存储">{{ props.row.dest_compress ? "是" : "否" }}</el-descriptions-item>
+              </template>
               <el-descriptions-item label="任务状态">{{ getOptionName(taskStatusOption,props.row.task_status) }}</el-descriptions-item>
-              <el-descriptions-item label="任务执行结果">{{ props.row.task_result }}</el-descriptions-item>
-              <el-descriptions-item label="清理数据量">{{ props.row.task_result_quantity }}</el-descriptions-item>
+              <el-descriptions-item label="任务错误原因">{{ props.row.task_reason }}</el-descriptions-item>
+              <el-descriptions-item label="任务错误详情">{{ props.row.task_detail }}</el-descriptions-item>
+              <el-descriptions-item label="清理数据行量">{{ props.row.task_result_quantity }}</el-descriptions-item>
               <el-descriptions-item label="清理数据容量">{{ props.row.task_result_size }}</el-descriptions-item>
               <el-descriptions-item label="任务开始时间">{{ props.row.task_start_time }}</el-descriptions-item>
               <el-descriptions-item label="任务结束时间">{{ props.row.task_end_time }}</el-descriptions-item>
               <el-descriptions-item label="执行时长(秒)">{{ props.row.task_duration }}</el-descriptions-item>
               <el-descriptions-item label="工作流ID">{{ props.row.workflow }}</el-descriptions-item>
-
-              <el-descriptions-item label="相关人">{{ props.row.relevant.join(",") }}</el-descriptions-item>
-              <el-descriptions-item label="通知策略">{{ getOptionName(notifyPolicyOption, props.row.notify_policy) }}</el-descriptions-item>
             </el-descriptions>
           </template>
         </el-table-column>
@@ -158,9 +159,18 @@
         </el-table-column>
         <el-table-column prop="task_status" label="任务状态" align="center" width="100px" sortable>
           <template slot-scope="scope">
-            <el-tag size="mini" :style="{ 'background-color': getOptionBackground(taskStatusOption, scope.row.task_status), color:'#555' }" effect="light">
-              {{getOptionName(taskStatusOption, scope.row.task_status)}}
-            </el-tag>
+            <template v-if="scope.row.task_reason !== ''">
+              <el-tooltip class="item" effect="dark" :content="scope.row.task_reason" open-delay="500" placement="top">
+                <el-tag size="mini" :style="{ 'background-color': getOptionBackground(taskStatusOption, scope.row.task_status), color:'#555' }" effect="light">
+                  {{getOptionName(taskStatusOption, scope.row.task_status)}}
+                </el-tag>
+              </el-tooltip>
+            </template>
+            <template v-else>
+                <el-tag size="mini" :style="{ 'background-color': getOptionBackground(taskStatusOption, scope.row.task_status), color:'#555' }" effect="light">
+                  {{getOptionName(taskStatusOption, scope.row.task_status)}}
+                </el-tag>
+            </template>
           </template>
         </el-table-column>
         <el-table-column label="操作" width="130" align="center">

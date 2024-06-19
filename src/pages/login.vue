@@ -6,7 +6,7 @@
       <el-col :span="16" :xs="16" :sm="16" :md="16" :lg="16">
         <div class="login-form">
           <div class="card-block">
-            <h2> </h2>
+            <h2> EXAMPLE </h2>
             <p class="text-muted">请输入用户名/密码登录</p>
             <div class="input-group m-b-1">
               <span class="input-group-addon"><i class="fa fa-user"></i></span>
@@ -19,7 +19,6 @@
             <div class="row">
               <el-row>
                 <el-col :span="12">
-
                 </el-col>
                 <el-col :span="12">
 <!--                  <el-button  class="btn btn-link forgot" style="float:right;">忘记密码?</el-button>-->
@@ -71,9 +70,8 @@
       },
       loginSuccess({data,redirectUrl}){
         auth.login(data.token);
-        window.sessionStorage.setItem("user-info", JSON.stringify(data));
+        window.localStorage.setItem("user", JSON.stringify(data));
         this.setUserInfo(data);
-        this.$http.defaults.headers.common['authSid'] = data.user_id;
         this.loadMenuList();
         redirectUrl && this.$router.push({path: redirectUrl});
       }

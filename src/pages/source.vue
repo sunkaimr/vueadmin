@@ -102,20 +102,21 @@
           <template slot-scope="props">
             <el-descriptions
               border
-              column=3
               size="mini"
               class="table-expand"
+              column=2
               labelStyle="min-width: 80px;"
+              contentStyle='min-width: 200px'
               with="100%" >
                 <el-descriptions-item label="ID">{{ props.row.id }}</el-descriptions-item>
                 <el-descriptions-item label="源端名称">{{ props.row.name }}</el-descriptions-item>
-                <el-descriptions-item label="创建时间">{{ props.row.created_at }}</el-descriptions-item>
                 <el-descriptions-item label="创建人"> {{ props.row.creator }} </el-descriptions-item>
+                <el-descriptions-item label="创建时间">{{ props.row.created_at }}</el-descriptions-item>
+                <el-descriptions-item label="说明">{{ props.row.description }}</el-descriptions-item>
                 <el-descriptions-item label="BU">{{ props.row.bu }}</el-descriptions-item>
                 <el-descriptions-item label="集群ID">{{ props.row.cluster_id }}</el-descriptions-item>
                 <el-descriptions-item label="集群名称">{{ props.row.cluster_name }}</el-descriptions-item>
                 <el-descriptions-item label="源库名">{{ props.row.database_name }}</el-descriptions-item>
-                <el-descriptions-item label="说明">{{ props.row.description }}</el-descriptions-item>
                 <el-descriptions-item label="源表名">{{ props.row.tables_name }}</el-descriptions-item>
             </el-descriptions>
           </template>

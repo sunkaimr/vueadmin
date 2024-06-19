@@ -1,7 +1,7 @@
 <template>
   <header class="main-header animated" :class="{closeLogo:sidebar.collapsed,mobileLogo:device.isMobile}">
     <a href="#" class="logo">
-      <span class="logo-lg"><i class="fa fa-diamond"></i>&nbsp; <b style="font-size: 14px;">  </b></span>
+      <span class="logo-lg"><i class="fa fa-diamond"></i>&nbsp; <b style="font-size: 14px;">EXAMPLE</b></span>
     </a>
     <nav class="navbar">
       <a href="#" class="sidebar-toggle" data-toggle="offcanvas" role="button"
@@ -75,7 +75,7 @@ export default {
     }
   },
   created() {
-    let item = window.sessionStorage.getItem("user-info");
+    let item = window.localStorage.getItem("user");
     if (!!item) {
       this.setUserInfo(JSON.parse(item));
     }

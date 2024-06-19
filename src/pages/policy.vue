@@ -173,27 +173,27 @@
           <template slot-scope="props">
             <el-descriptions
               border
-              column=3
               size="mini"
-              class="table-expand"
+              column=2
               labelStyle="min-width: 80px;"
+              contentStyle='min-width: 200px'
               with="100%" >
               <el-descriptions-item label="ID">{{ props.row.id }}</el-descriptions-item>
               <el-descriptions-item label="策略名称">{{ props.row.name }}</el-descriptions-item>
-              <el-descriptions-item label="创建时间">{{ props.row.created_at }}</el-descriptions-item>
               <el-descriptions-item label="创建人"> {{ props.row.creator }} </el-descriptions-item>
+              <el-descriptions-item label="创建时间">{{ props.row.created_at }}</el-descriptions-item>
+              <el-descriptions-item label="说明">{{ props.row.description }}</el-descriptions-item>
               <el-descriptions-item label="BU">{{ props.row.bu }}</el-descriptions-item>
+              <el-descriptions-item label="治理方式">{{ getOptionName(governOption, props.row.govern) }}</el-descriptions-item>
               <el-descriptions-item label="清理频率">{{ getOptionName(periodOption, props.row.period) }}</el-descriptions-item>
               <el-descriptions-item label="期望执行日">{{ props.row.day }}</el-descriptions-item>
               <el-descriptions-item label="执行窗口">{{ props.row.execute_window[0] +' - '+  props.row.execute_window[1] }}</el-descriptions-item>
               <el-descriptions-item label="源端ID">{{ props.row.src_id }}</el-descriptions-item>
               <el-descriptions-item label="目标端ID">{{ props.row.dest_id }}</el-descriptions-item>
-              <el-descriptions-item label="治理方式">{{ getOptionName(governOption, props.row.govern) }}</el-descriptions-item>
               <el-descriptions-item label="清理速度">{{ getOptionName(cleaningSpeedOption, props.row.cleaning_speed) }}</el-descriptions-item>
+              <el-descriptions-item label="清理条件">{{ props.row.condition }}</el-descriptions-item>
               <el-descriptions-item label="通知策略">{{ getOptionName(notifyPolicyOption, props.row.notify_policy) }}</el-descriptions-item>
               <el-descriptions-item label="相关人">{{ props.row.relevant.join(",") }}</el-descriptions-item>
-              <el-descriptions-item label="清理条件">{{ props.row.condition }}</el-descriptions-item>
-              <el-descriptions-item label="说明">{{ props.row.description }}</el-descriptions-item>
             </el-descriptions>
           </template>
         </el-table-column>
