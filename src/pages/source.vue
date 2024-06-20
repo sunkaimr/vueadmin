@@ -41,16 +41,16 @@
               </el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="源表名" prop="tables_name" label-width="80px">
+          <el-form-item label="源表名" label-width="80px">
             <div style="display: flex; align-items: center;">
-              <el-input v-model="tableNameFilter" @blur="handleTableNameFilter" @clear="handleTableNameFilter" style="flex: 1; margin-right: 10px;" clearable placeholder="使用正则表达式筛选所需表名"/>
+              <el-input v-model="tableNameFilter" @blur="handleTableNameFilter" @clear="handleTableNameFilter" style="flex: 1;" clearable placeholder="使用正则表达式筛选所需表名"/>
             </div>
             <div style="display: flex; margin-top: 10px; align-items: center;">
-            <el-select v-model="form.tables_name" multiple style="flex: 1; max-height: 80px; overflow-y: auto; margin-right: 10px;" clearable>
-              <el-option
-                v-for="item in filteredTableList" :key="item" :label="item" :value="item">
-              </el-option>
-            </el-select>
+              <el-select v-model="form.tables_name" @blur="tablesNameChanged" multiple clearable style="flex: 1; max-height: 200px; overflow-x: hidden; overflow-y: scroll; margin-right: 10px;">
+                <el-option
+                  v-for="item in filteredTableList" :key="item" :label="item" :value="item">
+                </el-option>
+              </el-select>
               <el-button size="mini" @click="selectAllFilter">全选</el-button>
               <el-button size="mini" @click="clearSelected">清空</el-button>
             </div>
@@ -189,9 +189,9 @@
           database_name: [
             { required: true, message: '请选择源库名', trigger: 'blur' }
           ],
-          tables_name: [
-            { required: true, message: '请选择源表名', trigger: 'blur' }
-          ]
+          // tables_name: [
+          //   { required: true, message: '请选择源表名', trigger: 'blur' }
+          // ]
         },
         currentRow: {},
         dialogVisible: false,
@@ -266,6 +266,9 @@
           this.form.tables_name = [];
         });
       },
+      tablesNameChanged(){
+        this.$notify({ title: '提示', message: "已选择 "+this.form.tables_name.length+" 张表", type: 'info' });
+      },
       selectAllFilter(){
         this.form.tables_name = this.filteredTableList
         this.$notify({ title: '提示', message: "已选择 "+this.form.tables_name.length+" 张表", type: 'info' });
@@ -278,6 +281,12 @@
           if (!valid) {
             return false
           }
+
+          if (this.form.tables_name.length === 0){
+            this.$notify({ title: '错误', message: "请选择表名", type: 'error' });
+            return
+          }
+
           this.fullscreenLoading = true;
           setTimeout(() => {
             this.fullscreenLoading = false;
