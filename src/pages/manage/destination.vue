@@ -99,8 +99,7 @@
         style="width: 100%;"
         size="mini"
         stripe
-        v-loading="listLoading"
-        @selection-change="handleSelectionChange">
+        v-loading="listLoading">
         <el-table-column prop="id" label="ID" width="80px" align="center" sortable> </el-table-column>
         <el-table-column prop="name" label="目标端名称" align="center"  sortable> </el-table-column>
         <el-table-column prop="description" label="说明" align="center"  sortable> </el-table-column>
@@ -140,10 +139,17 @@ import {destSearchOption, storageOption, getOptionName} from "../../common/utils
 import * as api from "../../api";
 
 export default {
-    components: {
+  components: {
       'imp-panel': panel
-    },
-    data(){
+  },
+  watch:{
+    searchKey: function (newVal, oldVal){
+      if (newVal !== oldVal) {
+        window.localStorage.setItem("destSearchKey", newVal);
+      }
+    }
+  },
+  data(){
       return {
         storageOption,
         destSearchOption,
@@ -200,12 +206,10 @@ export default {
         this.dialogAddFormVisible = true;
         this.form = {};
       },
-      handleSelectionChange(val){
-        this.loadData();
-      },
       handleSizeChange(val) {
         this.tableData.pagination.pageSize = val;
         this.loadData();
+        window.localStorage.setItem("destPageSize", val)
       },
       handleCurrentChange(val) {
         this.tableData.pagination.pageNo = val;
@@ -305,6 +309,11 @@ export default {
       }
     },
     created(){
+      this.searchKey = window.localStorage.getItem("destSearchKey");
+      this.searchKey = this.searchKey === null ? "id" : this.searchKey;
+
+      this.tableData.pagination.pageSize = parseInt(window.localStorage.getItem("destPageSize"), 10);
+
       this.loadData();
     }
   }

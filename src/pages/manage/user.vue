@@ -111,7 +111,6 @@
   import * as api from "../../api"
   import * as sysApi from '../../services/sys'
   import {userSearchOption} from "../../common/utils";
-  import {SYS_USER, SYS_USER_DELETE, USER_UPDATE} from "../../api";
 
   export default {
     components: {

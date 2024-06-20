@@ -155,8 +155,7 @@
               style="width: 100%;"
               size="mini"
               stripe
-              v-loading="listLoading"
-              @selection-change="handleSelectionChange">
+              v-loading="listLoading">
               <el-table-column prop="id" label="ID" width="80px" align="center" sortable> </el-table-column>
               <el-table-column prop="name" label="连接名称" align="center"  sortable> </el-table-column>
               <el-table-column prop="description" label="说明" align="center"  sortable> </el-table-column>
@@ -199,6 +198,18 @@
   export default {
     components: {
       'imp-panel': panel
+    },
+    watch:{
+      searchKey: function (newVal, oldVal){
+        if (newVal !== oldVal) {
+          window.localStorage.setItem("connSearchKey", newVal);
+        }
+      },
+      tablePaneName: function (newVal, oldVal){
+        if (newVal !== oldVal) {
+          window.localStorage.setItem("connTablePaneName", newVal);
+        }
+      }
     },
     data(){
       return {
@@ -267,13 +278,10 @@
         this.tableData.rows=[];
         this.loadData();
       },
-
-      handleSelectionChange(val){
-        this.loadData();
-      },
       handleSizeChange(val) {
         this.tableData.pagination.pageSize = val;
         this.loadData();
+        window.localStorage.setItem("connPageSize", val)
       },
       handleCurrentChange(val) {
         this.tableData.pagination.pageNo = val;
@@ -379,6 +387,14 @@
       }
     },
     created(){
+      this.searchKey = window.localStorage.getItem("connSearchKey");
+      this.searchKey = this.searchKey === null ? "id" : this.searchKey;
+
+      this.tablePaneName = window.localStorage.getItem("connTablePaneName");
+      this.tablePaneName = this.tablePaneName === null ? "mysql" : this.tablePaneName;
+
+      this.tableData.pagination.pageSize = parseInt(window.localStorage.getItem("connPageSize"), 10);
+
       this.loadData();
     }
   }

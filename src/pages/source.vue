@@ -1,6 +1,6 @@
 <template>
   <imp-panel>
-    <h4 class="box-title" slot="header" style="width: 100%;">
+    <span class="box-title" slot="header" style="width: 100%;">
       <el-row style="width: 100%; display: flex; align-items: flex-end;">
         <el-col :span="8" style="display: flex; align-items: flex-end;">
             <el-button size="small" type="primary" @click="addSource" icon="plus">新增</el-button>
@@ -17,8 +17,8 @@
           </div>
         </el-col>
       </el-row>
-    </h4>
-    <div slot="body">
+    </span>
+    <div slot="body" style="min-height: 500px;">
       <el-dialog title="添加源" :visible.sync="dialogAddFormVisible" style="width: 100%;">
         <el-form size="mini" :model="form" :rules="rules" ref="form">
           <el-form-item label="源端名称" prop="name" label-width="80px">
@@ -96,8 +96,7 @@
         style="width: 100%"
         size="small"
         stripe
-        v-loading="listLoading"
-        @selection-change="handleSelectionChange">
+        v-loading="listLoading">
         <el-table-column type="expand">
           <template slot-scope="props">
             <el-descriptions
@@ -163,6 +162,13 @@
     components: {
       'imp-panel': panel
     },
+    watch:{
+      searchKey: function (newVal, oldVal) {
+        if (newVal !== oldVal) {
+          window.localStorage.setItem("sourceSearchKey", newVal);
+        }
+      },
+    },
     data(){
       return {
         sourceSearchOption,
@@ -225,11 +231,9 @@
     },
     methods: {
       handleTableNameFilter(){
-        // this.filteredTableList = this.tableList.filter(item => item.includes(this.tableNameFilter));
         let pattern = this.tableNameFilter.replace(/\*/g, '.*');
         let regex = new RegExp(pattern, 'i');
         this.filteredTableList = this.tableList.filter(item => regex.test(item));
-
         this.form.tables_name = [];
       },
       addSource(){
@@ -344,11 +348,8 @@
       handleSearch(){
         this.loadData();
       },
-      handleSelectionChange(val){
-        this.tableData.pagination.pageSize = val;
-        this.loadData();
-      },
       handleSizeChange(val) {
+        window.localStorage.setItem("sourcePageSize", val);
         this.tableData.pagination.pageSize = val;
         this.loadData();
       },
@@ -383,13 +384,17 @@
       }
     },
     created(){
+      this.searchKey = window.localStorage.getItem("sourceSearchKey");
+      this.tableData.pagination.pageSize = parseInt(window.localStorage.getItem("sourcePageSize"), 10);
+      this.searchKey = this.searchKey === null ? "id" : this.searchKey;
+
       this.loadData();
     }
   }
 </script>
 <style>
   .input-with-select .el-input-group__prepend {
-    background-color: #fff;
+    background-color: #FFFFFF;
     width: 120px;
   }
 

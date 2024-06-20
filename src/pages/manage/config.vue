@@ -1,6 +1,6 @@
 <template>
   <imp-panel>
-    <h4 class="box-title" slot="header" style="width: 100%;">
+    <span class="box-title" slot="header" style="width: 100%;">
       <el-row style="width: 100%; display: flex; align-items: flex-end;">
         <el-col :span="8" style="display: flex; align-items: flex-end;">
         </el-col>
@@ -11,9 +11,9 @@
           </div>
         </el-col>
       </el-row>
-    </h4>
-    <div slot="body">
-      <el-tabs v-model="tablePaneName" type="card" @tab-click="handleTablePaneChane" style="min-height: 490px;">
+    </span>
+    <div slot="body" style="min-height: 500px;">
+      <el-tabs v-model="tablePaneName" type="card" @tab-click="handleTablePaneChane" style="min-height: 500px;">
         <el-tab-pane label="源端配置" name="source">
           <el-form size="mini" :model="form" style="width: 70%;" ref="form">
             <el-form-item label="源端库用户名" prop="src_db_user" label-width="150px">

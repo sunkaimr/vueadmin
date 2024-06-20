@@ -80,8 +80,7 @@
         style="width: 100%;"
         size="mini"
         stripe
-        v-loading="listLoading"
-        @selection-change="handleSelectionChange">
+        v-loading="listLoading">
         <el-table-column type="expand">
           <template slot-scope="props">
             <el-descriptions
@@ -140,7 +139,10 @@
         <el-table-column prop="id" label="ID" width="80px" align="center" sortable> </el-table-column>
         <el-table-column prop="enable" label="开启" align="center" width="100px" sortable>
           <template slot-scope="scope">
-            <el-switch v-model="scope.row.enable" size="mini" @change="handleEnableChange(scope.$index, scope.row)"/>
+            <el-switch v-model="scope.row.enable"
+                       size="mini"
+                       :disabled="taskCanModify(scope.row.task_status)"
+                       @change="handleEnableChange(scope.$index, scope.row)"/>
           </template>
         </el-table-column>
         <el-table-column prop="policy_id" label="策略ID" align="center" width="90px" sortable> </el-table-column>
@@ -207,11 +209,22 @@
     getOptionBackground,
     cleaningSpeedOption,
   } from "../common/utils";
-  import {TASK_LIST} from "../api";
 
   export default {
     components: {
       'imp-panel': panel
+    },
+    watch:{
+      searchTaskStatus: function (newVal, oldVal){
+        if (newVal !== oldVal) {
+          window.localStorage.setItem("searchTaskStatus", newVal);
+        }
+      },
+      searchKey: function (newVal, oldVal){
+        if (newVal !== oldVal) {
+          window.localStorage.setItem("taskSearchKey", newVal);
+        }
+      }
     },
     data(){
       return {
@@ -269,6 +282,10 @@
     methods: {
       getOptionBackground,
       getOptionName,
+      taskCanModify(status){
+        return (status === 'executing' || status === 'success' || status === 'exec_failed' || status === 'timeout');
+
+      },
       cancelEditSubmit(formName){
         this.$refs[formName].resetFields();
         this.fullscreenLoading = false;
@@ -324,12 +341,10 @@
           this.loadData();
         })
       },
-      handleSelectionChange(val){
-        this.loadData();
-      },
       handleSizeChange(val) {
         this.tableData.pagination.pageSize = val;
         this.loadData();
+        window.localStorage.setItem("taskPageSize", val)
       },
       handleCurrentChange(val) {
         this.tableData.pagination.pageNo = val;
@@ -384,6 +399,14 @@
       }
     },
     created(){
+      this.searchTaskStatus = window.localStorage.getItem("searchTaskStatus");
+      this.searchTaskStatus = this.searchTaskStatus === null ? "all" : this.searchTaskStatus;
+
+      this.searchKey = window.localStorage.getItem("taskSearchKey");
+      this.searchKey = this.searchKey === null ? "id" : this.searchKey;
+
+      this.tableData.pagination.pageSize = parseInt(window.localStorage.getItem("taskPageSize"), 10);
+
       this.loadData();
     }
   }

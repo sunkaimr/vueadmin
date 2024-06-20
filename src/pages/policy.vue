@@ -167,8 +167,7 @@
         style="width: 100%;"
         size="mini"
         stripe
-        v-loading="listLoading"
-        @selection-change="handleSelectionChange">
+        v-loading="listLoading">
         <el-table-column type="expand">
           <template slot-scope="props">
             <el-descriptions
@@ -204,6 +203,7 @@
             <el-switch v-model="scope.row.enable" size="mini" @change="handleEnableChange(scope.$index, scope.row)"/>
           </template>
         </el-table-column>
+        <el-table-column prop="src_id" label="源端ID" align="center" width="100px" sortable> </el-table-column>
         <el-table-column prop="bu" label="BU" sortable> </el-table-column>
         <el-table-column prop="period" label="清理周期" align="center" width="100px" sortable>
           <template slot-scope="scope">
@@ -222,10 +222,11 @@
             </el-tag>
           </template>
         </el-table-column>
-        <el-table-column prop="src_id" label="源端ID" align="center" width="100px" sortable> </el-table-column>
         <el-table-column prop="condition" label="清理条件" sortable>
           <template slot-scope="scope">
-            <div class="cell-ellipsis">{{ scope.row.condition }}</div>
+              <el-tooltip class="item" effect="light" :content="scope.row.condition" open-delay="1000" placement="top">
+                <div class="cell-ellipsis">{{ scope.row.condition }}</div>
+              </el-tooltip>
           </template>
         </el-table-column>
         <el-table-column label="操作" width="130" align="center">
@@ -264,6 +265,13 @@
   export default {
     components: {
       'imp-panel': panel
+    },
+    watch:{
+      searchKey: function (newVal, oldVal) {
+        if (newVal !== oldVal) {
+          window.localStorage.setItem("policySearchKey", newVal);
+        }
+      },
     },
     data(){
       return {
@@ -446,11 +454,9 @@
       handleSearch(){
         this.loadData();
       },
-      handleSelectionChange(val){
-        this.loadData();
-      },
       handleSizeChange(val) {
         this.tableData.pagination.pageSize = val;
+        window.localStorage.setItem("policyPageSize", val)
         this.loadData();
       },
       handleCurrentChange(val) {
@@ -507,6 +513,10 @@
       }
     },
     created(){
+      this.searchKey = window.localStorage.getItem("policySearchKey");
+      this.tableData.pagination.pageSize = parseInt(window.localStorage.getItem("policyPageSize"), 10);
+      this.searchKey = this.searchKey === null ? "id" : this.searchKey;
+
       this.loadData();
     }
   }
