@@ -74,6 +74,25 @@
           <el-button size="mini" type="primary" @click="onEditSubmit('form')" v-loading.fullscreen.lock="fullscreenLoading">确 定</el-button>
         </div>
       </el-dialog>
+      <el-dialog title="修改记录" :visible.sync="dialogRevisionFormVisible" style="width: 100%;">
+        <el-table
+          :data="revisionTableData.rows"
+          border
+          style="width: 100%;"
+          size="mini"
+          stripe
+          v-loading="listLoading">
+          <el-table-column prop="created_at" label="修改时间" align="center" sortable/>
+          <el-table-column prop="creator" label="修改人" align="center" sortable/>
+          <el-table-column prop="modify_field" label="修改字段" align="center" sortable>
+            <template slot-scope="scope">
+              {{ getOptionName(taskNameMap, scope.row.modify_field) }}
+            </template>
+          </el-table-column>
+          <el-table-column prop="old_value" label="原始值" align="center" sortable/>
+          <el-table-column prop="new_value" label="修改值" align="center" sortable/>
+        </el-table>
+      </el-dialog>
       <el-table
         :data="tableData.rows"
         border
@@ -162,7 +181,7 @@
         <el-table-column prop="task_status" label="任务状态" align="center" width="100px" sortable>
           <template slot-scope="scope">
             <template v-if="scope.row.task_reason !== ''">
-              <el-tooltip class="item" effect="dark" :content="scope.row.task_reason" open-delay="500" placement="top">
+              <el-tooltip class="item" effect="dark" :content="scope.row.task_reason" :open-delay="500" placement="top">
                 <el-tag size="mini" :style="{ 'background-color': getOptionBackground(taskStatusOption, scope.row.task_status), color:'#555' }" effect="light">
                   {{getOptionName(taskStatusOption, scope.row.task_status)}}
                 </el-tag>
@@ -175,10 +194,11 @@
             </template>
           </template>
         </el-table-column>
-        <el-table-column label="操作" width="130" align="center">
+        <el-table-column label="操作" width="180" align="center">
           <template slot-scope="scope">
             <el-button size="mini" @click="handleEdit(scope.$index, scope.row)" class="el-icon-edit"></el-button>
             <el-button size="mini" @click="handleDelete(scope.$index, scope.row)" class="el-icon-delete" style="color: red;"></el-button>
+            <el-button size="mini" @click="handleRevision(scope.$index, scope.row)" class="el-icon-notebook-2"></el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -208,7 +228,9 @@
     taskStatusOption,
     getOptionBackground,
     cleaningSpeedOption,
+    taskNameMap,
   } from "../common/utils";
+  import {getTaskRevision} from "../services/sys";
 
   export default {
     components: {
@@ -228,6 +250,7 @@
     },
     data(){
       return {
+        taskNameMap,
         displayEnableTask: false,
         periodOption,
         governOption,
@@ -240,6 +263,7 @@
         searchVal: '',
         dialogEditFormVisible: false,
         dialogAddFormVisible: false,
+        dialogRevisionFormVisible: false,
         fullscreenLoading: false,
         listLoading: false,
         tableData: {
@@ -276,6 +300,9 @@
           notify_policy: [
             { required: true, message: '请选择通知策略', trigger: 'blur' }
           ]
+        },
+        revisionTableData: {
+          rows: []
         },
       }
     },
@@ -375,6 +402,13 @@
           });
         }).catch(() => {
         });
+      },
+      handleRevision(index, row){
+        this.revisionTableData.rows = [];
+        sysApi.getTaskRevision({task_id: row.id}).then(res => {
+          this.revisionTableData.rows = res.data.items;
+        });
+        this.dialogRevisionFormVisible = true;
       },
       loadData(){
         let para = {

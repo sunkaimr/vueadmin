@@ -126,8 +126,7 @@
               style="width: 100%;"
               size="mini"
               stripe
-              v-loading="listLoading"
-              @selection-change="handleSelectionChange">
+              v-loading="listLoading">
               <el-table-column prop="id" label="ID" width="80px" align="center" sortable> </el-table-column>
               <el-table-column prop="name" label="连接名称" align="center"  sortable> </el-table-column>
               <el-table-column prop="description" label="说明" align="center"  sortable> </el-table-column>

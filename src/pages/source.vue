@@ -195,9 +195,6 @@
           database_name: [
             { required: true, message: '请选择源库名', trigger: 'blur' }
           ],
-          // tables_name: [
-          //   { required: true, message: '请选择源表名', trigger: 'blur' }
-          // ]
         },
         currentRow: {},
         dialogVisible: false,

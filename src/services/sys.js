@@ -1,7 +1,7 @@
 import axios from "../common/axios";
 import * as api from "../api";
 import defaultValue from "./default";
-import {MYSQL_CLUSTER_LIST, MYSQL_DATABASE_LIST, MYSQL_TABLE_LIST} from "../api";
+import {MYSQL_CLUSTER_LIST, MYSQL_DATABASE_LIST, MYSQL_TABLE_LIST, TASK_REVISION} from "../api";
 
 export function login (params) {
   return new Promise((resolve, reject) => {
@@ -155,6 +155,32 @@ export function destList (params) {
 export function getConfig () {
   return new Promise((resolve, reject) => {
     axios.get(api.SYS_CONFIG).then(response => {
+      resolve(response.data);
+    }, err => {
+      resolve(err);
+    })
+      .catch((error) => {
+        resolve(error)
+      })
+  })
+}
+
+export function getPolicyRevision (params) {
+  return new Promise((resolve, reject) => {
+    axios.get(api.POLICY_REVISION, {params}).then(response => {
+      resolve(response.data);
+    }, err => {
+      resolve(err);
+    })
+      .catch((error) => {
+        resolve(error)
+      })
+  })
+}
+
+export function getTaskRevision (params) {
+  return new Promise((resolve, reject) => {
+    axios.get(api.TASK_REVISION, {params}).then(response => {
       resolve(response.data);
     }, err => {
       resolve(err);

@@ -180,6 +180,30 @@ export const destSearchOption = [
   { name:"目标表名", value:"table_name" },
 ]
 
+export const policyNameMap= [
+  { name:"名称", value:"Name" },
+  { name:"说明", value:"Description" },
+  { name:"开启", value:"Enable" },
+  {name:"清理频率", value:"Period" },
+  {name:"期望执行日期", value:"Day" },
+  {name:"执行窗口", value:"ExecuteWindow" },
+  {name:"清理速度", value:"CleaningSpeed" },
+  {name:"治理方式", value:"Govern" },
+  {name:"治理条件", value:"Condition" },
+  {name:"通知策略", value:"NotifyPolicy" },
+  {name:"关注人", value:"Relevant" },
+]
+
+export const taskNameMap= [
+  { name:"名称", value:"Name" },
+  { name:"说明", value:"Description" },
+  { name:"开启", value:"Enable" },
+  {name:"期望执行日期", value:"Day" },
+  {name:"执行窗口", value:"ExecuteWindow" },
+  {name:"通知策略", value:"NotifyPolicy" },
+  {name:"关注人", value:"Relevant" },
+]
+
 export function getOptionBackground(optionsArray, propValue) {
   const foundOption = optionsArray.find(option => option.value === propValue);
   return foundOption ? foundOption.background : "#fff";

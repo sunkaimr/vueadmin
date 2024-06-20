@@ -161,6 +161,25 @@
           <el-button size="mini" type="primary" @click="onEditSubmit('form')" v-loading.fullscreen.lock="fullscreenLoading">确 定</el-button>
         </div>
       </el-dialog>
+      <el-dialog title="修改记录" :visible.sync="dialogRevisionFormVisible" style="width: 100%;">
+        <el-table
+          :data="revisionTableData.rows"
+          border
+          style="width: 100%;"
+          size="mini"
+          stripe
+          v-loading="listLoading">
+          <el-table-column prop="created_at" label="修改时间" align="center" sortable/>
+          <el-table-column prop="creator" label="修改人" align="center" sortable/>
+          <el-table-column prop="modify_field" label="修改字段" align="center" sortable>
+            <template slot-scope="scope">
+              {{ getOptionName(policyNameMap, scope.row.modify_field) }}
+            </template>
+          </el-table-column>
+          <el-table-column prop="old_value" label="原始值" align="center" sortable/>
+          <el-table-column prop="new_value" label="修改值" align="center" sortable/>
+        </el-table>
+      </el-dialog>
       <el-table
         :data="tableData.rows"
         border
@@ -224,15 +243,16 @@
         </el-table-column>
         <el-table-column prop="condition" label="清理条件" sortable>
           <template slot-scope="scope">
-              <el-tooltip class="item" effect="light" :content="scope.row.condition" open-delay="1000" placement="top">
+              <el-tooltip class="item" effect="light" :content="scope.row.condition" :open-delay="1000" placement="top">
                 <div class="cell-ellipsis">{{ scope.row.condition }}</div>
               </el-tooltip>
           </template>
         </el-table-column>
-        <el-table-column label="操作" width="130" align="center">
+        <el-table-column label="操作" width="180" align="center">
           <template slot-scope="scope">
             <el-button size="mini" @click="handleEdit(scope.$index, scope.row)" class="el-icon-edit"></el-button>
             <el-button size="mini" @click="handleDelete(scope.$index, scope.row)" class="el-icon-delete" style="color: red;"></el-button>
+            <el-button size="mini" @click="handleRevision(scope.$index, scope.row)" class="el-icon-notebook-2"></el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -260,7 +280,9 @@
     governOption,
     cleaningSpeedOption,
     notifyPolicyOption,
-    policySearchOption} from "../common/utils";
+    policySearchOption,
+    policyNameMap
+  } from "../common/utils";
 
   export default {
     components: {
@@ -281,10 +303,12 @@
         cleaningSpeedOption,
         notifyPolicyOption,
         policySearchOption,
+        policyNameMap,
         searchKey: 'id',
         searchVal: '',
         dialogEditFormVisible: false,
         dialogAddFormVisible: false,
+        dialogRevisionFormVisible: false,
         fullscreenLoading: false,
         listLoading: false,
         form: {
@@ -309,6 +333,9 @@
             pageSize: 10,
             parentId: 0
           },
+          rows: []
+        },
+        revisionTableData: {
           rows: []
         },
         rules: {
@@ -496,6 +523,13 @@
         }).catch(() => {
         });
       },
+      handleRevision(index, row){
+        this.revisionTableData.rows = [];
+        sysApi.getPolicyRevision({policy_id: row.id}).then(res => {
+          this.revisionTableData.rows = res.data.items;
+        });
+        this.dialogRevisionFormVisible = true;
+      },
       loadData(){
         let para = {
           [this.searchKey]: this.searchVal,
@@ -522,59 +556,59 @@
   }
 </script>
 <style>
-  .input-with-select .el-input-group__prepend {
-    background-color: #fff;
-    width: 120px;
-  }
+.input-with-select .el-input-group__prepend {
+  background-color: #fff;
+  width: 120px;
+}
 
-  .el-pagination {
-    float: right;
-    margin-top: 15px;
-  }
+.el-pagination {
+  float: right;
+  margin-top: 15px;
+}
 
-  .el-table .cell-ellipsis {
-    display: inline-block;
-    width: 100%;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
+.el-table .cell-ellipsis {
+  display: inline-block;
+  width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
 
-  .table-expand .el-form-item {
-    margin-right: 40px;
-    margin-left: 40px;
-    margin-bottom: 0;
-    width: 45%;
-  }
-  .table-expand, .table-expand * {
-    font-size: 12px;
-    margin-right: 20px;
-    margin-left: 20px;
-  }
+.table-expand .el-form-item {
+  margin-right: 40px;
+  margin-left: 40px;
+  margin-bottom: 0;
+  width: 45%;
+}
+.table-expand, .table-expand * {
+  font-size: 12px;
+  margin-right: 20px;
+  margin-left: 20px;
+}
 
-  .el-checkbox__label {
-    font-size: 12px;
-  }
+.el-checkbox__label {
+  font-size: 12px;
+}
 
-  .el-form-item__label{
-    min-width: 80px;
-  }
+.el-form-item__label{
+  min-width: 80px;
+}
 
-  .table-expand .el-form-item__label {
-    text-align: right;
-    font-size: 12px;
-    padding-right: 0;
-    width: auto;
-    min-width: 80px;
-    font-weight: bolder;
-  }
+.table-expand .el-form-item__label {
+  text-align: right;
+  font-size: 12px;
+  padding-right: 0;
+  width: auto;
+  min-width: 80px;
+  font-weight: bolder;
+}
 
-  .table-expand .el-form--label-left .el-form-item__label {
-    text-align: right;
-    min-width: 100px;
-  }
+.table-expand .el-form--label-left .el-form-item__label {
+  text-align: right;
+  min-width: 100px;
+}
 
-  .word-wrap {
-    word-break: break-all;
-  }
+.word-wrap {
+  word-break: break-all;
+}
 </style>
