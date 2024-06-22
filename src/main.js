@@ -9,6 +9,7 @@ import VueProgressBar from "vue-progressbar";
 import Element from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
 import ImpPanel from "./components/panel.vue";
+import VueParticles from 'vue-particles';
 
 Vue.prototype.$http = axios
 Vue.axios = axios
@@ -16,6 +17,7 @@ Vue.http = axios;
 Vue.use(axios);
 
 Vue.use(Element);
+Vue.use(VueParticles);
 
 Vue.component(ImpPanel.name, ImpPanel);
 

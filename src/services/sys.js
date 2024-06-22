@@ -6,7 +6,7 @@ import qs from 'qs'
 
 export function login (params) {
   return new Promise((resolve, reject) => {
-    axios.put(api.LOGIN, { username:params.username, password: params.password}).then(response => {
+    axios.put(api.LOGIN, params).then(response => {
         resolve(response.data);
     }).catch((error) => {
       reject(error);

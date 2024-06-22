@@ -1,212 +1,170 @@
 <template lang="html">
-  <el-row>
-    <el-col :span="12" :offset="6">
-      <div class="login">
-      <el-row slot="body" :gutter="0" >
-      <el-col :span="16" :xs="16" :sm="16" :md="16" :lg="16">
-        <div class="login-form">
-          <div class="card-block">
-            <h2> EXAMPLE </h2>
-            <p class="text-muted">请输入用户名/密码登录</p>
-            <div class="input-group m-b-1">
-              <span class="input-group-addon"><i class="fa fa-user"></i></span>
-              <input type="text" class="form-control" placeholder="" v-model="form.username">
-            </div>
-            <div class="input-group m-b-2">
-              <span class="input-group-addon"><i class="fa fa-lock"></i></span>
-              <input type="password" class="form-control" placeholder="" v-model="form.password" @keyup.enter="login">
-            </div>
-            <div class="row">
-              <el-row>
-                <el-col :span="12">
-                </el-col>
-                <el-col :span="12">
-<!--                  <el-button  class="btn btn-link forgot" style="float:right;">忘记密码?</el-button>-->
-                  <el-button type="primary" class="btn btn-primary p-x-2" @click="login">登录</el-button>
-                </el-col>
-              </el-row>
-            </div>
-          </div>
-        </div>
-      </el-col>
-      </el-row>
+  <div class="login">
+    <vue-particles
+      class="login-bg"
+      color="#39AFFD"
+      :particleOpacity="0.7"
+      :particlesNumber="100"
+      shapeType="circle"
+      :particleSize="4"
+      linesColor="#8DD1FE"
+      :linesWidth="1"
+      :lineLinked="true"
+      :lineOpacity="0.4"
+      :linesDistance="150"
+      :moveSpeed="3"
+      :hoverEffect="true"
+      hoverMode="grab"
+      :clickEffect="true"
+      clickMode="push"
+    />
+    <div class="login-box" @keyup.enter="login('form')">
+      <div class="login-box-title">EXAMPLE</div>
+      <div class="login-box-from">
+        <el-form :model="form" ref="form" :rules="rules">
+          <el-form-item prop="username">
+            <el-input v-model="form.username" placeholder="请输入用户名" prefix-icon="el-icon-user-solid"></el-input>
+          </el-form-item>
+          <el-form-item prop="password">
+            <el-input v-model="form.password" placeholder="请输入密码" prefix-icon="el-icon-key" show-password></el-input>
+          </el-form-item>
+          <el-form-item size="mini">
+            <el-checkbox v-model="ldap" >使用域账号登陆</el-checkbox>
+          </el-form-item>
+          <el-form-item>
+            <el-button type="primary" size="medium" :loading="loading" style="width: 100%" @click.native="login('form')">立即登陆</el-button>
+          </el-form-item>
+        </el-form>
       </div>
-    </el-col>
-  </el-row>
+    </div>
+  </div>
 </template>
 
-<script>
-  import types from '../store/mutation-types'
-  import  auth from '../common/auth'
-  import * as sysApi from '../services/sys'
-  import {mapActions, mapMutations} from 'vuex'
 
-  export default {
-    name: 'login',
-    data() {
-      return {
-        form: {
-          username: '',
-          password: ''
+<script>
+import types from '../store/mutation-types'
+import  auth from '../common/auth'
+import * as sysApi from '../services/sys'
+import {mapActions, mapMutations} from 'vuex'
+
+export default {
+  name: 'login',
+  data() {
+    return {
+      pwdShow: "password",
+      loading: false,
+      ldap: false,
+      form: {
+        username: '',
+        password: '',
+        is_ldap: 0,
+      },
+      rules: {
+        username: [
+          { required: true, message: "请输入用户名", trigger: "blur" },
+        ],
+        password: [
+          { required: true, message: "请输入密码", trigger: "blur" },
+        ],
+      },
+    }
+  },
+  components: {},
+  methods: {
+    ...mapMutations({
+      setUserInfo: types.SET_USER_INFO
+    }),
+    ...mapActions({
+      loadMenuList: 'loadMenuList'
+    }),
+    login(formName){
+      this.$refs[formName].validate((valid) => {
+        if (!valid) {
+          this.loading = false;
+          return false;
         }
-      }
-    },
-    components: {},
-    methods: {
-      ...mapMutations({
-        setUserInfo: types.SET_USER_INFO
-      }),
-      ...mapActions({
-        loadMenuList: 'loadMenuList' // 映射 this.load() 为 this.$store.dispatch('loadMenuList')
-      }),
-      login(){
+
+        this.loading = true;
         let redirectUrl = '/task';
         if (this.$route.query && this.$route.query != null && this.$route.query.redirect && this.$route.query.redirect != null) {
           redirectUrl = this.$route.query.redirect;
         }
+        this.form.is_ldap = this.ldap ? 1 : 0;
         sysApi.login(this.form).then(res => {
-            this.loginSuccess({data:res.data, redirectUrl})
+          this.loginSuccess({data:res.data, redirectUrl})
         })
-      },
-      loginSuccess({data,redirectUrl}){
-        auth.login(data.token);
-        window.localStorage.setItem("user", JSON.stringify(data));
-        this.setUserInfo(data);
-        this.loadMenuList();
-        redirectUrl && this.$router.push({path: redirectUrl});
-      }
+        this.loading = false;
+      });
+    },
+    loginSuccess({data,redirectUrl}){
+      auth.login(data.token);
+      window.localStorage.setItem("user", JSON.stringify(data));
+      this.setUserInfo(data);
+      this.loadMenuList();
+      redirectUrl && this.$router.push({path: redirectUrl});
     }
   }
+}
 </script>
 
 <style>
+  html, body {
+    height: 100%;
+    margin: 0;
+    overflow: hidden;
+  }
   .login {
-    margin-top: 160px;
-    width: 100%;
-    border: 1px solid #cfd8dc;
-    margin-right: auto !important;
-    margin-left: auto !important;
-    display: table;
-    table-layout: fixed;
-    background-color: #20a8d8;
-  }
-
-  .login .el-button {
-    border-radius: 0;
-  }
-
-  .login .el-button.forgot, .login .el-button.forgot:hover {
-    border: none;
-  }
-
-  .login .login-form {
-    background-color: #FFFFFF;
     width: 100%;
     height: 100%;
-    display: block;
-
-  }
-
-  .login .login-form .card-block {
-    padding: 35px;
-  }
-
-  .login .login-form .card-block p {
-    margin: 15px 0;
-  }
-
-  .input-group {
-    width: 100%;
-    display: table;
-    border-collapse: separate;
-    margin-bottom: 20px !important;
-  }
-
-  .input-group, .input-group-btn, .input-group-btn > .btn, .navbar {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-image: url("../../static/img/login.jpg");
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+    color: #cccccc;
     position: relative;
   }
 
-  .input-group-addon:not(:last-child) {
-    border-right: 0;
+  .login-box-title {
+    line-height: 50px;
+    font-size: 20px;
+    color: #dddddd;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-bottom: 1px solid #ffffff;
   }
-
-  .input-group-addon, .input-group-btn {
-    min-width: 40px;
-    white-space: nowrap;
-    vertical-align: middle;
-    width: 1%;
-  }
-
-  .btn-link:focus, .btn-link:hover {
-    color: #167495;
-    text-decoration: underline;
-    background-color: transparent;
-  }
-
-  .btn-link, .btn-link:active, .btn-link:focus, .btn-link:hover {
-    border-color: transparent;
-  }
-
-  .btn.focus, .btn:focus, .btn:hover {
-    text-decoration: none;
-  }
-
-  .input-group-addon {
-    padding: .5rem .75rem;
-    margin-bottom: 0;
-    font-size: 16px;
-    font-weight: 400;
-    line-height: 1.75rem;
-    color: #607d8b;
-    text-align: center;
-    background-color: #cfd8dc;
-    border: 1px solid rgba(0, 0, 0, .15);
-  }
-
-  .input-group .form-control, .input-group-addon, .input-group-btn {
-    display: table-cell;
-  }
-
-  .input-group .form-control {
-    position: relative;
-    z-index: 2;
-    float: left;
-    margin-bottom: 0;
-  }
-
-  .form-control {
-    width: 90%;
-    padding: .5rem .75rem;
-    font-size: 1.5rem;
-    line-height: 1.75rem;
-    color: #607d8b;
-    background: #fff none;
-    background-clip: padding-box;
-    border: 1px solid rgba(0, 0, 0, .15);
-    transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
-  }
-
-  .login .login-form .card-block .row {
-    display: block;
-    margin: 15px 0;
-  }
-
-  .login .login-register {
+  .login-bg {
     width: 100%;
     height: 100%;
-    display: block;
-    background-color: #20a8d8;
-    color: #fff;
+  }
+  .login-box {
+    width: 450px;
+    background: hsla(0, 0%, 100%, 0.1);
+    border-radius: 10px;
+
+    border: 0px #f7f7f7;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
   }
 
-  .login .login-register .card-block {
-    text-align: center !important;
+  .login-box-from {
+    width: 100%;
+    height: auto;
     padding: 30px;
+    box-sizing: border-box;
   }
 
-  .login .login-register .card-block p {
-    text-align: left !important;
-    margin: 15px 0;
-    height: 100px;
+  .el-checkbox{
+    color: #cccccc;
   }
+  .el-checkbox__input.is-checked+.el-checkbox__label {
+    color: #cccccc;
+  }
+  .agreement {
+      font-size: 12px;
+    }
 </style>

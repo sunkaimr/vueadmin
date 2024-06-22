@@ -42,7 +42,7 @@
           <el-button size="mini" type="primary" @click="onAddSubmit('form')" v-loading.fullscreen.lock="fullscreenLoading">确 定</el-button>
         </div>
       </el-dialog>
-      <el-dialog title="修改用户" :visible.sync="dialogEditFormVisible" style="width: 100%;">
+      <el-dialog title="修改用户信息" :visible.sync="dialogEditFormVisible" style="width: 100%;">
         <el-form size="mini" :model="form" :rules="rules" ref="form">
           <el-form-item label="用户名" prop="username" label-width="80px">
             <el-input v-model="form.username" disabled autocomplete="off" clearable/>
