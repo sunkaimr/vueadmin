@@ -98,6 +98,7 @@ export default {
     },
     loginSuccess({data,redirectUrl}){
       auth.login(data.token);
+      delete data.password;
       window.localStorage.setItem("user", JSON.stringify(data));
       this.setUserInfo(data);
       this.loadMenuList();

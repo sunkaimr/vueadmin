@@ -11,7 +11,8 @@
       <div class="navbar-custom-menu">
         <el-dropdown trigger="click" @command="commandHandle" class="navbar-dropdown">
           <div class="el-dropdown-link">
-            <i class="el-icon-user-solid" style="font-size: 16px;">&nbsp; {{ userInfo.real_name }}</i>
+            <i class="el-icon-user-solid" style="font-size: 24px;"></i>
+            <i style="font-size: 14px; font-style: normal;">&nbsp;{{ userInfo.real_name }}</i>
           </div>
           <el-dropdown-menu slot="dropdown">
               <el-dropdown-item command="userInfo">个人信息</el-dropdown-item>
@@ -20,19 +21,85 @@
         </el-dropdown>
       </div>
     </nav>
+    <el-dialog title="修改用户信息" :visible.sync="dialogEditFormVisible" :append-to-body="true">
+      <el-form size="mini" :model="form" :rules="rules" ref="form">
+        <el-form-item label="用户名" prop="username" label-width="80px">
+          <el-input v-model="form.username" disabled autocomplete="off" clearable/>
+        </el-form-item>
+        <el-form-item label="姓名" prop="real_name" label-width="80px">
+          <el-input v-model="form.real_name" autocomplete="off" clearable/>
+        </el-form-item>
+        <el-form-item label="邮箱" label-width="80px">
+          <el-input v-model="form.email" autocomplete="off" clearable/>
+        </el-form-item>
+        <el-form-item label="密码" label-width="80px">
+          <el-input v-model="form.password" placeholder="请输入密码" show-password></el-input>
+        </el-form-item>
+        <template v-if="form.password !== ''">
+          <el-form-item label="确认密码" label-width="80px">
+            <el-input v-model="form.passwordConfirm" placeholder="请确认密码" show-password></el-input>
+          </el-form-item>
+        </template>
+        <el-form-item label="上次登陆" label-width="80px">
+          <el-input v-model="form.last_login" disabled autocomplete="off" clearable/>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button size="mini" @click="cancelEditSubmit('form')">取 消</el-button>
+        <el-button size="mini" type="primary" @click="onEditSubmit('form')" v-loading.fullscreen.lock="fullscreenLoading">确 定</el-button>
+      </div>
+    </el-dialog>
   </header>
 </template>
 <script>
 import {mapGetters, mapActions, mapMutations} from 'vuex'
 import types from "../../store/mutation-types"
 import auth from '../../common/auth'
+import * as api from "../../api";
 
 export default {
   data() {
+    const validatePassword = (rule, value, callback) => {
+      if (value !== this.form.passwordConfirm) {
+        callback(new Error('两次输入密码不一致'));
+      } else {
+        callback();
+      }
+    };
+    const validatePasswordConfirm = (rule, value, callback) => {
+      if (value !== this.form.password) {
+        callback(new Error('两次输入密码不一致'));
+      } else {
+        callback();
+      }
+    };
     return {
-      showMessageBox: false,
-      showProfileBox: false,
-      show: true,
+      fullscreenLoading: false,
+      dialogEditFormVisible: false,
+      form: {
+        username: "",
+        real_name: "",
+        email: "",
+        password: "",
+        passwordConfirm: "",
+        last_login: "",
+      },
+      rules: {
+        username: [
+          { required: true, message: '请输入用户名', trigger: 'blur' },
+        ],
+        real_name: [
+          { required: true, message: '请输入姓名', trigger: 'blur' }
+        ],
+        password: [
+          { required: true, message: '请输入密码', trigger: 'blur' },
+          { validator: validatePassword, trigger: 'blur' }
+        ],
+        passwordConfirm: [
+          { required: true, message: '请确认密码', trigger: 'blur' },
+          { validator: validatePasswordConfirm, trigger: 'blur' }
+        ]
+      },
     }
   },
   computed: mapGetters({
@@ -41,6 +108,49 @@ export default {
     device: 'device',
   }),
   methods: {
+    onEditSubmit(formName){
+      this.$refs[formName].validate((valid) => {
+        if (!valid) {
+          return false
+        }
+        this.fullscreenLoading = true;
+        setTimeout(() => {
+          this.fullscreenLoading = false;
+        }, 1000);
+
+        if (this.form.password !== "" && this.form.password !== this.form.passwordConfirm){
+          this.$notify({ title: '错误', message: "两次输入密码不一致", type: 'error' });
+          this.fullscreenLoading = false;
+          return
+        }
+
+        const para = {
+          username : this.form.username,
+          real_name: this.form.real_name,
+          email: this.form.email,
+          password: this.form.password,
+        }
+        this.$http.put(api.USER_UPDATE, JSON.stringify(para)).then(res => {
+          this.fullscreenLoading = false;
+          this.dialogEditFormVisible = false;
+          this.$refs[formName].resetFields();
+          this.$notify({ title: '成功', message: "修改成功", type: 'success' });
+
+          this.form = res.data.data
+          this.form.password = ''
+          this.form.passwordConfirm = ''
+          window.localStorage.setItem("user", JSON.stringify(this.form));
+          this.setUserInfo(this.form);
+        }).catch(()=>{
+          this.fullscreenLoading = false;
+        })
+      });
+    },
+    cancelEditSubmit(formName){
+      this.$refs[formName].resetFields();
+      this.fullscreenLoading = false;
+      this.dialogEditFormVisible = false;
+    },
     toggleMenu(collapsed, isMobile) {
       if (isMobile) {
         this.toggleSidebarShow();
@@ -49,9 +159,14 @@ export default {
       }
     },
     commandHandle(command){
-      if (command === 'logout') {
-        auth.logout();
-        this.$router.push({path: '/login'});
+      switch (command) {
+        case 'logout':
+          auth.logout();
+          this.$router.push({path: '/login'});
+          break
+        case 'userInfo':
+          this.dialogEditFormVisible = true;
+          break
       }
     },
     ...mapMutations({
@@ -59,25 +174,11 @@ export default {
       toggleSidebarShow: types.TOGGLE_SIDEBAR_SHOW,
       setUserInfo: types.SET_USER_INFO,
     }),
-    toggleMessage() {
-      this.showMessageBox = !this.showMessageBox;
-    },
-    toggleProfile() {
-      this.showProfileBox = !this.showProfileBox;
-    },
-    autoHide(evt) {
-      if (!this.$el.querySelector('li.messages-menu').contains(evt.target)) {
-        this.showMessageBox = false
-      }
-      if (!this.$el.querySelector('li.user-menu').contains(evt.target)) {
-        this.showProfileBox = false
-      }
-    }
   },
   created() {
-    let item = window.localStorage.getItem("user");
-    if (!!item) {
-      this.setUserInfo(JSON.parse(item));
+    this.form = JSON.parse(window.localStorage.getItem("user"));
+    if (this.form) {
+      this.setUserInfo(this.form);
     }
   },
 }

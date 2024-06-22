@@ -53,6 +53,7 @@ export default {
 
   logout (cb) {
     window.localStorage.removeItem('token');
+    window.localStorage.removeItem('user');
     if (cb) cb()
   },
 

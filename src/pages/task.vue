@@ -25,7 +25,7 @@
       </el-row>
     </h4>
     <div slot="body">
-      <el-dialog title="修改任务" :visible.sync="dialogEditFormVisible" :rules="rules" style="width: 100%;">
+      <el-dialog title="修改任务" :visible.sync="dialogEditFormVisible" :rules="rules" :close-on-click-modal="false" style="width: 100%;">
         <el-form :model="form" :rules="rules" size="mini" ref="form">
           <el-form-item class="el-form-item-label" label="任务名称" prop="name" label-width="120px">
             <el-input v-model="form.name" autocomplete="off" clearable/>
@@ -78,7 +78,7 @@
           <el-button size="mini" type="primary" @click="onEditSubmit('form')" v-loading.fullscreen.lock="fullscreenLoading">确 定</el-button>
         </div>
       </el-dialog>
-      <el-dialog title="修改记录" :visible.sync="dialogRevisionFormVisible" style="width: 100%;">
+      <el-dialog title="修改记录" :visible.sync="dialogRevisionFormVisible" :close-on-click-modal="false" style="width: 100%;">
         <el-table
           :data="revisionTableData.rows"
           border

@@ -20,7 +20,7 @@
       </el-row>
     </h4>
     <div slot="body">
-      <el-dialog title="添加策略" :visible.sync="dialogAddFormVisible" :rules="rules" style="width: 100%;">
+      <el-dialog title="添加策略" :visible.sync="dialogAddFormVisible" :close-on-click-modal="false" :rules="rules" style="width: 100%;">
         <el-form size="mini" :model="form" :rules="rules" ref="form">
           <el-form-item class="el-form-item-label" label="策略名称" label-width="80px" prop="name">
             <el-input v-model="form.name" autocomplete="off" clearable/>
@@ -96,7 +96,7 @@
           <el-button size="mini" type="primary" @click="onAddSubmit('form')" v-loading.fullscreen.lock="fullscreenLoading">确 定</el-button>
         </div>
       </el-dialog>
-      <el-dialog title="修改策略" :visible.sync="dialogEditFormVisible" :rules="rules" style="width: 100%;">
+      <el-dialog title="修改策略" :visible.sync="dialogEditFormVisible" :close-on-click-modal="false" :rules="rules" style="width: 100%;">
         <el-form :model="form" :rules="rules" size="mini" ref="form">
           <el-form-item class="el-form-item-label" label="策略名称" prop="name" label-width="80px">
             <el-input v-model="form.name" autocomplete="off" clearable/>

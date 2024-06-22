@@ -19,7 +19,7 @@
       </el-row>
     </h4>
     <div slot="body">
-      <el-dialog title="添加目标" :visible.sync="dialogAddFormVisible" style="width: 100%;">
+      <el-dialog title="添加目标" :visible.sync="dialogAddFormVisible" :close-on-click-modal="false" style="width: 100%;">
         <el-form size="mini" :model="form" :rules="rules" ref="form">
           <el-form-item label="目标名称" prop="name" label-width="80px">
             <el-input v-model="form.name" autocomplete="off" clearable/>
@@ -56,7 +56,7 @@
           <el-button size="mini" type="primary" @click="onAddSubmit('form')" v-loading.fullscreen.lock="fullscreenLoading">确 定</el-button>
         </div>
       </el-dialog>
-      <el-dialog title="修改源端信息" :visible.sync="dialogEditFormVisible" style="width: 100%;">
+      <el-dialog title="修改源端信息" :visible.sync="dialogEditFormVisible" :close-on-click-modal="false" style="width: 100%;">
         <el-form size="mini" :model="form" :rules="rules" ref="form">
           <el-form-item label="目标名称" prop="name" label-width="80px">
             <el-input v-model="form.name" autocomplete="off" clearable/>
