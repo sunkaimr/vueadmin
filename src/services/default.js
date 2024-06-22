@@ -268,22 +268,22 @@ export default {
       "icon": "fa fa-cog",
       "children": [
         {
-          "id": 108,
-          "parentId": 6,
-          "sort": 0,
-          "name": " 目标端管理",
-          "href": "/manage/dest",
-          "icon": "fa fa-archive",
-          "children": [],
-          "isShow": "1"
-        },
-        {
           "id": 7,
           "parentId": 6,
           "sort": 1,
           "name": "连接信息",
           "href": "/manage/connect",
           "icon": "fa fa-exchange",
+          "children": [],
+          "isShow": "1"
+        },
+        {
+          "id": 108,
+          "parentId": 6,
+          "sort": 0,
+          "name": "目标管理",
+          "href": "/manage/dest",
+          "icon": "fa fa-archive",
           "children": [],
           "isShow": "1"
         },

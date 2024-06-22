@@ -2,6 +2,7 @@ import axios from "../common/axios";
 import * as api from "../api";
 import defaultValue from "./default";
 import {MYSQL_CLUSTER_LIST, MYSQL_DATABASE_LIST, MYSQL_TABLE_LIST, TASK_REVISION} from "../api";
+import qs from 'qs'
 
 export function login (params) {
   return new Promise((resolve, reject) => {
@@ -57,7 +58,10 @@ export function policyList (params) {
 export function taskList (params) {
   const sourceList = {}
   return new Promise((resolve, reject) => {
-    axios.get(api.TASK_LIST, { params }).then(response => {
+    axios.get(api.TASK_LIST, {
+      params,
+      paramsSerializer: (params) => qs.stringify(params, { arrayFormat: 'repeat' }),
+    }).then(response => {
       resolve(response.data);
     }, err => {
       resolve(sourceList);

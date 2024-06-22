@@ -10,7 +10,7 @@
             <el-checkbox size="small" v-model="displayEnablePolicy" @change="handleSearch" style="margin-right: 20px;">只看开启</el-checkbox>
             <el-input size="small" placeholder="请输入内容" v-model="searchVal" @clear="handleSearch" @keyup.enter.native="handleSearch" class="input-with-select" clearable>
               <el-select v-model="searchKey" slot="prepend" placeholder="请选择">
-                <el-option v-for="item in policySearchOption" :key="item.value" :label="item.name" :value="item.value"></el-option>
+                <el-option v-for="item in policySearchOption" :key="item.value" :label="item.name" :value="item.value" style="font-size: 12px"></el-option>
               </el-select>
               <el-button size="small" slot="append" icon="el-icon-search" @click="handleSearch"></el-button>
             </el-input>
@@ -248,11 +248,16 @@
               </el-tooltip>
           </template>
         </el-table-column>
-        <el-table-column label="操作" width="180" align="center">
+        <el-table-column label="操作" width="90px" align="center">
           <template slot-scope="scope">
-            <el-button size="mini" @click="handleEdit(scope.$index, scope.row)" class="el-icon-edit"></el-button>
-            <el-button size="mini" @click="handleDelete(scope.$index, scope.row)" class="el-icon-delete" style="color: red;"></el-button>
-            <el-button size="mini" @click="handleRevision(scope.$index, scope.row)" class="el-icon-notebook-2"></el-button>
+            <el-dropdown size="small" @command="handleDropdownCommand" :hide-on-click="false">
+              <span class="el-dropdown-link">更多 <i class="el-icon-circle-plus-outline"></i></span>
+              <el-dropdown-menu slot="dropdown">
+                <el-dropdown-item :command="beforeHandleDropdownCommand(scope.$index, scope.row, 'edit')" icon="el-icon-edit"> 修改 </el-dropdown-item>
+                <el-dropdown-item :command="beforeHandleDropdownCommand(scope.$index, scope.row, 'delete')" icon="el-icon-delete"> 删除 </el-dropdown-item>
+                <el-dropdown-item :command="beforeHandleDropdownCommand(scope.$index, scope.row, 'revision')" icon="el-icon-tickets"> 修改记录 </el-dropdown-item>
+              </el-dropdown-menu>
+            </el-dropdown>
           </template>
         </el-table-column>
       </el-table>
@@ -281,7 +286,8 @@
     cleaningSpeedOption,
     notifyPolicyOption,
     policySearchOption,
-    policyNameMap
+    policyNameMap,
+    beforeHandleDropdownCommand
   } from "../common/utils";
 
   export default {
@@ -372,8 +378,22 @@
       }
     },
     methods: {
+      beforeHandleDropdownCommand,
       getOptionName,
       getOptionBackground,
+      handleDropdownCommand(command){
+        switch (command.command) {
+          case "edit":
+            this.handleEdit(command.index, command.row);
+            break;
+          case "delete":
+            this.handleDelete(command.index, command.row);
+            break;
+          case "revision":
+            this.handleRevision(command.index, command.row);
+            break;
+        }
+      },
       handleEnableChange(index, row){
         const data = {
           id: row.id,
@@ -525,7 +545,10 @@
       },
       handleRevision(index, row){
         this.revisionTableData.rows = [];
-        sysApi.getPolicyRevision({policy_id: row.id}).then(res => {
+        sysApi.getPolicyRevision({
+            policy_id: row.id,
+            pageSize: 50,
+          }).then(res => {
           this.revisionTableData.rows = res.data.items;
         });
         this.dialogRevisionFormVisible = true;
@@ -610,5 +633,13 @@
 
 .word-wrap {
   word-break: break-all;
+}
+
+.el-dropdown-link {
+  cursor: pointer;
+  font-size: 12px;
+}
+.el-icon-arrow-down {
+  font-size: 12px;
 }
 </style>

@@ -4,14 +4,18 @@
       <el-row style="width: 100%; display: flex; align-items: flex-end;">
         <el-col :span="24" style="display: flex; align-items: flex-end;">
           <div style="display: flex; margin-left: auto; ustify-items: center; align-items: center;">
-            <el-checkbox size="small" v-model="displayEnableTask" @change="handleSearch" style="margin-right: 20px;">只看开启</el-checkbox>
-            <el-select size="small" v-model="searchTaskStatus" @change="handleSearch" placeholder="请选择任务状态" style="margin-right: 20px;">
-              <el-option key="all" label="ALL" value="all"></el-option>
-              <el-option v-for="item in taskStatusOption" :key="item.value" :label="item.name" :value="item.value"></el-option>
+            <el-radio-group size="mini" @input="taskStatusRadioChanged" v-model="taskStatusRadio">
+              <el-radio :label="1">未执行</el-radio>
+              <el-radio :label="2">执行中</el-radio>
+              <el-radio :label="3">已执行</el-radio>
+              <el-radio :label="0">全部</el-radio>
+            </el-radio-group>
+            <el-select size="small" v-model="searchTaskStatus" @change="handleSearch" placeholder="任务状态" multiple clearable style="max-height: 32px; overflow-x: hidden; overflow-y: hidden; margin-right: 10px;">
+              <el-option v-for="item in taskStatusOption" :key="item.value" :label="item.name" :value="item.value" style="font-size: 12px"></el-option>
             </el-select>
             <el-input size="small" placeholder="请输入内容" v-model="searchVal" @clear="handleSearch" @keyup.enter.native="handleSearch" class="input-with-select" clearable>
               <el-select v-model="searchKey" slot="prepend" placeholder="请选择">
-                <el-option v-for="item in taskSearchOption" :key="item.value" :label="item.name" :value="item.value"></el-option>
+                <el-option v-for="item in taskSearchOption" :key="item.value" :label="item.name" :value="item.value" style="font-size: 12px"></el-option>
               </el-select>
               <el-button size="small" slot="append" icon="el-icon-search" @click="handleSearch"></el-button>
             </el-input>
@@ -106,9 +110,7 @@
               border
               size="mini"
               class="table-expand"
-              column=3
-              labelStyle="min-width: 100px;"
-              contentStyle='min-width: 200px'
+              :column=3
               with="100%" >
               <el-descriptions-item label="ID">{{ props.row.id }}</el-descriptions-item>
               <el-descriptions-item label="任务名称">{{ props.row.name }}</el-descriptions-item>
@@ -194,11 +196,16 @@
             </template>
           </template>
         </el-table-column>
-        <el-table-column label="操作" width="180" align="center">
+        <el-table-column label="操作" width="90" align="center">
           <template slot-scope="scope">
-            <el-button size="mini" @click="handleEdit(scope.$index, scope.row)" class="el-icon-edit"></el-button>
-            <el-button size="mini" @click="handleDelete(scope.$index, scope.row)" class="el-icon-delete" style="color: red;"></el-button>
-            <el-button size="mini" @click="handleRevision(scope.$index, scope.row)" class="el-icon-notebook-2"></el-button>
+            <el-dropdown size="small" @command="handleDropdownCommand" :hide-on-click="false">
+              <span class="el-dropdown-link">更多 <i class="el-icon-circle-plus-outline"></i></span>
+              <el-dropdown-menu slot="dropdown">
+                <el-dropdown-item :command="beforeHandleDropdownCommand(scope.$index, scope.row, 'edit')" icon="el-icon-edit"> 修改 </el-dropdown-item>
+                <el-dropdown-item :command="beforeHandleDropdownCommand(scope.$index, scope.row, 'delete')" icon="el-icon-delete"> 删除 </el-dropdown-item>
+                <el-dropdown-item :command="beforeHandleDropdownCommand(scope.$index, scope.row, 'revision')" icon="el-icon-tickets"> 修改记录 </el-dropdown-item>
+              </el-dropdown-menu>
+            </el-dropdown>
           </template>
         </el-table-column>
       </el-table>
@@ -229,8 +236,8 @@
     getOptionBackground,
     cleaningSpeedOption,
     taskNameMap,
+    beforeHandleDropdownCommand,
   } from "../common/utils";
-  import {getTaskRevision} from "../services/sys";
 
   export default {
     components: {
@@ -246,19 +253,24 @@
         if (newVal !== oldVal) {
           window.localStorage.setItem("taskSearchKey", newVal);
         }
-      }
+      },
+      taskStatusRadio: function (newVal, oldVal){
+        if (newVal !== oldVal) {
+          window.localStorage.setItem("taskStatusRadio", newVal);
+        }
+      },
     },
     data(){
       return {
         taskNameMap,
-        displayEnableTask: false,
+        taskStatusRadio: 0,
         periodOption,
         governOption,
         taskStatusOption,
         cleaningSpeedOption,
         notifyPolicyOption,
         taskSearchOption,
-        searchTaskStatus: "all",
+        searchTaskStatus: [],
         searchKey: 'id',
         searchVal: '',
         dialogEditFormVisible: false,
@@ -309,9 +321,22 @@
     methods: {
       getOptionBackground,
       getOptionName,
+      beforeHandleDropdownCommand,
+      handleDropdownCommand(command){
+        switch (command.command) {
+          case "edit":
+            this.handleEdit(command.index, command.row);
+            break;
+          case "delete":
+            this.handleDelete(command.index, command.row);
+            break;
+          case "revision":
+            this.handleRevision(command.index, command.row);
+            break;
+        }
+      },
       taskCanModify(status){
         return (status === 'executing' || status === 'success' || status === 'exec_failed' || status === 'timeout');
-
       },
       cancelEditSubmit(formName){
         this.$refs[formName].resetFields();
@@ -351,6 +376,23 @@
         });
       },
       handleSearch(){
+        this.loadData();
+      },
+      taskStatusRadioChanged(){
+        switch (this.taskStatusRadio) {
+          case 1:
+            this.searchTaskStatus = [ "scheduled", "supplement_failed", "waiting", "exec_check_failed"];
+            break
+          case 2:
+            this.searchTaskStatus = ["executing"];
+            break
+          case 3:
+            this.searchTaskStatus = ["success","failed","timeout"];
+            break
+          default:
+            this.searchTaskStatus = [];
+            break
+        }
         this.loadData();
       },
       handleEnableChange(index, row){
@@ -405,7 +447,11 @@
       },
       handleRevision(index, row){
         this.revisionTableData.rows = [];
-        sysApi.getTaskRevision({task_id: row.id}).then(res => {
+        sysApi.getTaskRevision({
+          task_id: row.id,
+          pageSize: 0,
+          page: 0,
+        }).then(res => {
           this.revisionTableData.rows = res.data.items;
         });
         this.dialogRevisionFormVisible = true;
@@ -416,16 +462,8 @@
           pageSize: this.tableData.pagination.pageSize,
           page: this.tableData.pagination.pageNo
         }
+        para.task_status = this.searchTaskStatus;
 
-        if (this.displayEnableTask) {
-          para.enable = true
-        }
-
-        if ( this.searchTaskStatus === "all" ){
-          para.task_status = "";
-        } else {
-          para.task_status = this.searchTaskStatus;
-        }
         sysApi.taskList(para).then(res => {
           this.tableData.rows = res.data.items;
           this.tableData.pagination.total = res.data.total;
@@ -440,6 +478,22 @@
       this.searchKey = this.searchKey === null ? "id" : this.searchKey;
 
       this.tableData.pagination.pageSize = parseInt(window.localStorage.getItem("taskPageSize"), 10);
+
+      this.taskStatusRadio =  parseInt(window.localStorage.getItem("taskStatusRadio"));
+      switch (this.taskStatusRadio) {
+        case 1:
+          this.searchTaskStatus = [ "scheduled", "supplement_failed", "waiting", "exec_check_failed"];
+          break
+        case 2:
+          this.searchTaskStatus = ["executing"];
+          break
+        case 3:
+          this.searchTaskStatus = ["success","failed","timeout"];
+          break
+        default:
+          this.searchTaskStatus = [];
+          break
+      }
 
       this.loadData();
     }
@@ -500,5 +554,27 @@
 
 .word-wrap {
   word-break: break-all;
+}
+
+.el-radio-group {
+  display: flex; /* 使用 Flexbox 布局 */
+  flex-direction: row; /* 确保子元素横向排列 */
+  margin-right: 20px;
+}
+.el-radio__label{
+  font-size: 12px;
+}
+
+.el-radio {
+  display: inline-block; /* 确保 <el-radio> 不会在 Flexbox 布局中自动变为块级元素 */
+  margin-right: 10px;
+
+}
+.el-dropdown-link {
+  cursor: pointer;
+  font-size: 12px;
+}
+.el-icon-arrow-down {
+  font-size: 12px;
 }
 </style>

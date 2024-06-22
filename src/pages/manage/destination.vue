@@ -9,7 +9,7 @@
           <div style="display: flex; margin-left: auto; ustify-items: center; align-items: center;">
             <el-input size="small" placeholder="请输入内容" v-model="searchVal" @clear="handleSearch" @keyup.enter.native="handleSearch" class="input-with-select" clearable>
               <el-select v-model="searchKey" slot="prepend" placeholder="请选择">
-                <el-option v-for="item in destSearchOption" :key="item.value" :label="item.name" :value="item.value"></el-option>
+                <el-option v-for="item in destSearchOption" :key="item.value" :label="item.name" :value="item.value" style="font-size: 12px"></el-option>
               </el-select>
               <el-button size="small" slot="append" icon="el-icon-search" @click="handleSearch"></el-button>
             </el-input>
@@ -61,7 +61,7 @@
           <el-form-item label="目标名称" prop="name" label-width="80px">
             <el-input v-model="form.name" autocomplete="off" clearable/>
           </el-form-item>
-          <el-form-item  label="说明"  label-width="80px">
+          <el-form-item label="说明" label-width="80px">
             <el-input type="textarea" :rows="2" v-model="form.description" clearable/>
           </el-form-item>
           <el-form-item label="归档介质" prop="storage" label-width="80px">
@@ -112,10 +112,12 @@
         <el-table-column prop="compress" label="压缩存储" align="center" width="100px" sortable>
           <template slot-scope="scope">{{ scope.row.compress ? "是" : "否" }}</template>
         </el-table-column>
-        <el-table-column label="操作" width="130" align="center">
+        <el-table-column label="操作" width="110" align="center">
           <template slot-scope="scope">
-            <el-button size="mini" @click="handleEdit(scope.$index, scope.row)" class="el-icon-edit"></el-button>
-            <el-button size="mini" @click="handleDelete(scope.$index, scope.row)" class="el-icon-delete" style="color: red;"></el-button>
+            <el-button-group size="mini">
+              <el-button size="mini" @click="handleEdit(scope.$index, scope.row)" icon="el-icon-edit"></el-button>
+              <el-button size="mini" @click="handleDelete(scope.$index, scope.row)" icon="el-icon-delete" style="color: red;"></el-button>
+            </el-button-group>
           </template>
         </el-table-column>
       </el-table>

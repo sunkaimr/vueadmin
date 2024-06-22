@@ -147,7 +147,7 @@ export const taskStatusOption = [
   {name:"执行前检查失败", value:"exec_check_failed", background:"#FFAAAA"},
   {name:"执行中", value:"executing", background:"#ADD8E6"},
   {name:"执行成功", value:"success", background:"#90EE90"},
-  {name:"执行失败", value:"exec_failed", background:"#FFAAAA"},
+  {name:"执行失败", value:"failed", background:"#FFAAAA"},
   {name:"执行超时", value:"timeout", background:"#FFAAAA"},
 ]
 
@@ -214,3 +214,10 @@ export function getOptionName(optionsArray, propValue) {
   return foundOption ? foundOption.name : propValue;
 }
 
+export function beforeHandleDropdownCommand(index, row,command){
+  return {
+    'index': index,
+    'row': row,
+    'command':command
+  }
+}
