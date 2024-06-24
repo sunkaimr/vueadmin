@@ -18,7 +18,7 @@
         </el-col>
       </el-row>
     </span>
-    <div slot="body" style="min-height: 500px;">
+    <div slot="body" style="min-height: 400px;">
       <el-dialog title="添加源" :visible.sync="dialogAddFormVisible" :close-on-click-modal="false" style="width: 100%;">
         <el-form size="mini" :model="form" :rules="rules" ref="form">
           <el-form-item label="源端名称" prop="name" label-width="80px">
@@ -46,7 +46,7 @@
               <el-input v-model="tableNameFilter" @blur="handleTableNameFilter" @clear="handleTableNameFilter" style="flex: 1;" clearable placeholder="使用正则表达式筛选所需表名"/>
             </div>
             <div style="display: flex; margin-top: 10px; align-items: center;">
-              <el-select v-model="form.tables_name" @blur="tablesNameChanged" multiple clearable style="flex: 1; max-height: 200px; overflow-x: hidden; overflow-y: scroll; margin-right: 10px;">
+              <el-select v-model="form.tables_name" @visible-change="tablesNameChanged" multiple clearable style="flex: 1; max-height: 200px; overflow-x: hidden; overflow-y: scroll; margin-right: 10px;">
                 <el-option
                   v-for="item in filteredTableList" :key="item" :label="item" :value="item">
                 </el-option>
@@ -121,7 +121,10 @@
           </template>
         </el-table-column>
         <el-table-column prop="id" label="ID" width="80px" align="center" sortable> </el-table-column>
-        <el-table-column prop="name" label="源端名称" sortable> </el-table-column>
+        <el-table-column prop="name" label="源端名称" sortable>
+          <template slot-scope="scope">
+          <div class="cell-ellipsis">{{ scope.row.name }}</div>
+        </template></el-table-column>
         <el-table-column prop="bu" label="BU" sortable></el-table-column>
         <el-table-column prop="cluster_name" width="200px" label="集群名称" sortable> </el-table-column>
         <el-table-column prop="database_name" label="源库名" sortable> </el-table-column>
@@ -267,8 +270,10 @@
           this.form.tables_name = [];
         });
       },
-      tablesNameChanged(){
-        this.$notify({ title: '提示', message: "已选择 "+this.form.tables_name.length+" 张表", type: 'info' });
+      tablesNameChanged(visible){
+        if ( !visible && this.form.tables_name.length !== 0 ){
+          this.$notify({ title: '提示', message: "已选择 "+this.form.tables_name.length+" 张表", type: 'info' });
+        }
       },
       selectAllFilter(){
         this.form.tables_name = this.filteredTableList
@@ -276,6 +281,7 @@
       },
       clearSelected(){
         this.form.tables_name = [];
+        this.$notify({ title: '提示', message: "已选择 "+this.form.tables_name.length+" 张表", type: 'info' });
       },
       onAddSubmit(formName){
         this.$refs[formName].validate((valid) => {
@@ -382,9 +388,9 @@
     },
     created(){
       this.searchKey = window.localStorage.getItem("sourceSearchKey");
-      this.tableData.pagination.pageSize = parseInt(window.localStorage.getItem("sourcePageSize"), 10);
+      const pageSize = parseInt(window.localStorage.getItem("sourcePageSize"), 10);
+      this.tableData.pagination.pageSize = Number.isFinite(pageSize) ? pageSize : 10 ;
       this.searchKey = this.searchKey === null ? "id" : this.searchKey;
-
       this.loadData();
     }
   }

@@ -314,7 +314,8 @@ export default {
       this.searchKey = window.localStorage.getItem("destSearchKey");
       this.searchKey = this.searchKey === null ? "id" : this.searchKey;
 
-      this.tableData.pagination.pageSize = parseInt(window.localStorage.getItem("destPageSize"), 10);
+      const pageSize = parseInt(window.localStorage.getItem("destPageSize"), 10);
+      this.tableData.pagination.pageSize = Number.isFinite(pageSize) ? pageSize : 10 ;
 
       this.loadData();
     }

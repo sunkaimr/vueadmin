@@ -11,7 +11,6 @@
 <script>
   import echarts from 'echarts';
   import macarons from 'echarts/theme/macarons';
-  import data from '../../static/data/data.json';
   import {mapGetters, mapActions, mapMutations} from 'vuex'
   const getBeforeDate = (n) => {
     var list = [];

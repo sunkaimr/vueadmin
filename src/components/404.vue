@@ -46,12 +46,13 @@
 
   .error-page .errorWarp .backBtn {
     display: inline-block;
-    color: #fff;
+    color: white;
     margin-bottom: 20px;
     margin-top: 50px;
     padding: 15px 30px;
     border: 1px solid #fff;
     border-radius: 5px;
     cursor: pointer;
+    background-color: #555555;
   }
 </style>

@@ -23,13 +23,13 @@
       <div class="login-box-from">
         <el-form :model="form" ref="form" :rules="rules">
           <el-form-item prop="username">
-            <el-input v-model="form.username" placeholder="请输入用户名" prefix-icon="el-icon-user-solid"></el-input>
+            <el-input v-model="form.username" placeholder="用户名" prefix-icon="el-icon-user-solid"></el-input>
           </el-form-item>
           <el-form-item prop="password">
-            <el-input v-model="form.password" placeholder="请输入密码" prefix-icon="el-icon-key" show-password></el-input>
+            <el-input v-model="form.password" placeholder="密码" prefix-icon="el-icon-key" show-password></el-input>
           </el-form-item>
           <el-form-item size="mini">
-            <el-checkbox v-model="ldap" >使用域账号登陆</el-checkbox>
+            <el-checkbox v-model="ldap" class="login-box-from-checkbox">使用域账号登陆</el-checkbox>
           </el-form-item>
           <el-form-item>
             <el-button type="primary" size="medium" :loading="loading" style="width: 100%" @click.native="login('form')">立即登陆</el-button>
@@ -104,6 +104,9 @@ export default {
       this.loadMenuList();
       redirectUrl && this.$router.push({path: redirectUrl});
     }
+  },
+  mounted() {
+
   }
 }
 </script>
@@ -112,7 +115,7 @@ export default {
   html, body {
     height: 100%;
     margin: 0;
-    overflow: hidden;
+    overflow: auto;
   }
   .login {
     width: 100%;
@@ -124,7 +127,8 @@ export default {
     background-repeat: no-repeat;
     background-size: 100% 100%;
     color: #cccccc;
-    position: relative;
+    position: absolute;
+    overflow: hidden;
   }
 
   .login-box-title {
@@ -158,14 +162,11 @@ export default {
     padding: 30px;
     box-sizing: border-box;
   }
-
-  .el-checkbox{
-    color: #cccccc;
-  }
-  .el-checkbox__input.is-checked+.el-checkbox__label {
-    color: #cccccc;
-  }
-  .agreement {
-      font-size: 12px;
+  .login-box-from-checkbox{
+    color: #eeeeee;
+    .el-checkbox__label {
+      font-size: 13px;
+      color: #eeeeee;
     }
+  }
 </style>

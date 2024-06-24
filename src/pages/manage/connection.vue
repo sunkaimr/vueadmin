@@ -396,7 +396,8 @@
       this.tablePaneName = window.localStorage.getItem("connTablePaneName");
       this.tablePaneName = this.tablePaneName === null ? "mysql" : this.tablePaneName;
 
-      this.tableData.pagination.pageSize = parseInt(window.localStorage.getItem("connPageSize"), 10);
+      const pageSize = parseInt(window.localStorage.getItem("connPageSize"), 10);
+      this.tableData.pagination.pageSize = Number.isFinite(pageSize) ? pageSize : 10 ;
 
       this.loadData();
     }

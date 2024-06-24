@@ -216,7 +216,13 @@
           </template>
         </el-table-column>
         <el-table-column prop="id" label="ID" width="80px" align="center" sortable> </el-table-column>
-        <el-table-column prop="name" label="策略名称" sortable> </el-table-column>
+        <el-table-column prop="name" label="策略名称" sortable>
+          <template slot-scope="scope">
+            <el-tooltip class="item" effect="light" :content="scope.row.name" :open-delay="1000" placement="top">
+              <div class="cell-ellipsis">{{ scope.row.name }}</div>
+            </el-tooltip>
+          </template>
+        </el-table-column>
         <el-table-column prop="enable" label="开启" align="center" width="100px" sortable>
           <template slot-scope="scope">
             <el-switch v-model="scope.row.enable" size="mini" @change="handleEnableChange(scope.$index, scope.row)"/>
@@ -571,75 +577,79 @@
     },
     created(){
       this.searchKey = window.localStorage.getItem("policySearchKey");
-      this.tableData.pagination.pageSize = parseInt(window.localStorage.getItem("policyPageSize"), 10);
+      const pageSize = parseInt(window.localStorage.getItem("policyPageSize"), 10);
+      this.tableData.pagination.pageSize = Number.isFinite(pageSize) ? pageSize : 10 ;
       this.searchKey = this.searchKey === null ? "id" : this.searchKey;
 
       this.loadData();
     }
   }
 </script>
-<style>
-.input-with-select .el-input-group__prepend {
-  background-color: #fff;
-  width: 120px;
-}
+<style scoped>
+  .input-with-select .el-input-group__prepend {
+    background-color: #fff;
+    width: 120px;
+  }
 
-.el-pagination {
-  float: right;
-  margin-top: 15px;
-}
+  .el-pagination {
+    float: right;
+    margin-top: 15px;
+  }
 
-.el-table .cell-ellipsis {
-  display: inline-block;
-  width: 100%;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
+  .el-table .cell-ellipsis {
+    display: inline-block;
+    width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
 
-.table-expand .el-form-item {
-  margin-right: 40px;
-  margin-left: 40px;
-  margin-bottom: 0;
-  width: 45%;
-}
-.table-expand, .table-expand * {
-  font-size: 12px;
-  margin-right: 20px;
-  margin-left: 20px;
-}
+  .table-expand .el-form-item {
+    margin-right: 40px;
+    margin-left: 40px;
+    margin-bottom: 0;
+    width: 45%;
+  }
+  .table-expand, .table-expand * {
+    font-size: 12px;
+    margin-right: 20px;
+    margin-left: 20px;
+  }
 
-.el-checkbox__label {
-  font-size: 12px;
-}
+  .el-checkbox {
+    .el-checkbox__label {
+      font-size: 12px;
+    }
+  }
 
-.el-form-item__label{
-  min-width: 80px;
-}
+  .el-form-item__label{
+    min-width: 80px;
+  }
 
-.table-expand .el-form-item__label {
-  text-align: right;
-  font-size: 12px;
-  padding-right: 0;
-  width: auto;
-  min-width: 80px;
-  font-weight: bolder;
-}
+  .table-expand .el-form-item__label {
+    text-align: right;
+    font-size: 12px;
+    padding-right: 0;
+    width: auto;
+    min-width: 80px;
+    font-weight: bolder;
+  }
 
-.table-expand .el-form--label-left .el-form-item__label {
-  text-align: right;
-  min-width: 100px;
-}
+  .table-expand .el-form--label-left .el-form-item__label {
+    text-align: right;
+    min-width: 100px;
+  }
 
-.word-wrap {
-  word-break: break-all;
-}
+  .word-wrap {
+    word-break: break-all;
+  }
 
-.el-dropdown-link {
-  cursor: pointer;
-  font-size: 12px;
-}
-.el-icon-arrow-down {
-  font-size: 12px;
-}
+  .el-dropdown-link {
+    cursor: pointer;
+    font-size: 12px;
+  }
+
+  .el-icon-arrow-down {
+    font-size: 12px;
+  }
 </style>

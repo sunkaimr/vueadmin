@@ -243,6 +243,7 @@ export default {
   height: 38px;
   line-height: 38px;
   margin-top: 6px;
+  text-align: left;
 }
 
 .main-header .navbar {

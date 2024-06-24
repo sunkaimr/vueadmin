@@ -2,14 +2,18 @@
   <imp-panel>
     <h4 class="box-title" slot="header" style="width: 100%;">
       <el-row style="width: 100%; display: flex; align-items: flex-end;">
-        <el-col :span="24" style="display: flex; align-items: flex-end;">
-          <div style="display: flex; margin-left: auto; ustify-items: center; align-items: center;">
+        <el-col :span="14" style="display: flex; justify-content: flex-end;">
+          <div style="display: flex; align-items: center; height: 50px">
             <el-radio-group size="mini" @input="taskStatusRadioChanged" v-model="taskStatusRadio">
               <el-radio :label="1">未执行</el-radio>
               <el-radio :label="2">执行中</el-radio>
               <el-radio :label="3">已执行</el-radio>
               <el-radio :label="0">全部</el-radio>
             </el-radio-group>
+          </div>
+        </el-col>
+        <el-col :span="10" style="display: flex; align-items: flex-end;">
+          <div style="display: flex; margin-left: auto; justify-items: center; align-items: center; height: 50px">
             <el-select size="small" v-model="searchTaskStatus" @change="handleSearch" placeholder="任务状态" multiple clearable style="max-height: 32px; overflow-x: hidden; overflow-y: hidden; margin-right: 10px;">
               <el-option v-for="item in taskStatusOption" :key="item.value" :label="item.name" :value="item.value" style="font-size: 12px"></el-option>
             </el-select>
@@ -477,9 +481,12 @@
       this.searchKey = window.localStorage.getItem("taskSearchKey");
       this.searchKey = this.searchKey === null ? "id" : this.searchKey;
 
-      this.tableData.pagination.pageSize = parseInt(window.localStorage.getItem("taskPageSize"), 10);
+      const pageSize = parseInt(window.localStorage.getItem("taskPageSize"), 10);
+      this.tableData.pagination.pageSize = Number.isFinite(pageSize) ? pageSize : 10 ;
 
-      this.taskStatusRadio =  parseInt(window.localStorage.getItem("taskStatusRadio"));
+      const radio =  parseInt(window.localStorage.getItem("taskStatusRadio"));
+      this.taskStatusRadio =  Number.isFinite(radio) ? radio : 0;
+
       switch (this.taskStatusRadio) {
         case 1:
           this.searchTaskStatus = [ "scheduled", "supplement_failed", "waiting", "exec_check_failed"];
@@ -499,82 +506,82 @@
     }
   }
 </script>
-<style>
-.input-with-select .el-input-group__prepend {
-  background-color: #fff;
-  width: 120px;
-}
+<style scoped>
+  .input-with-select .el-input-group__prepend {
+    background-color: #fff;
+    width: 120px;
+  }
 
-.el-pagination {
-  float: right;
-  margin-top: 15px;
-}
+  .el-pagination {
+    float: right;
+    margin-top: 15px;
+  }
 
-.el-table .cell-ellipsis {
-  display: inline-block;
-  width: 100%;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
+  .el-table .cell-ellipsis {
+    display: inline-block;
+    width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
 
-.table-expand .el-form-item {
-  margin-right: 40px;
-  margin-left: 40px;
-  margin-bottom: 0;
-  width: 45%;
-}
-.table-expand, .table-expand * {
-  font-size: 12px;
-  margin-right: 20px;
-  margin-left: 20px;
-}
+  .table-expand .el-form-item {
+    margin-right: 40px;
+    margin-left: 40px;
+    margin-bottom: 0;
+    width: 45%;
+  }
+  .table-expand, .table-expand * {
+    font-size: 12px;
+    margin-right: 20px;
+    margin-left: 20px;
+  }
 
-.el-checkbox__label {
-  font-size: 12px;
-}
+  .el-checkbox__label {
+    font-size: 12px;
+  }
 
-.el-form-item__label{
-  min-width: 80px;
-}
+  .el-form-item__label{
+    min-width: 80px;
+  }
 
-.table-expand .el-form-item__label {
-  text-align: right;
-  font-size: 12px;
-  padding-right: 0;
-  width: auto;
-  min-width: 80px;
-  font-weight: bolder;
-}
+  .table-expand .el-form-item__label {
+    text-align: right;
+    font-size: 12px;
+    padding-right: 0;
+    width: auto;
+    min-width: 80px;
+    font-weight: bolder;
+  }
 
-.table-expand .el-form--label-left .el-form-item__label {
-  text-align: right;
-  min-width: 100px;
-}
+  .table-expand .el-form--label-left .el-form-item__label {
+    text-align: right;
+    min-width: 100px;
+  }
 
-.word-wrap {
-  word-break: break-all;
-}
+  .word-wrap {
+    word-break: break-all;
+  }
 
-.el-radio-group {
-  display: flex; /* 使用 Flexbox 布局 */
-  flex-direction: row; /* 确保子元素横向排列 */
-  margin-right: 20px;
-}
-.el-radio__label{
-  font-size: 12px;
-}
+  .el-radio-group {
+    display: flex;
+    flex-direction: row;
+    margin-right: 20px;
 
-.el-radio {
-  display: inline-block; /* 确保 <el-radio> 不会在 Flexbox 布局中自动变为块级元素 */
-  margin-right: 10px;
+    .el-radio {
+      display: inline-block;
+      margin-right: 10px;
+    }
+    .el-radio__label{
+      font-size: 12px;
+    }
+  }
 
-}
-.el-dropdown-link {
-  cursor: pointer;
-  font-size: 12px;
-}
-.el-icon-arrow-down {
-  font-size: 12px;
-}
+  .el-dropdown-link {
+    cursor: pointer;
+    font-size: 12px;
+  }
+  .el-icon-arrow-down {
+    font-size: 12px;
+  }
 </style>

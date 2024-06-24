@@ -12,7 +12,13 @@ import task from "../pages/task.vue";
 // Routes
 const routes = [
   {
-    path: '/login', component: login
+    path: '/',
+    component: login,
+    redirect: '/source',
+  },
+  {
+    path: '/login',
+    component: login
   },
   {
     path: '', component: app, children:
@@ -28,7 +34,13 @@ const routes = [
         { path: '/manage/config', component: config },
       ]
   },
-  { path: '*', component: NotFoundView }
+  {
+    path: '*',
+    meta: {
+      title: "页面走丢了",
+    },
+    component: NotFoundView
+  }
 ]
 
 

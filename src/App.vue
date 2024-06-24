@@ -122,6 +122,10 @@
 
 <style>
 
+  .el-loading-mask {
+    background-color: rgba(0, 0, 0, 0.3);
+  }
+
   .animated {
     animation-duration: .2s;
   }
