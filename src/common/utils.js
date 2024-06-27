@@ -221,3 +221,12 @@ export function beforeHandleDropdownCommand(index, row,command){
     'command':command
   }
 }
+
+export const tableExpandLabelStyle= {
+  'min-width': '100px',
+}
+
+export const tableExpandContentStyle= {
+  'min-width': '200px',
+  'word-break': 'break-all'
+}

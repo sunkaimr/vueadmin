@@ -193,8 +193,8 @@
               border
               size="mini"
               column=2
-              labelStyle="min-width: 80px;"
-              contentStyle='min-width: 200px'
+              :labelStyle="tableExpandLabelStyle"
+              :contentStyle='tableExpandContentStyle'
               with="100%" >
               <el-descriptions-item label="ID">{{ props.row.id }}</el-descriptions-item>
               <el-descriptions-item label="策略名称">{{ props.row.name }}</el-descriptions-item>
@@ -293,7 +293,9 @@
     notifyPolicyOption,
     policySearchOption,
     policyNameMap,
-    beforeHandleDropdownCommand
+    beforeHandleDropdownCommand,
+    tableExpandLabelStyle,
+    tableExpandContentStyle
   } from "../common/utils";
 
   export default {
@@ -309,6 +311,8 @@
     },
     data(){
       return {
+        tableExpandLabelStyle,
+        tableExpandContentStyle,
         displayEnablePolicy: false,
         periodOption,
         governOption,

@@ -104,8 +104,8 @@
               size="mini"
               class="table-expand"
               column=2
-              labelStyle="min-width: 80px;"
-              contentStyle='min-width: 200px'
+              :labelStyle="tableExpandLabelStyle"
+              :contentStyle="tableExpandContentStyle"
               with="100%" >
                 <el-descriptions-item label="ID">{{ props.row.id }}</el-descriptions-item>
                 <el-descriptions-item label="源端名称">{{ props.row.name }}</el-descriptions-item>
@@ -159,7 +159,7 @@
   import panel from "../components/panel.vue"
   import * as api from "../api"
   import * as sysApi from '../services/sys'
-  import {sourceSearchOption} from '../common/utils'
+  import {sourceSearchOption,tableExpandLabelStyle,tableExpandContentStyle} from '../common/utils'
 
   export default {
     components: {
@@ -174,6 +174,8 @@
     },
     data(){
       return {
+        tableExpandLabelStyle,
+        tableExpandContentStyle,
         sourceSearchOption,
         dialogEditFormVisible: false,
         dialogAddFormVisible: false,

@@ -115,6 +115,8 @@
               size="mini"
               class="table-expand"
               :column=3
+              :labelStyle="tableExpandLabelStyle"
+              :contentStyle='tableExpandContentStyle'
               with="100%" >
               <el-descriptions-item label="ID">{{ props.row.id }}</el-descriptions-item>
               <el-descriptions-item label="任务名称">{{ props.row.name }}</el-descriptions-item>
@@ -241,6 +243,8 @@
     cleaningSpeedOption,
     taskNameMap,
     beforeHandleDropdownCommand,
+    tableExpandLabelStyle,
+    tableExpandContentStyle,
   } from "../common/utils";
 
   export default {
@@ -266,6 +270,8 @@
     },
     data(){
       return {
+        tableExpandLabelStyle,
+        tableExpandContentStyle,
         taskNameMap,
         taskStatusRadio: 0,
         periodOption,
