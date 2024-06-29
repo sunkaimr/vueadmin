@@ -205,7 +205,7 @@
         <el-table-column label="操作" width="90" align="center">
           <template slot-scope="scope">
             <el-dropdown size="small" @command="handleDropdownCommand" :hide-on-click="false">
-              <span class="el-dropdown-link">更多 <i class="el-icon-circle-plus-outline"></i></span>
+              <span class="el-dropdown-link">更多 <i class="el-icon-arrow-down"></i></span>
               <el-dropdown-menu slot="dropdown">
                 <el-dropdown-item :command="beforeHandleDropdownCommand(scope.$index, scope.row, 'edit')" icon="el-icon-edit"> 修改 </el-dropdown-item>
                 <el-dropdown-item :command="beforeHandleDropdownCommand(scope.$index, scope.row, 'delete')" icon="el-icon-delete"> 删除 </el-dropdown-item>

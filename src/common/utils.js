@@ -180,6 +180,20 @@ export const destSearchOption = [
   { name:"目标表名", value:"table_name" },
 ]
 
+export const clusterSearchOption = [
+  { name:"ID", value:"id" },
+  { name:"集群名称", value:"cluster_name" },
+  { name:"集群ID", value:"cluster_id" },
+  { name:"环境", value:"env" },
+  { name:"添加方式", value:"import_from" },
+  { name:"集群类型", value:"cluster_type" },
+  { name:"连接ID", value:"connection_id" },
+  { name:"服务地址", value:"service_addr" },
+  { name:"读写地址", value:"write_addr" },
+  { name:"只读地址", value:"read_addr" },
+  { name:"用户名", value:"user_name" },
+]
+
 export const policyNameMap= [
   { name:"名称", value:"Name" },
   { name:"说明", value:"Description" },
@@ -198,10 +212,21 @@ export const taskNameMap= [
   { name:"名称", value:"Name" },
   { name:"说明", value:"Description" },
   { name:"开启", value:"Enable" },
-  {name:"期望执行日期", value:"Day" },
-  {name:"执行窗口", value:"ExecuteWindow" },
-  {name:"通知策略", value:"NotifyPolicy" },
-  {name:"关注人", value:"Relevant" },
+  { name:"期望执行日期", value:"Day" },
+  { name:"执行窗口", value:"ExecuteWindow" },
+  { name:"通知策略", value:"NotifyPolicy" },
+  { name:"关注人", value:"Relevant" },
+]
+
+export const envNameMap= [
+  { name:"测试", value:"test" },
+  { name:"预发", value:"stage" },
+  { name:"生产", value:"prod" },
+]
+
+export const importFromNameMap= [
+  { name:"手动添加", value:"customized" },
+  { name:"外部导入", value:"ipaas" },
 ]
 
 export function getOptionBackground(optionsArray, propValue) {

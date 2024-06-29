@@ -6,6 +6,7 @@ import sysUser from "../pages/manage/user.vue";
 import connect from "../pages/manage/connection.vue";
 import dest from "../pages/manage/destination.vue";
 import config from "../pages/manage/config.vue";
+import cluster from "../pages/manage/cluster.vue";
 import source from "../pages/source.vue";
 import policy from "../pages/policy.vue";
 import task from "../pages/task.vue";
@@ -27,6 +28,7 @@ const routes = [
         { path: '/policy', component: policy },
         { path: '/task', component: task },
         { path: '/index', component: task  },
+        { path: '/manage/cluster', component: cluster },
         { path: '/manage/user', component: sysUser },
         { path: '/manage/dest', component: dest },
         { path: '/manage', component: connect },

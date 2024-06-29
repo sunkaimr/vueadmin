@@ -3,6 +3,7 @@ import qs from "qs";
 import auth from "./auth";
 import { getBaseUrl } from "../common/utils";
 import { MessageBox, Message } from "element-ui";
+import router from "../router";
 
 // axios 配置
 axios.defaults.timeout = 600000;
@@ -40,23 +41,17 @@ axios.interceptors.response.use(
     return response;
   },
   error => {
+    if (error.response && error.response.data &&
+      (error.response.data.code === 4010001 ||
+        error.response.data.code === 4010002 ||
+        error.response.data.code === 4010003
+      )) {
+      router.push({name: "login", path: "/login"});
+      return;
+    }
     Message({ type:"error", message: error.response.data.message});
     return Promise.reject(error);
   });
 
-export function fetch (url, config = { method: 'get' }) {
-  return axios.request({ ...config, url })
-  // return new Promise((resolve, reject) => {
-  //   axios.request({ ...config, url })
-  //     .then(response => {
-  //       resolve(response.data);
-  //     }, err => {
-  //       reject(err);
-  //     })
-  //     .catch((error) => {
-  //       reject(error)
-  //     })
-  // })
-}
 
 export default axios

@@ -30,7 +30,7 @@
           <el-form-item label="集群ID" prop="cluster_id" label-width="80px">
             <el-select v-model="form.cluster_id" @change="clusterChange" filterable placeholder="请选择集群" style="width: 100%;">
               <el-option
-                v-for="item in clusterList" :key="item.cluster_id" :label="item.cluster_id + ' | ' +item.cluster_name" :value="item.cluster_id">
+                v-for="item in clusterList" :key="item.cluster_id" :label="item.cluster_id + ' | ' + item.cluster_name" :value="item.cluster_id">
               </el-option>
             </el-select>
           </el-form-item>
@@ -246,9 +246,12 @@
         this.tableNameFilter = "";
         this.filteredTableList = [];
         this.form = {};
-        sysApi.mysqlClusterList().then(res => {
-          this.clusterList = res.data;
+        sysApi.clusterList({
+          pageSize: 10000,
+        }).then(res => {
+          this.clusterList = res.data.items;
         });
+
       },
       handleEdit(index, row){
         this.dialogEditFormVisible = true;
@@ -261,12 +264,12 @@
       },
       clusterChange(clusterID){
         this.selectedClusterId = clusterID;
-        sysApi.mysqlDatabaseList(clusterID).then(res => {
+        sysApi.clusterDatabaseList(clusterID).then(res => {
           this.databaseList = res.data;
         });
       },
       databaseChange(database){
-        sysApi.mysqlTableList(this.selectedClusterId, database).then(res => {
+        sysApi.clusterTableList(this.selectedClusterId, database).then(res => {
           this.tableList = res.data;
           this.filteredTableList = this.tableList;
           this.form.tables_name = [];

@@ -51,7 +51,17 @@ export default {
         {
           "id": 7,
           "parentId": 6,
-          "sort": 1,
+          "sort": 7,
+          "name": "集群管理",
+          "href": "/manage/cluster",
+          "icon": "fa fa-server",
+          "children": [],
+          "isShow": "1"
+        },
+        {
+          "id": 8,
+          "parentId": 6,
+          "sort": 8,
           "name": "连接信息",
           "href": "/manage/connect",
           "icon": "fa fa-exchange",
@@ -59,9 +69,9 @@ export default {
           "isShow": "1"
         },
         {
-          "id": 108,
+          "id": 9,
           "parentId": 6,
-          "sort": 0,
+          "sort": 9,
           "name": "目标管理",
           "href": "/manage/dest",
           "icon": "fa fa-archive",
@@ -69,9 +79,9 @@ export default {
           "isShow": "1"
         },
         {
-          "id": 9,
+          "id": 10,
           "parentId": 6,
-          "sort": 3,
+          "sort": 10,
           "name": "用户管理",
           "href": "/manage/user",
           "icon": "fa fa-user-plus",
@@ -79,9 +89,9 @@ export default {
           "isShow": "1"
         },
         {
-          "id": 10,
+          "id": 11,
           "parentId": 6,
-          "sort": 3,
+          "sort": 12,
           "name": "系统设置",
           "href": "/manage/config",
           "icon": "fa fa-cog",

@@ -3,9 +3,10 @@ export const CONTEXT = '/mysql-enhance-pack/api/v1';
 
 export const LOGIN = CONTEXT + '/user/login';
 export const SOURCE_LIST = CONTEXT + '/source';
-export const MYSQL_CLUSTER_LIST = CONTEXT + '/source/mysql';
-export const MYSQL_DATABASE_LIST = CONTEXT + '/source/mysql/{mysql}/databases';
-export const MYSQL_TABLE_LIST = CONTEXT + '/source/mysql/{mysql}/{database}/tables';
+export const CLUSTER = CONTEXT + '/cluster';
+export const CLUSTER_SYNC = CONTEXT + '/cluster/sync';
+export const CLUSTER_DATABASE_LIST = CONTEXT + '/cluster/{cluster_id}/databases';
+export const CLUSTER_TABLE_LIST = CONTEXT + '/cluster/{cluster_id}/{database}/tables';
 export const SOURCE_ADD = CONTEXT + '/source/';
 export const POLICY_LIST = CONTEXT + '/policy/';
 export const POLICY_REVISION = CONTEXT + '/policy/revision';

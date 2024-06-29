@@ -1,7 +1,7 @@
 import axios from "../common/axios";
 import * as api from "../api";
 import defaultValue from "./default";
-import {MYSQL_CLUSTER_LIST, MYSQL_DATABASE_LIST, MYSQL_TABLE_LIST, TASK_REVISION} from "../api";
+import {CLUSTER, CLUSTER_DATABASE_LIST, CLUSTER_TABLE_LIST, TASK_REVISION} from "../api";
 import qs from 'qs'
 
 export function login (params) {
@@ -100,10 +100,10 @@ export function getDestList (params) {
   })
 }
 
-export function mysqlClusterList () {
+export function clusterList (params) {
   const clusterList = {}
   return new Promise((resolve, reject) => {
-    axios.get(api.MYSQL_CLUSTER_LIST).then(response => {
+    axios.get(api.CLUSTER,{params}).then(response => {
       resolve(response.data);
     }, err => {
       resolve(clusterList);
@@ -113,9 +113,9 @@ export function mysqlClusterList () {
   })
 }
 
-export function mysqlDatabaseList (clusterID) {
+export function clusterDatabaseList (clusterID) {
   const databaseList = {}
-  const url = api.MYSQL_DATABASE_LIST.replace('{mysql}', clusterID);
+  const url = api.CLUSTER_DATABASE_LIST.replace('{cluster_id}', clusterID);
   return new Promise((resolve, reject) => {
     axios.get(url).then(response => {
       resolve(response.data);
@@ -127,9 +127,9 @@ export function mysqlDatabaseList (clusterID) {
   })
 }
 
-export function mysqlTableList (clusterID, database) {
+export function clusterTableList (clusterID, database) {
   const tableList = {}
-  const url = api.MYSQL_TABLE_LIST.replace('{mysql}', clusterID).replace('{database}', database);
+  const url = api.CLUSTER_TABLE_LIST.replace('{cluster_id}', clusterID).replace('{database}', database);
   return new Promise((resolve, reject) => {
     axios.get(url).then(response => {
       resolve(response.data);
