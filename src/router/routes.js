@@ -15,7 +15,7 @@ const routes = [
   {
     path: '/',
     component: login,
-    redirect: '/source',
+    redirect: '/task',
   },
   {
     path: '/login',
@@ -24,6 +24,7 @@ const routes = [
   {
     path: '', component: app, children:
       [
+        { path: '/dashboard', component: dashboard },
         { path: '/source', component: source },
         { path: '/policy', component: policy },
         { path: '/task', component: task },
