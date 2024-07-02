@@ -21,9 +21,9 @@
     <div slot="body" style="min-height: 400px;">
       <el-dialog title="添加源" :visible.sync="dialogAddFormVisible" :close-on-click-modal="false" style="width: 100%;">
         <el-form size="mini" :model="form" :rules="rules" ref="form">
-          <el-form-item label="源端名称" prop="name" label-width="80px">
-            <el-input v-model="form.name" autocomplete="off" clearable/>
-          </el-form-item>
+<!--          <el-form-item label="源端名称" prop="name" label-width="80px">-->
+<!--            <el-input v-model="form.name" autocomplete="off" clearable/>-->
+<!--          </el-form-item>-->
           <el-form-item  label="说明"  label-width="80px">
             <el-input type="textarea" :rows="2" v-model="form.description" clearable/>
           </el-form-item>
@@ -123,8 +123,11 @@
         <el-table-column prop="id" label="ID" width="80px" align="center" sortable> </el-table-column>
         <el-table-column prop="name" label="源端名称" sortable>
           <template slot-scope="scope">
-          <div class="cell-ellipsis">{{ scope.row.name }}</div>
-        </template></el-table-column>
+            <el-tooltip class="item" effect="light" :content="scope.row.name" :open-delay="1000" placement="top">
+              <div class="cell-ellipsis">{{ scope.row.name }}</div>
+            </el-tooltip>
+          </template>
+        </el-table-column>
         <el-table-column prop="bu" label="BU" sortable></el-table-column>
         <el-table-column prop="cluster_name" width="200px" label="集群名称" sortable> </el-table-column>
         <el-table-column prop="database_name" label="源库名" sortable> </el-table-column>
@@ -191,9 +194,9 @@
           columns: "",
         },
         rules: {
-          name: [
-            { required: true, message: '请输入源端名称', trigger: 'blur' },
-          ],
+          // name: [
+          //   { required: true, message: '请输入源端名称', trigger: 'blur' },
+          // ],
           cluster_id: [
             { required: true, message: '请选择集群', trigger: 'blur' }
           ],

@@ -173,7 +173,13 @@
           </template>
         </el-table-column>
         <el-table-column prop="policy_id" label="策略ID" align="center" width="90px" sortable> </el-table-column>
-        <el-table-column prop="name" label="任务名称" sortable> </el-table-column>
+        <el-table-column prop="name" label="任务名称" sortable>
+          <template slot-scope="scope">
+            <el-tooltip class="item" effect="light" :content="scope.row.name" :open-delay="1000" placement="top">
+              <div class="cell-ellipsis">{{ scope.row.name }}</div>
+            </el-tooltip>
+          </template>
+        </el-table-column>
         <el-table-column prop="govern" label="清理方式" align="center" width="100px" sortable>
           <template slot-scope="scope">{{getOptionName(governOption, scope.row.govern)}}</template>
         </el-table-column>

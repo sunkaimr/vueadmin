@@ -22,9 +22,9 @@
     <div slot="body">
       <el-dialog title="添加策略" :visible.sync="dialogAddFormVisible" :close-on-click-modal="false" :rules="rules" style="width: 100%;">
         <el-form size="mini" :model="form" :rules="rules" ref="form">
-          <el-form-item class="el-form-item-label" label="策略名称" label-width="80px" prop="name">
-            <el-input v-model="form.name" autocomplete="off" clearable/>
-          </el-form-item>
+<!--          <el-form-item class="el-form-item-label" label="策略名称" label-width="80px" prop="name">-->
+<!--            <el-input v-model="form.name" autocomplete="off" clearable/>-->
+<!--          </el-form-item>-->
           <el-form-item label="说明" label-width="80px">
             <el-input type="textarea" :rows="2" v-model="form.description" clearable/>
           </el-form-item>
@@ -69,7 +69,7 @@
               <el-option v-for="i in governOption" :key="i.value" :label="i.name" :value="i.value"></el-option>
             </el-select>
           </el-form-item>
-          <el-form-item v-if="form.govern !=='truncate' && form.govern !=='recreate'" label="治理条件" prop="condition" label-width="80px">
+          <el-form-item v-if="form.govern !=='truncate' && form.govern !=='rebuild'" label="治理条件" prop="condition" label-width="80px">
             <el-input type="textarea" :rows="2" v-model="form.condition" clearable/>
           </el-form-item>
           <el-form-item label="清理速度" label-width="80px" prop="cleaning_speed">
@@ -139,7 +139,7 @@
               <el-option v-for="i in governOption" :key="i.value" :label="i.name" :value="i.value"></el-option>
             </el-select>
           </el-form-item>
-          <el-form-item v-if="form.govern !=='truncate' && form.govern !=='recreate'" label="治理条件" prop="condition" label-width="80px">
+          <el-form-item v-if="form.govern !=='truncate' && form.govern !=='rebuild'" label="治理条件" prop="condition" label-width="80px">
             <el-input type="textarea" :rows="2" v-model="form.condition" clearable/>
           </el-form-item>
           <el-form-item label="清理速度" prop="cleaning_speed" label-width="80px">
@@ -355,9 +355,9 @@
           rows: []
         },
         rules: {
-          name: [
-            { required: true, message: '请输入策略名称', trigger: 'blur' },
-          ],
+          // name: [
+          //   { required: true, message: '请输入策略名称', trigger: 'blur' },
+          // ],
           enable: [
             { required: true, message: '是否开启', trigger: 'blur' }
           ],

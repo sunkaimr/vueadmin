@@ -124,7 +124,7 @@ export const governOption = [
   {name:"删除数据", value:"delete", background:"#FFFFE0"},
   {name:"备份删除", value:"backup-delete", background:"#DDA0DD"},
   {name:"归档数据", value:"archive", background:"#90EE90"},
-  {name:"重建表", value:"recreate", background:"#ADD8E6"},
+  {name:"重建表", value:"rebuild", background:"#ADD8E6"},
 ]
 
 export const cleaningSpeedOption = [

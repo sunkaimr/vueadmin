@@ -16,25 +16,25 @@
       <el-tabs v-model="tablePaneName" type="card" @tab-click="handleTablePaneChane" style="min-height: 500px;">
         <el-tab-pane label="源端配置" name="source">
           <el-form size="mini" :model="form" style="width: 70%;" ref="form">
-            <el-form-item label="源端库用户名" prop="src_db_user" label-width="150px">
-              <el-input v-model="form.src_db_user" autocomplete="off" clearable/>
+            <el-form-item label="源端库用户名" prop="cluster_default_user" label-width="150px">
+              <el-input v-model="form.cluster_default_user" autocomplete="off" clearable/>
             </el-form-item>
             <el-form-item label="源端库密码" label-width="150px">
-              <el-input v-model="form.src_db_passwd" placeholder="请输入密码" show-password></el-input>
+              <el-input v-model="form.cluster_default_passwd" placeholder="请输入密码" show-password></el-input>
             </el-form-item>
             <el-form-item  label="库黑名单"  label-width="150px">
-              <el-input type="textarea" :rows="2" v-model="form.src_exclude_database" clearable
+              <el-input type="textarea" :rows="2" v-model="form.cluster_exclude_database" clearable
                         placeholder="列入黑名单的库名（如sys,mysql等系统库）对用户不可见，多个库用英文逗号分割"/>
             </el-form-item>
             <el-form-item  label="表黑名单"  label-width="150px">
-              <el-input type="textarea" :rows="2" v-model="form.src_exclude_tables" clearable
+              <el-input type="textarea" :rows="2" v-model="form.cluster_exclude_tables" clearable
                         placeholder="列入黑名单的表名对用户不可见，多个表用英文逗号分割"/>
             </el-form-item>
           </el-form>
         </el-tab-pane>
         <el-tab-pane label="任务配置" name="task">
           <el-form size="mini" :model="form" ref="form">
-            <el-form-item label="任务最大并发数" prop="src_db_user" label-width="150px">
+            <el-form-item label="任务最大并发数" prop="task_max_parallel" label-width="150px">
               <el-input-number prop="task_max_parallel" v-model="form.task_max_parallel" :min="1" />
             </el-form-item>
             <el-form-item label="任务超时时间(秒)" label-width="150px">
@@ -44,7 +44,7 @@
         </el-tab-pane>
         <el-tab-pane label="其他设置" name="other">
           <el-form size="mini" :model="form" ref="form">
-            <el-form-item label="监控地址" prop="src_db_user" label-width="150px">
+            <el-form-item label="监控地址" prop="thanos_url" label-width="150px">
               <el-input v-model="form.thanos_url" autocomplete="off" clearable/>
             </el-form-item>
           </el-form>
@@ -68,10 +68,10 @@
         fullscreenLoading: false,
         tablePaneName: "source",
         form :{
-          src_db_user: "",
-          src_db_passwd: "",
-          src_exclude_database: "",
-          src_exclude_tables: "",
+          cluster_default_user: "",
+          cluster_default_passwd: "",
+          cluster_exclude_database: "",
+          cluster_exclude_tables: "",
           thanos_url: "",
           task_max_parallel: 0,
           task_timeout: 3600,
