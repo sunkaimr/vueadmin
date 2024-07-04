@@ -42,10 +42,7 @@ axios.interceptors.response.use(
   },
   error => {
     if (error.response && error.response.data &&
-      (error.response.data.code === 4010001 ||
-        error.response.data.code === 4010002 ||
-        error.response.data.code === 4010003
-      )) {
+      (error.response.data.code === 4010001 || error.response.data.code === 4010002 || error.response.data.code === 4010003 )) {
       router.push({name: "login", path: "/login"});
       return;
     }

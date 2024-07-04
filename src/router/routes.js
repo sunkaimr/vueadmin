@@ -14,8 +14,8 @@ import task from "../pages/task.vue";
 const routes = [
   {
     path: '/',
-    component: login,
-    redirect: '/task',
+    component: dashboard,
+    redirect: '/dashboard',
   },
   {
     path: '/login',

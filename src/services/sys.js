@@ -1,7 +1,14 @@
 import axios from "../common/axios";
 import * as api from "../api";
 import defaultValue from "./default";
-import {CLUSTER, CLUSTER_DATABASE_LIST, CLUSTER_TABLE_LIST, TASK_REVISION} from "../api";
+import {
+  CLUSTER,
+  CLUSTER_DATABASE_LIST,
+  CLUSTER_TABLE_LIST,
+  TASK_PLAN,
+  TASK_REVISION,
+  TASK_STATISTIC_SUMMARY
+} from "../api";
 import qs from 'qs'
 
 export function login (params) {
@@ -194,3 +201,30 @@ export function getTaskRevision (params) {
       })
   })
 }
+
+export function getTaskStatisticSummary(params){
+  return new Promise((resolve, reject) => {
+    axios.get(api.TASK_STATISTIC_SUMMARY, {params}).then(response => {
+      resolve(response.data);
+    }, err => {
+      resolve(err);
+    })
+      .catch((error) => {
+        resolve(error)
+      })
+  })
+}
+
+export function getTaskPlan(params){
+  return new Promise((resolve, reject) => {
+    axios.get(api.TASK_PLAN, {params}).then(response => {
+      resolve(response.data);
+    }, err => {
+      resolve(err);
+    })
+      .catch((error) => {
+        resolve(error)
+      })
+  })
+}
+

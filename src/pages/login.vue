@@ -85,7 +85,7 @@ export default {
         }
 
         this.loading = true;
-        let redirectUrl = '/task';
+        let redirectUrl = '/dashboard';
         if (this.$route.query && this.$route.query != null && this.$route.query.redirect && this.$route.query.redirect != null) {
           redirectUrl = this.$route.query.redirect;
         }
@@ -164,9 +164,9 @@ export default {
   }
   .login-box-from-checkbox{
     color: #eeeeee;
-    .el-checkbox__label {
-      font-size: 13px;
-      color: #eeeeee;
-    }
+  }
+  .el-checkbox__label {
+    font-size: 13px;
+    color: #eeeeee;
   }
 </style>

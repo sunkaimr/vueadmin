@@ -4,20 +4,27 @@
       <el-col :span="8">
         <el-card class="box-card">
           <div slot="header">
-            <span class="box-card-head">今日任务 - <span>30</span></span>
+            <span class="box-card-head">今日任务 -
+              <span>
+              {{ statisticToday.success + statisticToday.fail + statisticToday.executing+statisticToday.upcoming}}
+              </span>
+            </span>
           </div>
           <div class="box-card-body">
             <div class="text item">
-              <i class="el-icon-success"/> 成&#x3000;功：<span>33</span>
+              <i class="el-icon-success"/> 成&#x3000;功：<span>{{ statisticToday.success }}</span>
             </div>
             <div class="text item">
-              <i class="el-icon-error"/> 失&#x3000;败：<span>30</span>
+              <i class="el-icon-error"/> 失&#x3000;败：<span>{{ statisticToday.fail }}</span>
             </div>
             <div class="text item">
-              <i class="el-icon-s-help"/> 执行中：<span>3</span>
+              <i class="el-icon-s-help"/> 执行中：<span>{{ statisticToday.executing }}</span>
             </div>
             <div class="text item">
-              <i class="el-icon-info"/> 待执行：<span>13</span>
+              <i class="el-icon-info"/> 待执行：<span>{{ statisticToday.upcoming }}</span>
+            </div>
+            <div class="text item">
+              <i class="el-icon-question"/> 成功率：<span>{{ statisticToday.successRate }}%</span>
             </div>
           </div>
         </el-card>
@@ -25,20 +32,27 @@
       <el-col :span="8">
         <el-card class="box-card">
           <div slot="header">
-            <span class="box-card-head">本月任务 - <span>3340</span></span>
+            <span class="box-card-head">近一月任务 -
+              <span>
+              {{ statisticLastMonth.success + statisticLastMonth.fail + statisticLastMonth.executing + statisticLastMonth.upcoming}}
+              </span>
+            </span>
           </div>
           <div class="box-card-body">
             <div class="text item">
-              <i class="el-icon-success"/> 成&#x3000;功：<span>3453</span>
+              <i class="el-icon-success"/> 成&#x3000;功：<span>{{ statisticLastMonth.success }}</span>
             </div>
             <div class="text item">
-              <i class="el-icon-error"/> 失&#x3000;败：<span>30</span>
+              <i class="el-icon-error"/> 失&#x3000;败：<span>{{ statisticLastMonth.fail }}</span>
             </div>
             <div class="text item">
-              <i class="el-icon-s-help"/> 执行中：<span>34</span>
+              <i class="el-icon-s-help"/> 执行中：<span>{{ statisticLastMonth.executing }}</span>
             </div>
             <div class="text item">
-              <i class="el-icon-info"/> 待执行：<span>1453</span>
+              <i class="el-icon-info"/> 待执行：<span>{{ statisticLastMonth.upcoming }}</span>
+            </div>
+            <div class="text item">
+              <i class="el-icon-question"/> 成功率：<span>{{ statisticLastMonth.successRate }}%</span>
             </div>
           </div>
         </el-card>
@@ -46,20 +60,27 @@
       <el-col :span="8">
         <el-card class="box-card">
           <div slot="header">
-            <span class="box-card-head">全部任务 - <span>37650</span></span>
+            <span class="box-card-head">全部任务 -
+              <span>
+              {{ statisticTotal.success + statisticTotal.fail + statisticTotal.executing + statisticTotal.upcoming}}
+              </span>
+            </span>
           </div>
           <div class="box-card-body">
             <div class="text item">
-              <i class="el-icon-success"/> 成&#x3000;功：<span>3673</span>
+              <i class="el-icon-success"/> 成&#x3000;功：<span>{{ statisticTotal.success }}</span>
             </div>
             <div class="text item">
-              <i class="el-icon-error"/> 失&#x3000;败：<span>3670</span>
+              <i class="el-icon-error"/> 失&#x3000;败：<span>{{ statisticTotal.fail }}</span>
             </div>
             <div class="text item">
-              <i class="el-icon-s-help"/> 执行中：<span>36</span>
+              <i class="el-icon-s-help"/> 执行中：<span>{{ statisticTotal.executing }}</span>
             </div>
             <div class="text item">
-              <i class="el-icon-info"/> 待执行：<span>16763</span>
+              <i class="el-icon-info"/> 待执行：<span>{{ statisticTotal.upcoming }}</span>
+            </div>
+            <div class="text item">
+              <i class="el-icon-question"/> 成功率：<span>{{ statisticTotal.successRate }}%</span>
             </div>
           </div>
         </el-card>
@@ -78,59 +99,65 @@
 </template>
 
 <script>
-import echarts from 'echarts' // 注意echarts版本，高版本不支持透明度rgba,以下代码版本为3.8.5
+import echarts from 'echarts'
+import moment from 'moment';
+import * as sysApi from "../services/sys";
+import {TaskStatisticSummaryType} from "../common/utils";
+
 export default {
   name: 'project-progress',
   data() {
     return {
+      statisticToday : TaskStatisticSummaryType,
+      statisticLastMonth: TaskStatisticSummaryType,
+      statisticTotal: TaskStatisticSummaryType,
       ganttChart: null,
-      chartData: [
-        { id: 1, name: '任务1', start: '2024-02-01 02:00:00', end: '2024-02-01 08:00:00', status: 2 },
-        { id: 2, name: '任务2', start: '2024-02-02 02:00:00', end: '2024-02-02 15:00:00', status: 2 },
-        { id: 3, name: '任务3', start: '2024-02-03 02:00:00', end: '2024-02-03 02:01:00', status: 2 },
-        { id: 4, name: '任务4', start: '2024-02-04 02:00:00', end: '2024-02-06 04:00:00', status: 2 },
-        { id: 5, name: '任务5', start: '2024-02-05 02:00:00', end: '2024-02-05 05:00:00', status: 2 },
-        { id: 6, name: '任务6', start: '2024-02-06 02:00:00', end: '2024-02-06 05:00:00', status: 2 },
-        { id: 7, name: '任务7', start: '2024-02-07 02:00:00', end: '2024-02-07 15:00:00', status: 2 },
-        { id: 8, name: '任务8', start: '2024-02-08 02:00:00', end: '2024-02-08 05:00:00', status: 2 },
-        { id: 9, name: '任务9', start: '2024-02-09 02:00:00', end: '2024-02-09 05:00:00', status: 2 },
-        { id: 10, name: '任务10', start: '2024-02-09 02:00:00', end: '2024-02-10 05:00:00', status: 2 },
-        { id: 11, name: '任务11', start: '2024-02-11 01:00:00', end: '2024-02-11 05:00:00', status: 2 },
-        // { id: 12, name: '任务12', start: '2024-02-12 04:00:00', end: '2024-02-12 12:00:00', status: 2 },
-        // { id: 13, name: '任务13', start: '2024-02-13 02:00:00', end: '2024-02-13 05:00:00', status: 2 },
-        // { id: 14, name: '任务14', start: '2024-02-14 01:00:00', end: '2024-02-14 05:00:00', status: 2 },
-        // { id: 15, name: '任务15', start: '2024-02-15 02:00:00', end: '2024-02-15 03:00:00', status: 2 },
-        // { id: 16, name: '任务16', start: '2024-02-13 02:00:00', end: '2024-02-16 15:00:00', status: 2 },
-        // { id: 17, name: '任务17', start: '2024-02-17 02:00:00', end: '2024-02-17 05:00:00', status: 2 },
-        // { id: 18, name: '任务18', start: '2024-02-18 02:00:00', end: '2024-02-18 05:00:00', status: 2 },
-        // { id: 19, name: '任务19', start: '2024-02-19 02:00:00', end: '2024-02-19 05:00:00', status: 2 },
-        // { id: 20, name: '任务20', start: '2024-02-20 02:00:00', end: '2024-02-20 05:00:00', status: 2 },
-        // { id: 21, name: '任务21', start: '2024-02-21 02:00:00', end: '2024-02-21 05:00:00', status: 2 },
-        // { id: 22, name: '任务22', start: '2024-02-22 02:00:00', end: '2024-02-22 05:00:00', status: 2 },
-        // { id: 23, name: '任务23', start: '2024-02-23 02:00:00', end: '2024-02-23 05:00:00', status: 2 },
-        // { id: 24, name: '任务24', start: '2024-02-24 02:00:00', end: '2024-02-24 05:00:00', status: 2 },
-        // { id: 25, name: '任务25', start: '2024-02-25 02:00:00', end: '2024-02-25 05:00:00', status: 2 },
-        // { id: 26, name: '任务26', start: '2024-02-26 02:00:00', end: '2024-02-26 05:00:00', status: 2 },
-        // { id: 27, name: '任务27', start: '2024-02-27 02:00:00', end: '2024-02-27 05:00:00', status: 2 },
-        // { id: 28, name: '任务28', start: '2024-02-28 02:00:00', end: '2024-02-28 05:00:00', status: 2 },
-        // { id: 29, name: '任务29', start: '2024-02-29 02:00:00', end: '2024-02-29 05:00:00', status: 2 },
-        // { id: 30, name: '任务30', start: '2024-02-29 02:00:00', end: '2024-02-29 05:00:00', status: 2 },
-        // { id: 31, name: '任务31', start: '2024-02-11 02:00:00', end: '2024-02-11 05:00:00', status: 2 },
-        // { id: 32, name: '任务32', start: '2024-02-12 02:00:00', end: '2024-02-12 05:00:00', status: 2 },
-        // { id: 33, name: '任务33', start: '2024-02-13 02:00:00', end: '2024-02-13 05:00:00', status: 2 },
-        // { id: 34, name: '任务34', start: '2024-02-14 02:00:00', end: '2024-02-14 05:00:00', status: 2 },
-        // { id: 35, name: '任务35', start: '2024-02-15 02:00:00', end: '2024-02-15 05:00:00', status: 2 },
-        // { id: 36, name: '任务36', start: '2024-02-16 02:00:00', end: '2024-02-16 05:00:00', status: 2 },
-        // { id: 37, name: '任务37', start: '2024-02-17 02:00:00', end: '2024-02-17 05:00:00', status: 2 },
-        // { id: 38, name: '任务38', start: '2024-02-18 02:00:00', end: '2024-02-18 02:01:00', status: 2 },
-        // { id: 39, name: '任务39', start: '2024-02-19 02:00:00', end: '2024-02-19 05:00:00', status: 2 },
-        // { id: 40, name: '任务40', start: '2024-02-29 02:00:00', end: '2024-02-29 05:00:00', status: 2 },
-        // { id: 41, name: '任务41', start: '2024-02-29 02:00:00', end: '2024-02-29 05:00:00', status: 2 },
-        // { id: 42, name: '任务42', start: '2024-02-11 02:00:00', end: '2024-02-11 05:00:00', status: 2 },
-        // { id: 43, name: '任务43', start: '2024-02-12 02:00:00', end: '2024-02-12 05:00:00', status: 2 },
-        // { id: 44, name: '任务44', start: '2024-02-13 02:00:00', end: '2024-02-13 05:00:00', status: 2 },
-        // { id: 45, name: '任务45', start: '2024-02-14 02:00:00', end: '2024-02-14 05:00:00', status: 2 },
-        // { id: 46, name: '任务46', start: '2024-02-15 02:00:00', end: '2024-02-15 05:00:00', status: 2 },
+      chartData:   [
+        {
+          "id": 434,
+          "name": "每天任务-用例30",
+          "task_start_time": "2024-07-02 02:00:05",
+          "task_end_time": "2024-07-02 02:00:37",
+          "task_status": "success",
+          "task_result_quantity": 0,
+          "task_result_size": 0
+        },
+        {
+          "id": 436,
+          "name": "每天任务-用例31",
+          "task_start_time": "2024-07-02 02:00:02",
+          "task_end_time": "2024-07-02 02:00:35",
+          "task_status": "success",
+          "task_result_quantity": 0,
+          "task_result_size": 0
+        },
+        {
+          "id": 446,
+          "name": "单次任务-truncate_iop___TEST_mysql-04_performance_sale_performance_sale_detail_20cf",
+          "task_start_time": "2024-07-02 15:45:04",
+          "task_end_time": "2024-07-02 15:47:00",
+          "task_status": "failed",
+          "task_result_quantity": 0,
+          "task_result_size": 0
+        },
+        {
+          "id": 448,
+          "name": "单次任务-truncate_iop___TEST_mysql-04_performance_sale_performance_sale_detail_20cf",
+          "task_start_time": "2024-07-02 15:52:04",
+          "task_end_time": "2024-07-02 15:53:16",
+          "task_status": "success",
+          "task_result_quantity": 0,
+          "task_result_size": 0
+        },
+        {
+          "id": 450,
+          "name": "单次任务-truncate_iop___TEST_mysql-04_performance_sale_performance_sale_detail_20cf",
+          "task_start_time": "2024-07-02 18:26:04",
+          "task_end_time": "2024-07-02 18:27:14",
+          "task_status": "success",
+          "task_result_quantity": 0,
+          "task_result_size": 0
+        }
       ]
     }
   },
@@ -144,6 +171,7 @@ export default {
     this.$nextTick(() => {
       this.initChart()
     })
+
   },
   methods: {
     initChart() {
@@ -162,7 +190,7 @@ export default {
           type: 'time',
         },
         yAxis: {
-          data: this.chartData.map(item => item.name)
+          data: this.chartData.map(item => item.id)
         },
         tooltip: {
           trigger: 'axis',
@@ -172,7 +200,6 @@ export default {
             var date0 = params[0].data
             var date1 = params[1].data
             res += date0 + '</br>' + date1 + '</br>'
-            console.log(params)
             return res
           }
         },
@@ -187,7 +214,7 @@ export default {
               }
             },
             lineStyle: {},
-            data: this.chartData.map(item => item.start)
+            data: this.chartData.map(item => item.task_start_time)
           },
           {
             name: '超时',
@@ -201,7 +228,7 @@ export default {
                   let color = ''
                   // var colorList = ['#3E84E9','#c23531','#d4cece']; // 超时, 已完成, 待完成
                   var item = _self.chartData.filter(item => {
-                    return item.name === params.name
+                    return item.id === params.id
                   })
                   var status = item && item[0] && item[0].status
                   // console.log('====', status)
@@ -210,7 +237,7 @@ export default {
                 }
               }
             },
-            data: this.chartData.map(item => item.end)
+            data: this.chartData.map(item => item.task_end_time)
           }
         ]
       }
@@ -220,41 +247,77 @@ export default {
     resizeCharts() {
       this.ganttChart && this.ganttChart.resize()
     },
+    todayStatistic(){
+      sysApi.getTaskStatisticSummary({
+        startDate: moment().format('YYYY-MM-DD'),
+        endDate: moment().format('YYYY-MM-DD'),
+      }).then(res => {
+        this.statisticToday = res.data;
+        this.statisticToday.successRate = this.statisticToday.success / (this.statisticToday.fail + this.statisticToday.success) * 100
+        this.statisticToday.successRate = Number.isFinite(this.statisticToday.successRate) ? this.statisticToday.successRate.toFixed(0) : 0 ;
+      });
+    },
+    lastMonthStatistic(){
+      sysApi.getTaskStatisticSummary({
+        endDate: moment().format('YYYY-MM-DD'),
+        startDate: moment().subtract(1, 'months').format('YYYY-MM-DD'),
+      }).then(res => {
+        this.statisticLastMonth = res.data;
+        this.statisticLastMonth.successRate = this.statisticLastMonth.success / (this.statisticLastMonth.fail + this.statisticLastMonth.success) * 100
+        this.statisticLastMonth.successRate = Number.isFinite(this.statisticLastMonth.successRate) ? this.statisticLastMonth.successRate.toFixed(0) : 0 ;
+      });
+    },
+    totalStatistic(){
+      sysApi.getTaskStatisticSummary({}).then(res => {
+        this.statisticTotal = res.data;
+        this.statisticTotal.successRate = this.statisticTotal.success / (this.statisticTotal.fail + this.statisticTotal.success) * 100
+        this.statisticTotal.successRate = Number.isFinite(this.statisticTotal.successRate) ? this.statisticTotal.successRate.toFixed(0) : 0 ;
+      });
+    },
+    taskPlan(){
+      sysApi.getTaskPlan({
+        startDate:moment().subtract(3, 'days').format('YYYY-MM-DD'),
+        endDate: moment().add(3, 'days').format('YYYY-MM-DD'),
+      }).then(res => {
+        this.chartData = res.data.tasks;
+      });
+    },
     destroyed() {
       window.removeEventListener('resize', this.resizeCharts)
-    }
-  }
+    },
+  },
+  created(){
+    this.todayStatistic();
+    this.lastMonthStatistic();
+    this.totalStatistic();
+  },
 }
 </script>
 
-
 <style lang="css" scoped>
   .box-card-head{
-    font-size: 18px;
+    font-size: 16px;
     border-width: medium;
   }
   .box-card-body {
     display: flex;
     flex-wrap: wrap;
-    font-size: 16px;
+    font-size: 14px;
     line-height: 30px;
   }
   .text > span{
-    font-size: 22px;
+    font-size: 18px;
+    font-weight: bold;
   }
   .box-card-head>span{
-    font-size: 24px;
+    font-size: 18px;
+    font-weight: bold;
   }
 
   .text.item {
-    flex: 0 0 45%; /* 占据50%的容器宽度，不伸缩 */
+    flex: 0 0 45%;
   }
 
-  /* 可选：如果你想要添加一些间距，可以使用margin
-  .text.item:nth-child(odd) {
-    margin-right: 1px;
-  }
-  */
   .demo {
      padding: 5px 15px;
      position: relative;

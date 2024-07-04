@@ -229,6 +229,24 @@ export const importFromNameMap= [
   { name:"外部导入", value:"ipaas" },
 ]
 
+export let TaskStatisticSummaryType = {
+  success: 0,
+  fail: 0,
+  executing: 0,
+  upcoming: 0,
+  successRate: 0
+};
+
+export let TaskPlanType = {
+  id: 0,
+  name: "",
+  task_start_time: "",
+  task_end_time: "",
+  task_status: "",
+  task_result_quantity: 0,
+  task_result_size: 0,
+}
+
 export function getOptionBackground(optionsArray, propValue) {
   const foundOption = optionsArray.find(option => option.value === propValue);
   return foundOption ? foundOption.background : "#fff";
