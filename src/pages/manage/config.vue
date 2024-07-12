@@ -14,7 +14,7 @@
     </span>
     <div slot="body" style="min-height: 500px;">
       <el-tabs v-model="tablePaneName" type="card" @tab-click="handleTablePaneChane" style="min-height: 500px;">
-        <el-tab-pane label="源端配置" name="source">
+        <el-tab-pane label="集群配置" name="source">
           <el-form size="mini" :model="form" style="width: 70%;" ref="form">
             <el-form-item label="源端库用户名" prop="cluster_default_user" label-width="150px">
               <el-input v-model="form.cluster_default_user" autocomplete="off" clearable/>
@@ -37,6 +37,14 @@
             <el-form-item label="任务最大并发数" prop="task_max_parallel" label-width="150px">
               <el-input-number prop="task_max_parallel" v-model="form.task_max_parallel" :min="1" />
             </el-form-item>
+            <el-form-item label="任务冲突级别" label-width="150px">
+              <el-select v-model="form.task_conflict_level" placeholder="请选择">
+                <el-option v-for="i in taskConflictLevelOption" :key="i.value" :label="i.name" :value="i.value"></el-option>
+              </el-select>
+            </el-form-item>
+            <el-form-item label="允许任务冲突个数" label-width="150px">
+              <el-input-number prop="task_conflict_max" v-model="form.task_conflict_max" />
+            </el-form-item>
             <el-form-item label="任务超时时间(秒)" label-width="150px">
               <el-input-number prop="task_timeout" v-model="form.task_timeout" />
             </el-form-item>
@@ -58,6 +66,7 @@
   import panel from "../../components/panel.vue"
   import * as sysApi from '../../services/sys'
   import * as api from "../../api";
+  import {taskConflictLevelOption} from '../../common/utils'
 
   export default {
     components: {
@@ -65,6 +74,7 @@
     },
     data(){
       return {
+        taskConflictLevelOption,
         fullscreenLoading: false,
         tablePaneName: "source",
         form :{
@@ -75,6 +85,8 @@
           thanos_url: "",
           task_max_parallel: 0,
           task_timeout: 3600,
+          task_conflict_level: "",
+          task_conflict_max: 0,
         },
       }
     },
@@ -110,60 +122,15 @@
     }
   }
 </script>
-<style>
-.input-with-select .el-input-group__prepend {
-  background-color: #fff;
-  width: 120px;
+<style scoped>
+
+.el-input-number--mini{
+  width: 300px;
 }
 
-.el-pagination {
-  float: right;
-  margin-top: 15px;
+.el-select .el-input {
+  width: 300px !important;
 }
 
-.el-table .cell-ellipsis {
-  display: inline-block;
-  width: 70%;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
 
-.table-expand .el-form-item {
-  margin-right: 40px;
-  margin-left: 40px;
-  margin-bottom: 0;
-  width: 45%;
-}
-.table-expand, .table-expand * {
-  font-size: 12px;
-  margin-right: 20px;
-  margin-left: 20px;
-}
-
-.el-checkbox__label {
-  font-size: 12px;
-}
-
-.el-form-item__label{
-  min-width: 80px;
-}
-
-.table-expand .el-form-item__label {
-  text-align: right;
-  font-size: 12px;
-  padding-right: 0;
-  width: auto;
-  min-width: 80px;
-  font-weight: bolder;
-}
-
-.table-expand .el-form--label-left .el-form-item__label {
-  text-align: right;
-  min-width: 100px;
-}
-
-.word-wrap {
-  word-break: break-all;
-}
 </style>

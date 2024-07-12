@@ -24,9 +24,9 @@
 <!--          <el-form-item label="源端名称" prop="name" label-width="80px">-->
 <!--            <el-input v-model="form.name" autocomplete="off" clearable/>-->
 <!--          </el-form-item>-->
-          <el-form-item  label="说明"  label-width="80px">
-            <el-input type="textarea" :rows="2" v-model="form.description" clearable/>
-          </el-form-item>
+<!--          <el-form-item  label="说明"  label-width="80px">-->
+<!--            <el-input type="textarea" :rows="2" v-model="form.description" clearable/>-->
+<!--          </el-form-item>-->
           <el-form-item label="集群ID" prop="cluster_id" label-width="80px">
             <el-select v-model="form.cluster_id" @change="clusterChange" filterable placeholder="请选择集群" style="width: 100%;">
               <el-option
@@ -128,8 +128,8 @@
             </el-tooltip>
           </template>
         </el-table-column>
-        <el-table-column prop="bu" label="BU" sortable></el-table-column>
-        <el-table-column prop="cluster_name" width="200px" label="集群名称" sortable> </el-table-column>
+        <el-table-column prop="bu" label="BU" width="120px" sortable></el-table-column>
+        <el-table-column prop="cluster_name" label="集群名称" sortable> </el-table-column>
         <el-table-column prop="database_name" label="源库名" sortable> </el-table-column>
         <el-table-column prop="tables_name" label="源表名" sortable>
           <template slot-scope="scope">

@@ -25,9 +25,9 @@
 <!--          <el-form-item class="el-form-item-label" label="策略名称" label-width="80px" prop="name">-->
 <!--            <el-input v-model="form.name" autocomplete="off" clearable/>-->
 <!--          </el-form-item>-->
-          <el-form-item label="说明" label-width="80px">
-            <el-input type="textarea" :rows="2" v-model="form.description" clearable/>
-          </el-form-item>
+<!--          <el-form-item label="说明" label-width="80px">-->
+<!--            <el-input type="textarea" :rows="2" v-model="form.description" clearable/>-->
+<!--          </el-form-item>-->
           <el-form-item label="开启" prop="enable" label-width="80px">
             <el-switch size="mini" v-model="form.enable"  />
           </el-form-item>
@@ -487,7 +487,7 @@
       },
       addPolicy(){
         this.form = {
-          enable: true,
+          enable: false,
           period: "monthly",
           day: 1,
           execute_window: ["00:00:00","23:59:59"],
@@ -496,7 +496,9 @@
           notify_policy: "failed",
         };
         this.dialogAddFormVisible = true;
-        sysApi.sourceList().then(res => {
+        sysApi.sourceList({
+          pageSize: 10000,
+        }).then(res => {
           this.sourceList = res.data.items;
         });
       },

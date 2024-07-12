@@ -229,6 +229,12 @@ export const importFromNameMap= [
   { name:"外部导入", value:"ipaas" },
 ]
 
+export const taskConflictLevelOption=[
+  {name:"集群级", value:"cluster"},
+  {name:"库级", value:"database"},
+  {name:"表级", value:"table"},
+]
+
 export let TaskStatisticSummaryType = {
   success: 0,
   fail: 0,

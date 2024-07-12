@@ -6,8 +6,8 @@ import {
   CLUSTER_DATABASE_LIST,
   CLUSTER_TABLE_LIST,
   TASK_PLAN,
-  TASK_REVISION,
-  TASK_STATISTIC_SUMMARY
+  TASK_REVISION, TASK_STATISTIC_BU, TASK_STATISTIC_CLUSTER, TASK_STATISTIC_DATABASE,
+  TASK_STATISTIC_SUMMARY, TASK_STATISTIC_TABLE
 } from "../api";
 import qs from 'qs'
 
@@ -228,3 +228,55 @@ export function getTaskPlan(params){
   })
 }
 
+
+export function taskStatisticGroupByBu (params) {
+  return new Promise((resolve, reject) => {
+    axios.get(api.TASK_STATISTIC_BU, { params }).then(response => {
+      resolve(response.data);
+    }, err => {
+      resolve([]);
+    })
+      .catch((error) => {
+        resolve([])
+      })
+  })
+}
+
+export function taskStatisticGroupByCluster (params) {
+  return new Promise((resolve, reject) => {
+    axios.get(api.TASK_STATISTIC_CLUSTER, { params }).then(response => {
+      resolve(response.data);
+    }, err => {
+      resolve([]);
+    })
+      .catch((error) => {
+        resolve([])
+      })
+  })
+}
+
+export function taskStatisticGroupByDatabase (params) {
+  return new Promise((resolve, reject) => {
+    axios.get(api.TASK_STATISTIC_DATABASE, { params }).then(response => {
+      resolve(response.data);
+    }, err => {
+      resolve([]);
+    })
+      .catch((error) => {
+        resolve([])
+      })
+  })
+}
+
+export function taskStatisticGroupByTable (params) {
+  return new Promise((resolve, reject) => {
+    axios.get(api.TASK_STATISTIC_TABLE, { params }).then(response => {
+      resolve(response.data);
+    }, err => {
+      resolve([]);
+    })
+      .catch((error) => {
+        resolve([])
+      })
+  })
+}

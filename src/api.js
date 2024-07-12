@@ -22,4 +22,8 @@ export const SYS_CONFIG = CONTEXT + '/manage/config';
 export const USER_UPDATE = CONTEXT + '/user';
 export const TASK_STATISTIC_SUMMARY = CONTEXT + '/task/statistic/summary';
 export const TASK_PLAN = CONTEXT + '/task/plan';
+export const TASK_STATISTIC_BU = CONTEXT + '/task/statistic/bu';
+export const TASK_STATISTIC_CLUSTER = CONTEXT + '/task/statistic/cluster';
+export const TASK_STATISTIC_DATABASE = CONTEXT + '/task/statistic/database';
+export const TASK_STATISTIC_TABLE = CONTEXT + '/task/statistic/table';
 
