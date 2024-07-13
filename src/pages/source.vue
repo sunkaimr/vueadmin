@@ -452,6 +452,10 @@
     word-break: break-all; /* 允许在任意位置换行 */
   }
 
+  .el-select-dropdown__item{
+    font-size: 12px;
+  }
+
   .el-dropdown-link {
     cursor: pointer;
     font-size: 12px;

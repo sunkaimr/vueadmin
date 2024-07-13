@@ -68,7 +68,10 @@
   .box-header {
     color: #444;
     display: block;
-    padding: 15px;
+    padding-top: 15px;
+    padding-left: 15px;
+    padding-right: 15px;
+    padding-bottom: 5px;
     position: relative;
   }
   .box-header.with-border {
@@ -112,7 +115,8 @@
     border-top-right-radius: 0;
     border-bottom-right-radius: 3px;
     border-bottom-left-radius: 3px;
-    padding: 10px;
+    padding: 15px;
+    padding-top: 5px;
   }
 
   .box-footer {

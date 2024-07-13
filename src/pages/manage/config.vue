@@ -1,19 +1,7 @@
 <template>
   <imp-panel>
-    <span class="box-title" slot="header" style="width: 100%;">
-      <el-row style="width: 100%; display: flex; align-items: flex-end;">
-        <el-col :span="8" style="display: flex; align-items: flex-end;">
-        </el-col>
-        <el-col :span="16" style="display: flex; align-items: flex-end;">
-          <div style="display: flex; margin-top: 15px; margin-left: auto;">
-            <el-button size="mini" @click="loadData()">取 消</el-button>
-            <el-button size="mini" type="primary" @click="onSubmit('form')" v-loading.fullscreen.lock="fullscreenLoading">保 存</el-button>
-          </div>
-        </el-col>
-      </el-row>
-    </span>
     <div slot="body" style="min-height: 500px;">
-      <el-tabs v-model="tablePaneName" type="card" @tab-click="handleTablePaneChane" style="min-height: 500px;">
+      <el-tabs v-model="tablePaneName" @tab-click="handleTablePaneChane" style="min-height: 500px;">
         <el-tab-pane label="集群配置" name="source">
           <el-form size="mini" :model="form" style="width: 70%;" ref="form">
             <el-form-item label="源端库用户名" prop="cluster_default_user" label-width="150px">
@@ -58,6 +46,10 @@
           </el-form>
         </el-tab-pane>
       </el-tabs>
+      <div style="display: flex;  justify-content: flex-end; margin: 15px 15px 15px auto;">
+          <el-button size="mini" @click="loadData()">取 消</el-button>
+          <el-button size="mini" type="primary" @click="onSubmit('form')" v-loading.fullscreen.lock="fullscreenLoading">保 存</el-button>
+      </div>
     </div>
   </imp-panel>
 </template>

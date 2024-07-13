@@ -1,6 +1,6 @@
 <template>
   <imp-panel>
-  <el-tabs v-model="activeTable" @tab-click="activeTableChanged">
+  <el-tabs v-model="activeTable" @tab-click="activeTableChanged" style="min-height: 500px;">
     <el-tab-pane label="任务概览" name="taskStatisticSummary">
       <div class="demo">
         <el-row :gutter=24>
@@ -92,7 +92,7 @@
       </div>
     </el-tab-pane>
     <el-tab-pane label="任务统计" name="taskStatistic">
-      <div class="block" >
+      <div>
         <el-row :gutter="10">
           <el-col :span="3">
             <el-select v-model="taskStatisticFilter.govern"
@@ -111,7 +111,7 @@
               placeholder="请筛选bu、集群、库、表"
               @change="taskStatisticFilterChanged"></el-cascader>
           </el-col>
-          <el-col :span="6">
+          <el-col :span="8">
             <el-date-picker
               v-model="taskStatisticDateRange"
               size="mini"
@@ -123,55 +123,79 @@
               end-placeholder="结束日期">
             </el-date-picker>
           </el-col>
+          <el-col :span="10" style="display: flex; justify-content: flex-end">
+            <el-checkbox-group v-model="taskStatisticShow" @change="taskStatisticShowChanged" size="mini">
+              <el-checkbox-button label="bu">BU维度</el-checkbox-button>
+              <el-checkbox-button label="cluster">集群维度</el-checkbox-button>
+              <el-checkbox-button label="database">库维度</el-checkbox-button>
+              <el-checkbox-button label="table">表维度</el-checkbox-button>
+            </el-checkbox-group>
+          </el-col>
         </el-row>
       </div>
-      <div style="width: 100%; margin-top: 20px;">
-        <el-table :data="taskStatisticDataBU.rows" size="mini" border stripe>
+      <div class="task-statistic-table" v-if="taskStatisticShow.indexOf('bu') !== -1">
+        <el-table :data="taskStatisticDataBU.rows" size="mini" show-summary border stripe>
             <el-table-column label="BU维度" align="center">
-              <el-table-column prop="bu" label="BU" width="180"></el-table-column>
-              <el-table-column prop="govern" label="治理方式" width="180"></el-table-column>
-              <el-table-column prop="total_quantity" label="治理数据量"></el-table-column>
-              <el-table-column prop="total_size" label="治理容量大小"></el-table-column>
-              <el-table-column prop="count" label="运行任务次数"></el-table-column>
+              <el-table-column prop="bu" label="BU" align="center" sortable></el-table-column>
+              <el-table-column prop="govern" label="治理方式" align="center" sortable>
+                <template slot-scope="scope">
+                  <span v-for="i in scope.row.govern.split(',')">{{getOptionName(governOption, i)}} </span>
+                </template>
+              </el-table-column>
+              <el-table-column prop="total_quantity" label="治理数据量" align="center" sortable></el-table-column>
+              <el-table-column prop="total_size" label="治理容量大小" align="center" sortable></el-table-column>
+              <el-table-column prop="count" label="运行任务次数" align="center" sortable></el-table-column>
           </el-table-column>
         </el-table>
       </div>
-      <div style="width: 100%; margin-top: 20px">
-        <el-table :data="taskStatisticDataCluster.rows" size="mini" border stripe>
+      <div class="task-statistic-table" v-if="taskStatisticShow.indexOf('cluster') !== -1">
+        <el-table :data="taskStatisticDataCluster.rows" size="mini" show-summary border stripe>
           <el-table-column label="集群维度" align="center">
-            <el-table-column prop="bu" label="BU" ></el-table-column>
-            <el-table-column prop="cluster_name" label="集群名称" ></el-table-column>
-            <el-table-column prop="govern" label="治理方式" ></el-table-column>
-            <el-table-column prop="total_quantity" label="治理数据量"></el-table-column>
-            <el-table-column prop="total_size" label="治理容量大小"></el-table-column>
-            <el-table-column prop="count" label="运行任务次数"></el-table-column>
+            <el-table-column prop="bu" label="BU" align="center" sortable></el-table-column>
+            <el-table-column prop="cluster_name" label="集群名称" align="center" sortable></el-table-column>
+            <el-table-column prop="govern" label="治理方式" align="center" sortable>
+              <template slot-scope="scope">
+                <span v-for="i in scope.row.govern.split(',')">{{getOptionName(governOption, i)}} </span>
+              </template>
+            </el-table-column>
+            <el-table-column prop="total_quantity" label="治理数据量" align="center" sortable></el-table-column>
+            <el-table-column prop="total_size" label="治理容量大小" align="center" sortable></el-table-column>
+            <el-table-column prop="count" label="运行任务次数" align="center" sortable></el-table-column>
           </el-table-column>
         </el-table>
       </div>
-      <div style="width: 100%; margin-top: 20px">
-        <el-table :data="taskStatisticDataDatabase.rows" size="mini" border stripe>
+      <div class="task-statistic-table" v-if="taskStatisticShow.indexOf('database') !== -1">
+        <el-table :data="taskStatisticDataDatabase.rows" size="mini" show-summary border stripe>
           <el-table-column label="库维度" align="center">
-            <el-table-column prop="bu" label="BU" ></el-table-column>
-            <el-table-column prop="cluster_name" label="集群名称" ></el-table-column>
-            <el-table-column prop="database" label="库" ></el-table-column>
-            <el-table-column prop="govern" label="治理方式" ></el-table-column>
-            <el-table-column prop="total_quantity" label="治理数据量"></el-table-column>
-            <el-table-column prop="total_size" label="治理容量大小"></el-table-column>
-            <el-table-column prop="count" label="运行任务次数"></el-table-column>
+            <el-table-column prop="bu" label="BU" align="center" sortable></el-table-column>
+            <el-table-column prop="cluster_name" label="集群名称" align="center" sortable></el-table-column>
+            <el-table-column prop="database" label="库" align="center" sortable></el-table-column>
+            <el-table-column prop="govern" label="治理方式" align="center" sortable>
+              <template slot-scope="scope">
+                <span v-for="i in scope.row.govern.split(',')">{{getOptionName(governOption, i)}} </span>
+              </template>
+            </el-table-column>
+            <el-table-column prop="total_quantity" label="治理数据量" align="center" sortable></el-table-column>
+            <el-table-column prop="total_size" label="治理容量大小" align="center" sortable></el-table-column>
+            <el-table-column prop="count" label="运行任务次数" align="center" sortable></el-table-column>
           </el-table-column>
         </el-table>
       </div>
-      <div style="width: 100%; margin-top: 20px">
-        <el-table :data="taskStatisticDataTable.rows" size="mini" border stripe>
+      <div class="task-statistic-table" v-if="taskStatisticShow.indexOf('table') !== -1">
+        <el-table :data="taskStatisticDataTable.rows" size="mini" show-summary border stripe>
           <el-table-column label="表维度" align="center">
-            <el-table-column prop="bu" label="BU" ></el-table-column>
-            <el-table-column prop="cluster_name" label="集群名称" ></el-table-column>
-            <el-table-column prop="database" label="库" ></el-table-column>
-            <el-table-column prop="table" label="表" ></el-table-column>
-            <el-table-column prop="govern" label="治理方式" ></el-table-column>
-            <el-table-column prop="total_quantity" label="治理数据量"></el-table-column>
-            <el-table-column prop="total_size" label="治理容量大小"></el-table-column>
-            <el-table-column prop="count" label="运行任务次数"></el-table-column>
+            <el-table-column prop="bu" label="BU" align="center" sortable></el-table-column>
+            <el-table-column prop="cluster_name" label="集群名称" align="center" sortable></el-table-column>
+            <el-table-column prop="database" label="库" align="center" sortable></el-table-column>
+            <el-table-column prop="table" label="表" align="center" sortable></el-table-column>
+            <el-table-column prop="govern" label="治理方式" align="center" sortable>
+              <template slot-scope="scope">
+                <span v-for="i in scope.row.govern.split(',')">{{getOptionName(governOption, i)}} </span>
+              </template>
+            </el-table-column>
+            <el-table-column prop="total_quantity" label="治理数据量" align="center" sortable></el-table-column>
+            <el-table-column prop="total_size" label="治理容量大小" align="center" sortable></el-table-column>
+            <el-table-column prop="count" label="运行任务次数" align="center" sortable></el-table-column>
           </el-table-column>
         </el-table>
       </div>
@@ -197,13 +221,22 @@
 import echarts from 'echarts'
 import moment from 'moment';
 import * as sysApi from "../services/sys";
-import {TaskStatisticSummaryType,governOption} from "../common/utils";
+import {TaskStatisticSummaryType, governOption, getOptionName, getOptionBackground} from "../common/utils";
 import {taskStatisticGroupByBu} from "../services/sys";
 
 export default {
   name: 'project-progress',
+  // watch:{
+  //   taskStatisticShow: function (newVal, oldVal) {
+  //     console.log(newVal, oldVal);
+  //     if (newVal !== oldVal) {
+  //       window.localStorage.setItem("taskStatisticShow", newVal);
+  //     }
+  //   },
+  // },
   data() {
     return {
+      taskStatisticShow: ['bu','cluster','database','table'],
       governOption,
       cascaderValue: "",
       taskStatisticFilter: {
@@ -215,7 +248,7 @@ export default {
       },
       taskStatisticFilterOption: [],
       taskStatisticDateRange:[],
-      activeTable: "taskStatistic",
+      activeTable: "taskStatisticSummary",
       statisticToday : TaskStatisticSummaryType,
       statisticLastMonth: TaskStatisticSummaryType,
       statisticTotal: TaskStatisticSummaryType,
@@ -317,8 +350,14 @@ export default {
     // })
   },
   methods: {
+    getOptionName,
+    getOptionBackground,
+    taskStatisticShowChanged(){
+      window.localStorage.setItem("taskStatisticShow", this.taskStatisticShow);
+    },
     activeTableChanged(tab, event) {
       this.activeTable = tab.name;
+      window.localStorage.setItem("taskStatisticActiveTable", this.activeTable);
     },
     initChart() {
       this.ganttChart = echarts.init(document.getElementById('gantt-chart'))
@@ -547,6 +586,13 @@ export default {
     },
   },
   created(){
+    this.taskStatisticShow = window.localStorage.getItem("taskStatisticShow");
+
+    this.taskStatisticShow = this.taskStatisticShow === null ? ['bu','cluster','database','table'] : this.taskStatisticShow.split(',');
+
+    this.activeTable = window.localStorage.getItem("taskStatisticActiveTable");
+    this.activeTable = this.activeTable === null ? 'taskStatisticSummary' : this.activeTable
+
     this.taskStatisticDateRange[0]= moment().subtract(1, 'months').format('YYYY-MM-DD');
     this.taskStatisticDateRange[1]= moment().format('YYYY-MM-DD');
     this.todayStatistic();
@@ -559,21 +605,17 @@ export default {
 
 <style lang="css" scoped>
   .box-card-head{
-    font-size: 16px;
+    font-size: 14px;
     border-width: medium;
   }
   .box-card-body {
     display: flex;
     flex-wrap: wrap;
-    font-size: 14px;
+    font-size: 12px;
     line-height: 30px;
   }
-  .text > span{
-    font-size: 18px;
-    font-weight: bold;
-  }
-  .box-card-head>span{
-    font-size: 18px;
+  .text > span, .box-card-head>span{
+    font-size: 16px;
     font-weight: bold;
   }
 
@@ -585,7 +627,18 @@ export default {
     flex: 0 0 95%;
   }
 
+  .el-select-dropdown__item{
+    font-size: 12px;
+  }
 
+  .el-cascader-panel, .el-cascader-node__label {
+    font-size: 12px;
+  }
+
+  .task-statistic-table {
+    width: 100%;
+    margin-top: 20px;
+  }
 
   .demo {
      padding: 5px 15px;

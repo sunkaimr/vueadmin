@@ -628,6 +628,10 @@
     }
   }
 
+  .el-select-dropdown__item{
+    font-size: 12px;
+  }
+
   .el-form-item__label{
     min-width: 80px;
   }
