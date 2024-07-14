@@ -121,7 +121,6 @@
 </script>
 
 <style>
-
   .el-loading-mask {
     background-color: rgba(0, 0, 0, 0.3);
   }
@@ -140,7 +139,6 @@
     -moz-box-sizing: border-box;
     box-sizing: border-box;
   }
-
 
   .content-wrapper {
     -webkit-transition: -webkit-transform 0.3s ease-in-out, margin 0.3s ease-in-out;

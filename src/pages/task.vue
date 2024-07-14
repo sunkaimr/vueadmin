@@ -2,7 +2,7 @@
   <imp-panel>
     <h4 class="box-title" slot="header" style="width: 100%;">
       <el-row style="width: 100%; display: flex; align-items: flex-end;">
-        <el-col :span="14" style="display: flex; justify-content: flex-end;">
+        <el-col :span="13" style="display: flex; justify-content: flex-end;">
           <div style="display: flex; align-items: center; height: 50px">
             <el-radio-group size="mini" @input="taskStatusRadioChanged" v-model="taskStatusRadio">
               <el-radio :label="1">未执行</el-radio>
@@ -12,9 +12,9 @@
             </el-radio-group>
           </div>
         </el-col>
-        <el-col :span="10" style="display: flex; align-items: flex-end;">
+        <el-col :span="11" style="display: flex; align-items: flex-end;">
           <div style="display: flex; margin-left: auto; justify-items: center; align-items: center; height: 50px">
-            <el-select size="small" v-model="searchTaskStatus" @change="handleSearch" placeholder="任务状态" multiple clearable style="max-height: 32px; overflow-x: hidden; overflow-y: hidden; margin-right: 10px;">
+            <el-select size="small" v-model="searchTaskStatus" @change="handleSearch" placeholder="任务状态" multiple collapse-tags clearable style=" min-width: 180px; margin-right: 10px;">
               <el-option v-for="item in taskStatusOption" :key="item.value" :label="item.name" :value="item.value" style="font-size: 12px"></el-option>
             </el-select>
             <el-input size="small" placeholder="请输入内容" v-model="searchVal" @clear="handleSearch" @keyup.enter.native="handleSearch" class="input-with-select" clearable>
@@ -114,7 +114,7 @@
               border
               size="mini"
               class="table-expand"
-              :column=3
+              :column=2
               :labelStyle="tableExpandLabelStyle"
               :contentStyle='tableExpandContentStyle'
               with="100%" >
@@ -128,8 +128,8 @@
               <el-descriptions-item label="预期执行日期">{{ props.row.execute_date }}</el-descriptions-item>
               <el-descriptions-item label="执行窗口">{{ props.row.execute_window[0] +' - '+  props.row.execute_window[1] }}</el-descriptions-item>
               <el-descriptions-item label="治理方式">{{ getOptionName(governOption, props.row.govern) }}</el-descriptions-item>
-              <el-descriptions-item label="清理速度">{{ getOptionName(cleaningSpeedOption, props.row.cleaning_speed) }}</el-descriptions-item>
-              <el-descriptions-item label="清理条件">{{ props.row.condition }}</el-descriptions-item>
+              <el-descriptions-item label="治理速度">{{ getOptionName(cleaningSpeedOption, props.row.cleaning_speed) }}</el-descriptions-item>
+              <el-descriptions-item label="治理条件">{{ props.row.condition }}</el-descriptions-item>
               <el-descriptions-item label="通知策略">{{ getOptionName(notifyPolicyOption, props.row.notify_policy) }}</el-descriptions-item>
               <el-descriptions-item label="相关人">{{ props.row.relevant.join(",") }}</el-descriptions-item>
 
@@ -152,14 +152,14 @@
                 <el-descriptions-item label="压缩存储">{{ props.row.dest_compress ? "是" : "否" }}</el-descriptions-item>
               </template>
               <el-descriptions-item label="任务状态">{{ getOptionName(taskStatusOption,props.row.task_status) }}</el-descriptions-item>
-              <el-descriptions-item label="任务错误原因">{{ props.row.task_reason }}</el-descriptions-item>
-              <el-descriptions-item label="任务错误详情">{{ props.row.task_detail }}</el-descriptions-item>
-              <el-descriptions-item label="清理数据行量">{{ props.row.task_result_quantity }}</el-descriptions-item>
-              <el-descriptions-item label="清理数据容量">{{ props.row.task_result_size }}</el-descriptions-item>
+              <el-descriptions-item label="原因">{{ props.row.task_reason }}</el-descriptions-item>
+              <el-descriptions-item label="详情">{{ props.row.task_detail }}</el-descriptions-item>
+              <el-descriptions-item label="治理数据行数">{{ props.row.task_result_quantity }}</el-descriptions-item>
+              <el-descriptions-item label="治理数据大小(MB)">{{ props.row.task_result_size }}</el-descriptions-item>
               <el-descriptions-item label="任务开始时间">{{ props.row.task_start_time }}</el-descriptions-item>
               <el-descriptions-item label="任务结束时间">{{ props.row.task_end_time }}</el-descriptions-item>
-              <el-descriptions-item label="执行时长(秒)">{{ props.row.task_duration }}</el-descriptions-item>
-              <el-descriptions-item label="工作流ID">{{ props.row.workflow }}</el-descriptions-item>
+              <el-descriptions-item label="执行时长">{{ formatSecondsPrecisely(props.row.task_duration)}}</el-descriptions-item>
+              <el-descriptions-item label="工作流">{{ props.row.workflow }}</el-descriptions-item>
             </el-descriptions>
           </template>
         </el-table-column>
@@ -183,19 +183,21 @@
         <el-table-column prop="govern" label="清理方式" align="center" width="100px" sortable>
           <template slot-scope="scope">{{getOptionName(governOption, scope.row.govern)}}</template>
         </el-table-column>
-        <el-table-column prop="cleaning_speed" label="清理速度" align="center" width="100px" sortable>
-          <template slot-scope="scope">
-            {{ getOptionName(cleaningSpeedOption, scope.row.cleaning_speed ) }}
-          </template>
-        </el-table-column>
+<!--        <el-table-column prop="cleaning_speed" label="清理速度" align="center" width="100px" sortable>-->
+<!--          <template slot-scope="scope">-->
+<!--            {{ getOptionName(cleaningSpeedOption, scope.row.cleaning_speed ) }}-->
+<!--          </template>-->
+<!--        </el-table-column>-->
         <el-table-column prop="execute_date" label="计划执行日期" align="center" width="120px" sortable></el-table-column>
         <el-table-column prop="execute_window" label="执行窗口" align="center" width="150px" sortable>
           <template slot-scope="scope">{{ scope.row.execute_window[0] +'-'+ scope.row.execute_window[1] }}</template>
         </el-table-column>
+        <el-table-column prop="task_start_time" label="开始执行时间" align="center" width="140px" sortable>
+        </el-table-column>
         <el-table-column prop="task_status" label="任务状态" align="center" width="100px" sortable>
           <template slot-scope="scope">
             <template v-if="scope.row.task_reason !== ''">
-              <el-tooltip class="item" effect="dark" :content="scope.row.task_reason" :open-delay="500" placement="top">
+              <el-tooltip class="item" effect="dark" :content="scope.row.task_reason" :open-delay="300" placement="top">
                 <el-tag size="mini" :style="{ 'background-color': getOptionBackground(taskStatusOption, scope.row.task_status), color:'#555' }" effect="light">
                   {{getOptionName(taskStatusOption, scope.row.task_status)}}
                 </el-tag>
@@ -238,6 +240,7 @@
   import panel from "../components/panel.vue"
   import * as api from "../api"
   import * as sysApi from '../services/sys'
+  import moment from 'moment';
   import {
     governOption,
     notifyPolicyOption,
@@ -427,6 +430,7 @@
         })
       },
       handleSizeChange(val) {
+        this.tableData.pagination.pageNo = 1;
         this.tableData.pagination.pageSize = val;
         this.loadData();
         window.localStorage.setItem("taskPageSize", val)
@@ -484,7 +488,27 @@
           this.tableData.rows = res.data.items;
           this.tableData.pagination.total = res.data.total;
         });
-      }
+      },
+      formatSecondsPrecisely(seconds) {
+        if (seconds === 0){
+          return ""
+        }
+        let days = Math.floor(seconds / (24 * 60 * 60));
+        let hours = Math.floor((seconds % (24 * 60 * 60)) / (60 * 60));
+        let minutes = Math.floor((seconds % (60 * 60)) / 60);
+        seconds = Math.floor(seconds % 60);
+
+        days = days.toString().padStart(2, '0');
+        hours = hours.toString().padStart(2, '0');
+        minutes = minutes.toString().padStart(2, '0');
+        seconds = seconds.toString().padStart(2, '0');
+
+        if (days === '00') {
+          return `${hours}:${minutes}:${seconds}`;
+        } else {
+          return `${days}d ${hours}:${minutes}:${seconds}`;
+        }
+      },
     },
     created(){
       this.searchTaskStatus = window.localStorage.getItem("searchTaskStatus");
@@ -519,14 +543,13 @@
   }
 </script>
 <style scoped>
-  .input-with-select .el-input-group__prepend {
-    background-color: #fff;
-    width: 120px;
-  }
-
   .el-pagination {
     float: right;
     margin-top: 15px;
+  }
+
+  .el-select__tags-text {
+    font-size: 10px;
   }
 
   .el-table .cell-ellipsis {

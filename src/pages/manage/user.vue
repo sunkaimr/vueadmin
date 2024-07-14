@@ -258,6 +258,7 @@
         this.loadData();
       },
       handleSizeChange(val) {
+        this.tableData.pagination.pageNo = 1;
         this.tableData.pagination.pageSize = val;
         this.loadData();
       },
@@ -305,7 +306,7 @@
     }
   }
 </script>
-<style>
+<style scoped>
 .input-with-select .el-input-group__prepend {
   background-color: #fff;
   width: 120px;

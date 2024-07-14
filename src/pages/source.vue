@@ -1,22 +1,20 @@
 <template>
   <imp-panel>
     <span class="box-title" slot="header" style="width: 100%;">
-      <el-row style="width: 100%; display: flex; align-items: flex-end;">
-        <el-col :span="8" style="display: flex; align-items: flex-end;">
-            <el-button size="small" type="primary" @click="addSource" icon="plus">新增</el-button>
-        </el-col>
-        <el-col :span="16" style="display: flex; align-items: flex-end;">
-          <div style="display: flex; margin-top: 15px; margin-left: auto;">
-            <el-input size="small" placeholder="请输入内容" v-model="searchVal" @clear="handleSearch" @keyup.enter.native="handleSearch" class="input-with-select" clearable style="flex: 1;">
-              <el-select v-model="searchKey" slot="prepend" placeholder="请选择">
-                <el-option v-for="item in sourceSearchOption" :key="item.value" :label="item.name" :value="item.value" style="font-size: 12px"></el-option>
-              </el-select>
-              <el-button size="mini" slot="append" icon="el-icon-search" @click="handleSearch"></el-button>
-            </el-input>
-            <el-button size="mini" icon="el-icon-refresh" @click="handleSearch" style="margin-left: 10px;"/>
-          </div>
-        </el-col>
-      </el-row>
+      <div style="display: flex; justify-content: space-between;">
+        <div>
+          <el-button size="mini" type="primary" @click="addSource" icon="plus">新增</el-button>
+        </div>
+        <div style="display: flex;">
+          <el-input size="small" placeholder="请输入内容" v-model="searchVal" @clear="handleSearch" @keyup.enter.native="handleSearch" clearable>
+            <el-select v-model="searchKey" slot="prepend" placeholder="请选择">
+              <el-option v-for="item in sourceSearchOption" :key="item.value" :label="item.name" :value="item.value"/>
+            </el-select>
+            <el-button size="mini" slot="append" icon="el-icon-search" @click="handleSearch"/>
+          </el-input>
+          <el-button size="mini" icon="el-icon-refresh" @click="handleSearch" style="margin-left: 10px;"/>
+        </div>
+      </div>
     </span>
     <div slot="body" style="min-height: 400px;">
       <el-dialog title="添加源" :visible.sync="dialogAddFormVisible" :close-on-click-modal="false" style="width: 100%;">
@@ -46,7 +44,7 @@
               <el-input v-model="tableNameFilter" @blur="handleTableNameFilter" @clear="handleTableNameFilter" style="flex: 1;" clearable placeholder="使用正则表达式筛选所需表名"/>
             </div>
             <div style="display: flex; margin-top: 10px; align-items: center;">
-              <el-select v-model="form.tables_name" @visible-change="tablesNameChanged" multiple clearable style="flex: 1; max-height: 200px; overflow-x: hidden; overflow-y: scroll; margin-right: 10px;">
+              <el-select v-model="form.tables_name" @visible-change="tablesNameChanged" multiple collapse-tags clearable style="flex: 1; margin-right: 10px;">
                 <el-option
                   v-for="item in filteredTableList" :key="item" :label="item" :value="item">
                 </el-option>
@@ -54,9 +52,6 @@
               <el-button size="mini" @click="selectAllFilter">全选</el-button>
               <el-button size="mini" @click="clearSelected">清空</el-button>
             </div>
-          </el-form-item>
-          <el-form-item label="列名" label-width="80px">
-            <el-input v-model="form.columns" autocomplete="off"></el-input>
           </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
@@ -80,9 +75,6 @@
             </el-form-item>
             <el-form-item label="源表名" label-width="80px">
               <el-input v-model="form.tables_name" disabled clearable/>
-            </el-form-item>
-            <el-form-item label="列名" label-width="80px">
-              <el-input v-model="form.columns" disabled></el-input>
             </el-form-item>
           </el-form>
           <div slot="footer" class="dialog-footer">
@@ -123,13 +115,19 @@
         <el-table-column prop="id" label="ID" width="80px" align="center" sortable> </el-table-column>
         <el-table-column prop="name" label="源端名称" sortable>
           <template slot-scope="scope">
-            <el-tooltip class="item" effect="light" :content="scope.row.name" :open-delay="1000" placement="top">
+            <el-tooltip class="item" effect="light" :content="scope.row.name" :open-delay="500" placement="top">
               <div class="cell-ellipsis">{{ scope.row.name }}</div>
             </el-tooltip>
           </template>
         </el-table-column>
         <el-table-column prop="bu" label="BU" width="120px" sortable></el-table-column>
-        <el-table-column prop="cluster_name" label="集群名称" sortable> </el-table-column>
+        <el-table-column prop="cluster_name" label="集群名称" sortable>
+          <template slot-scope="scope">
+            <el-tooltip class="item" effect="light" :content="scope.row.cluster_name" :open-delay="500" placement="top">
+              <div class="cell-ellipsis">{{ scope.row.cluster_name }}</div>
+            </el-tooltip>
+          </template>
+        </el-table-column>
         <el-table-column prop="database_name" label="源库名" sortable> </el-table-column>
         <el-table-column prop="tables_name" label="源表名" sortable>
           <template slot-scope="scope">
@@ -361,6 +359,7 @@
       },
       handleSizeChange(val) {
         window.localStorage.setItem("sourcePageSize", val);
+        this.tableData.pagination.pageNo = 1;
         this.tableData.pagination.pageSize = val;
         this.loadData();
       },
@@ -403,10 +402,18 @@
     }
   }
 </script>
-<style>
+<style scoped>
+  .el-loading-mask {
+    background-color: rgba(0, 0, 0, 0.3);
+  }
+
+  .el-select .el-input {
+    width: 230px;
+    font-size: 12px;
+  }
+
   .input-with-select .el-input-group__prepend {
-    background-color: #FFFFFF;
-    width: 120px;
+    background-color: #fff;
   }
 
   .el-table .cell-ellipsis {

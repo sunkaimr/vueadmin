@@ -98,6 +98,7 @@
             <el-select v-model="taskStatisticFilter.govern"
                        multiple clearable
                        size="mini"
+                       collapse-tags
                        @change="taskStatisticFilterChanged"
                        placeholder="请选择清理方式">
               <el-option v-for="i in governOption" :key="i.value" :label="i.name" :value="i.value"></el-option>
@@ -434,8 +435,8 @@ export default {
     },
     todayStatistic(){
       sysApi.getTaskStatisticSummary({
-        startDate: moment().format('YYYY-MM-DD'),
-        endDate: moment().format('YYYY-MM-DD'),
+        start_date: moment().format('YYYY-MM-DD'),
+        end_date: moment().format('YYYY-MM-DD'),
       }).then(res => {
         this.statisticToday = res.data;
         this.statisticToday.successRate = this.statisticToday.success / (this.statisticToday.fail + this.statisticToday.success) * 100
@@ -444,8 +445,8 @@ export default {
     },
     lastMonthStatistic(){
       sysApi.getTaskStatisticSummary({
-        endDate: moment().format('YYYY-MM-DD'),
-        startDate: moment().subtract(1, 'months').format('YYYY-MM-DD'),
+        end_date: moment().format('YYYY-MM-DD'),
+        start_date: moment().subtract(1, 'months').format('YYYY-MM-DD'),
       }).then(res => {
         this.statisticLastMonth = res.data;
         this.statisticLastMonth.successRate = this.statisticLastMonth.success / (this.statisticLastMonth.fail + this.statisticLastMonth.success) * 100
@@ -531,7 +532,7 @@ export default {
 
     taskStatisticDateRangeChanged(){
       const params = {
-        start_data: this.taskStatisticDateRange[0],
+        start_date: this.taskStatisticDateRange[0],
         end_date: this.taskStatisticDateRange[1],
         bu: this.taskStatisticFilter.bu,
         cluster_name: this.taskStatisticFilter.cluster_name,

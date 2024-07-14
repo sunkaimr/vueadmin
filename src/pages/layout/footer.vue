@@ -7,7 +7,7 @@
   export default {
   }
 </script>
-<style>
+<style scoped>
   .main-footer {
     -webkit-transition: -webkit-transform 0.3s ease-in-out, margin 0.3s ease-in-out;
     -moz-transition: -moz-transform 0.3s ease-in-out, margin 0.3s ease-in-out;

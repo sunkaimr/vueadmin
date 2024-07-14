@@ -141,9 +141,9 @@ export const notifyPolicyOption = [
 ]
 
 export const taskStatusOption = [
-  {name:"已排期", value:"scheduled", background:"#FFFFE0" },
+  {name:"已排期", value:"scheduled", background:"#eee" },
   {name:"填充信息失败", value:"supplement_failed", background:"#FFAAAA" },
-  {name:"等待执行", value:"waiting", background:"#DDA0DD"},
+  {name:"等待执行", value:"waiting", background: "#aaccff"},
   {name:"执行前检查失败", value:"exec_check_failed", background:"#FFAAAA"},
   {name:"执行中", value:"executing", background:"#ADD8E6"},
   {name:"执行成功", value:"success", background:"#90EE90"},

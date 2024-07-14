@@ -1,23 +1,21 @@
 <template>
   <imp-panel>
     <h4 class="box-title" slot="header" style="width: 100%;">
-      <el-row style="width: 100%; display: flex; align-items: flex-end;">
-        <el-col :span="8" style="display: flex; align-items: flex-end;">
-          <el-button size="small" type="primary" @click="addPolicy" icon="plus">新增</el-button>
-        </el-col>
-        <el-col :span="16" style="display: flex; align-items: flex-end;">
-          <div style="display: flex; margin-left: auto; ustify-items: center; align-items: center;">
-            <el-checkbox size="small" v-model="displayEnablePolicy" @change="handleSearch" style="margin-right: 20px;">只看开启</el-checkbox>
-            <el-input size="small" placeholder="请输入内容" v-model="searchVal" @clear="handleSearch" @keyup.enter.native="handleSearch" class="input-with-select" clearable>
-              <el-select v-model="searchKey" slot="prepend" placeholder="请选择">
-                <el-option v-for="item in policySearchOption" :key="item.value" :label="item.name" :value="item.value" style="font-size: 12px"></el-option>
-              </el-select>
-              <el-button size="small" slot="append" icon="el-icon-search" @click="handleSearch"></el-button>
-            </el-input>
-            <el-button size="small" icon="el-icon-refresh" @click="handleSearch" style="margin-left: 10px;"/>
-          </div>
-        </el-col>
-      </el-row>
+      <div style="display: flex; justify-content: space-between;">
+        <div>
+          <el-button size="mini" type="primary" @click="addPolicy" icon="plus">新增</el-button>
+        </div>
+        <div style="display: flex;">
+          <el-checkbox size="small" v-model="displayEnablePolicy" @change="handleSearch" style="line-height: 32px; margin-right: 20px;">只看开启</el-checkbox>
+          <el-input size="small" placeholder="请输入内容" v-model="searchVal" @clear="handleSearch" @keyup.enter.native="handleSearch" class="input-with-select" clearable>
+            <el-select v-model="searchKey" slot="prepend" placeholder="请选择">
+              <el-option v-for="item in policySearchOption" :key="item.value" :label="item.name" :value="item.value" style="font-size: 12px"></el-option>
+            </el-select>
+            <el-button size="small" slot="append" icon="el-icon-search" @click="handleSearch"></el-button>
+          </el-input>
+          <el-button size="small" icon="el-icon-refresh" @click="handleSearch" style="margin-left: 10px;"/>
+        </div>
+      </div>
     </h4>
     <div slot="body">
       <el-dialog title="添加策略" :visible.sync="dialogAddFormVisible" :close-on-click-modal="false" :rules="rules" style="width: 100%;">
@@ -514,6 +512,7 @@
         this.loadData();
       },
       handleSizeChange(val) {
+        this.tableData.pagination.pageNo = 1;
         this.tableData.pagination.pageSize = val;
         window.localStorage.setItem("policyPageSize", val)
         this.loadData();
