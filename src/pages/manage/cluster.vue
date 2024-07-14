@@ -1,23 +1,21 @@
 <template>
   <imp-panel>
     <h4 class="box-title" slot="header" style="width: 100%;">
-      <el-row style="width: 100%; display: flex; align-items: flex-end;">
-        <el-col :span="8" style="display: flex; align-items: flex-end;">
+      <div style="display: flex; justify-content: space-between;">
+        <div>
           <el-button size="small" type="primary" @click="addCluster" icon="plus">新增</el-button>
           <el-button size="small"  @click="handleSyncCluster" style="margin-right: 10px;">同步</el-button>
-        </el-col>
-        <el-col :span="16" style="display: flex; align-items: flex-end;">
-          <div style="display: flex; margin-left: auto; ustify-items: center; align-items: center;">
-            <el-input size="small" placeholder="请输入内容" v-model="searchVal" @clear="handleSearch" @keyup.enter.native="handleSearch" class="input-with-select" clearable>
-              <el-select v-model="searchKey" slot="prepend" placeholder="请选择">
-                <el-option v-for="item in clusterSearchOption" :key="item.value" :label="item.name" :value="item.value" style="font-size: 12px"></el-option>
-              </el-select>
-              <el-button size="small" slot="append" icon="el-icon-search" @click="handleSearch"></el-button>
-            </el-input>
-            <el-button size="small" icon="el-icon-refresh" @click="handleSearch" style="margin-left: 10px;"/>
-          </div>
-        </el-col>
-      </el-row>
+        </div>
+        <div style="display: flex;">
+          <el-input size="small" placeholder="请输入内容" v-model="searchVal" @clear="handleSearch" @keyup.enter.native="handleSearch" clearable>
+            <el-select v-model="searchKey" slot="prepend" class="input-with-select" placeholder="请选择">
+              <el-option v-for="item in clusterSearchOption" :key="item.value" :label="item.name" :value="item.value" style="font-size: 12px"></el-option>
+            </el-select>
+            <el-button size="small" slot="append" icon="el-icon-search" @click="handleSearch"></el-button>
+          </el-input>
+          <el-button size="small" icon="el-icon-refresh" @click="handleSearch" style="margin-left: 10px;"></el-button>
+        </div>
+      </div>
     </h4>
     <div slot="body">
       <el-dialog title="添加集群" :visible.sync="dialogAddFormVisible" :close-on-click-modal="false" style="width: 100%;">
@@ -358,10 +356,18 @@ export default {
   }
 </script>
 <style scoped>
-.input-with-select .el-input-group__prepend {
-  background-color: #fff;
-  width: 120px;
-}
+  .el-loading-mask {
+    background-color: rgba(0, 0, 0, 0.3);
+  }
+
+  .input-with-select {
+    width: 120px;
+    font-size: 12px;
+  }
+
+  .input-with-select .el-input-group__prepend {
+    background-color: #fff;
+  }
 
 .el-pagination {
   float: right;

@@ -105,7 +105,8 @@ export const taskSearchOption = [
   {name:"治理方式", value:"govern" },
   {name:"治理条件", value:"condition" },
   {name:"源端ID", value:"src_id" },
-  {name:"目标端ID", value:"dest_id" }
+  {name:"目标端ID", value:"dest_id" },
+  {name:"原因", value:"task_reason" },
 ]
 
 export const periodOption=[

@@ -3,17 +3,16 @@
     <h4 class="box-title" slot="header" style="width: 100%;">
       <div style="display: flex; justify-content: space-between;">
         <div>
-          <el-button size="mini" type="primary" @click="addPolicy" icon="plus">新增</el-button>
+          <el-button size="mini" type="primary" @click="addSource" icon="plus">新增</el-button>
         </div>
         <div style="display: flex;">
-          <el-checkbox size="small" v-model="displayEnablePolicy" @change="handleSearch" style="line-height: 32px; margin-right: 20px;">只看开启</el-checkbox>
-          <el-input size="small" placeholder="请输入内容" v-model="searchVal" @clear="handleSearch" @keyup.enter.native="handleSearch" class="input-with-select" clearable>
-            <el-select v-model="searchKey" slot="prepend" placeholder="请选择">
-              <el-option v-for="item in policySearchOption" :key="item.value" :label="item.name" :value="item.value" style="font-size: 12px"></el-option>
+          <el-input size="mini" placeholder="请输入内容" v-model="searchVal" @clear="handleSearch" @keyup.enter.native="handleSearch" clearable>
+            <el-select v-model="searchKey" slot="prepend" class="input-with-select" placeholder="请选择">
+              <el-option v-for="item in policySearchOption" :key="item.value" :label="item.name" :value="item.value"/>
             </el-select>
-            <el-button size="small" slot="append" icon="el-icon-search" @click="handleSearch"></el-button>
+            <el-button size="mini" slot="append" icon="el-icon-search" @click="handleSearch"/>
           </el-input>
-          <el-button size="small" icon="el-icon-refresh" @click="handleSearch" style="margin-left: 10px;"/>
+          <el-button size="mini" icon="el-icon-refresh" @click="handleSearch" style="margin-left: 10px;"/>
         </div>
       </div>
     </h4>
@@ -591,9 +590,17 @@
   }
 </script>
 <style scoped>
+  .el-loading-mask {
+    background-color: rgba(0, 0, 0, 0.3);
+  }
+
+  .input-with-select {
+    width: 120px;
+    font-size: 12px;
+  }
+
   .input-with-select .el-input-group__prepend {
     background-color: #fff;
-    width: 120px;
   }
 
   .el-pagination {

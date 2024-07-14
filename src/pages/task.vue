@@ -1,32 +1,28 @@
 <template>
   <imp-panel>
     <h4 class="box-title" slot="header" style="width: 100%;">
-      <el-row style="width: 100%; display: flex; align-items: flex-end;">
-        <el-col :span="13" style="display: flex; justify-content: flex-end;">
-          <div style="display: flex; align-items: center; height: 50px">
-            <el-radio-group size="mini" @input="taskStatusRadioChanged" v-model="taskStatusRadio">
-              <el-radio :label="1">未执行</el-radio>
-              <el-radio :label="2">执行中</el-radio>
-              <el-radio :label="3">已执行</el-radio>
-              <el-radio :label="0">全部</el-radio>
-            </el-radio-group>
-          </div>
-        </el-col>
-        <el-col :span="11" style="display: flex; align-items: flex-end;">
-          <div style="display: flex; margin-left: auto; justify-items: center; align-items: center; height: 50px">
-            <el-select size="small" v-model="searchTaskStatus" @change="handleSearch" placeholder="任务状态" multiple collapse-tags clearable style=" min-width: 180px; margin-right: 10px;">
-              <el-option v-for="item in taskStatusOption" :key="item.value" :label="item.name" :value="item.value" style="font-size: 12px"></el-option>
+      <div style="display: flex; justify-content: flex-end;">
+        <div style="display: flex; align-items: center; height: 30px">
+          <el-radio-group size="mini" @input="taskStatusRadioChanged" v-model="taskStatusRadio">
+            <el-radio :label="1">未执行</el-radio>
+            <el-radio :label="2">执行中</el-radio>
+            <el-radio :label="3">已执行</el-radio>
+            <el-radio :label="0">全部</el-radio>
+          </el-radio-group>
+        </div>
+        <div style="display: flex; align-items: center; height: 30px">
+          <el-select size="mini" v-model="searchTaskStatus" @change="handleSearch" placeholder="任务状态" multiple collapse-tags clearable >
+            <el-option v-for="item in taskStatusOption" :key="item.value" :label="item.name" :value="item.value" style="font-size: 12px"></el-option>
+          </el-select>
+          <el-input size="mini" placeholder="请输入内容" v-model="searchVal" @clear="handleSearch" @keyup.enter.native="handleSearch" clearable>
+            <el-select v-model="searchKey" slot="prepend" class="input-with-select" placeholder="请选择">
+              <el-option v-for="item in taskSearchOption" :key="item.value" :label="item.name" :value="item.value" style="font-size: 12px"></el-option>
             </el-select>
-            <el-input size="small" placeholder="请输入内容" v-model="searchVal" @clear="handleSearch" @keyup.enter.native="handleSearch" class="input-with-select" clearable>
-              <el-select v-model="searchKey" slot="prepend" placeholder="请选择">
-                <el-option v-for="item in taskSearchOption" :key="item.value" :label="item.name" :value="item.value" style="font-size: 12px"></el-option>
-              </el-select>
-              <el-button size="small" slot="append" icon="el-icon-search" @click="handleSearch"></el-button>
-            </el-input>
-            <el-button size="small" icon="el-icon-refresh" @click="handleSearch" style="margin-left: 10px;"/>
-          </div>
-        </el-col>
-      </el-row>
+            <el-button size="mini" slot="append" icon="el-icon-search" @click="handleSearch"></el-button>
+          </el-input>
+          <el-button size="mini" icon="el-icon-refresh" @click="handleSearch" style="margin-left: 10px;"/>
+        </div>
+      </div>
     </h4>
     <div slot="body">
       <el-dialog title="修改任务" :visible.sync="dialogEditFormVisible" :rules="rules" :close-on-click-modal="false" style="width: 100%;">
@@ -543,13 +539,29 @@
   }
 </script>
 <style scoped>
+  .el-loading-mask {
+    background-color: rgba(0, 0, 0, 0.3);
+  }
+
+  .el-input {
+    margin-left: 10px;
+  }
+
+  .el-input {
+    width: 400px;
+  }
+
+  .input-with-select {
+    width: 120px;
+    font-size: 12px;
+  }
+
+  .input-with-select .el-input-group__prepend {
+    background-color: #fff;
+  }
   .el-pagination {
     float: right;
     margin-top: 15px;
-  }
-
-  .el-select__tags-text {
-    font-size: 10px;
   }
 
   .el-table .cell-ellipsis {

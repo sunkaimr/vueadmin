@@ -1,13 +1,13 @@
 <template>
   <imp-panel>
-    <span class="box-title" slot="header" style="width: 100%;">
-      <div style="display: flex; justify-content: space-between;">
+    <h4 class="content-header" slot="header" style="width: 100%;">
+      <div class="content-header" style="display: flex; justify-content: space-between;">
         <div>
           <el-button size="mini" type="primary" @click="addSource" icon="plus">新增</el-button>
         </div>
         <div style="display: flex;">
-          <el-input size="small" placeholder="请输入内容" v-model="searchVal" @clear="handleSearch" @keyup.enter.native="handleSearch" clearable>
-            <el-select v-model="searchKey" slot="prepend" placeholder="请选择">
+          <el-input size="mini" placeholder="请输入内容" v-model="searchVal" @clear="handleSearch" @keyup.enter.native="handleSearch" clearable>
+            <el-select v-model="searchKey" slot="prepend" class="input-with-select" placeholder="请选择">
               <el-option v-for="item in sourceSearchOption" :key="item.value" :label="item.name" :value="item.value"/>
             </el-select>
             <el-button size="mini" slot="append" icon="el-icon-search" @click="handleSearch"/>
@@ -15,7 +15,7 @@
           <el-button size="mini" icon="el-icon-refresh" @click="handleSearch" style="margin-left: 10px;"/>
         </div>
       </div>
-    </span>
+    </h4>
     <div slot="body" style="min-height: 400px;">
       <el-dialog title="添加源" :visible.sync="dialogAddFormVisible" :close-on-click-modal="false" style="width: 100%;">
         <el-form size="mini" :model="form" :rules="rules" ref="form">
@@ -95,7 +95,7 @@
               border
               size="mini"
               class="table-expand"
-              column=2
+              :column=2
               :labelStyle="tableExpandLabelStyle"
               :contentStyle="tableExpandContentStyle"
               with="100%" >
@@ -402,13 +402,15 @@
     }
   }
 </script>
-<style scoped>
+<style lang="css" scoped>
+/*@import "../../static/css/main.css";*/
+
   .el-loading-mask {
     background-color: rgba(0, 0, 0, 0.3);
   }
 
-  .el-select .el-input {
-    width: 230px;
+  .input-with-select {
+    width: 120px;
     font-size: 12px;
   }
 
@@ -456,7 +458,7 @@
   }
 
   .word-wrap {
-    word-break: break-all; /* 允许在任意位置换行 */
+    word-break: break-all;
   }
 
   .el-select-dropdown__item{

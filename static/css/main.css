@@ -1,0 +1,68 @@
+
+.el-loading-mask {
+  background-color: rgba(0, 0, 0, 0.3);
+}
+
+.input-with-select {
+  width: 120px;
+  font-size: 12px;
+}
+
+.input-with-select .el-input-group__prepend {
+  background-color: #fff;
+}
+
+.el-table .cell-ellipsis {
+  display: inline-block;
+  width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.el-pagination {
+  float: right;
+  margin-top: 15px;
+}
+
+.table-expand .el-form-item {
+  margin-right: 40px;
+  margin-left: 40px;
+  margin-bottom: 10px;
+  width: 45%;
+}
+.table-expand, .table-expand * {
+  font-size: 12px;
+  margin-right: 20px;
+  margin-left: 20px;
+}
+
+.table-expand .el-form-item__label {
+  text-align: right;
+  font-size: 12px;
+  padding-right: 0;
+  width: auto;
+  min-width: 80px;
+  font-weight: bolder;
+}
+
+.table-expand .el-form--label-left .el-form-item__label {
+  text-align: right;
+  min-width: 100px;
+}
+
+.word-wrap {
+  word-break: break-all;
+}
+
+.el-select-dropdown__item{
+  font-size: 12px;
+}
+
+.el-dropdown-link {
+  cursor: pointer;
+  font-size: 12px;
+}
+.el-icon-arrow-down {
+  font-size: 12px;
+}
