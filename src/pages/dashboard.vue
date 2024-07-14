@@ -605,6 +605,7 @@ export default {
 </script>
 
 <style lang="css" scoped>
+@import "../../static/css/main.css";
   .box-card-head{
     font-size: 14px;
     border-width: medium;
@@ -641,39 +642,4 @@ export default {
     margin-top: 20px;
   }
 
-  .demo {
-     padding: 5px 15px;
-     position: relative;
-     .chart-title {
-       position: absolute;
-       transform: translateX(-50%);
-       left: 50%;
-       i {
-         font-style: normal;
-         padding-right: 20px;
-       }
-       i:before {
-         content: '';
-         display: inline-block;
-         width: 30px;
-         height: 15px;
-         border-radius: 5px;
-         vertical-align: bottom;
-         margin-right: 3px;
-         background-color: #3e84e9;
-       }
-       i.to-be-completed:before {
-         background-color: #d4cece;
-       }
-       i.timeout:before {
-         background-color: #c23531;
-       }
-     }
-     #gantt-chart {
-       margin: 1em auto;
-       height: 600px;
-       width: 100%;
-       align-content: center;
-     }
-   }
 </style>

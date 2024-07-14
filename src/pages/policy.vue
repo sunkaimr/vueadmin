@@ -1,18 +1,16 @@
 <template>
   <imp-panel>
-    <h4 class="box-title" slot="header" style="width: 100%;">
-      <div style="display: flex; justify-content: space-between;">
-        <div>
-          <el-button size="mini" type="primary" @click="addSource" icon="plus">新增</el-button>
-        </div>
-        <div style="display: flex;">
+    <h4 class="content-header" slot="header">
+      <div class="content-header-all">
+        <el-button size="mini" type="primary" @click="addPolicy" icon="plus">新增</el-button>
+        <div class="content-header-right">
           <el-input size="mini" placeholder="请输入内容" v-model="searchVal" @clear="handleSearch" @keyup.enter.native="handleSearch" clearable>
-            <el-select v-model="searchKey" slot="prepend" class="input-with-select" placeholder="请选择">
+            <el-select class="input-with-select" v-model="searchKey" slot="prepend"  placeholder="请选择">
               <el-option v-for="item in policySearchOption" :key="item.value" :label="item.name" :value="item.value"/>
             </el-select>
             <el-button size="mini" slot="append" icon="el-icon-search" @click="handleSearch"/>
           </el-input>
-          <el-button size="mini" icon="el-icon-refresh" @click="handleSearch" style="margin-left: 10px;"/>
+          <el-button size="mini" icon="el-icon-refresh" @click="handleSearch"/>
         </div>
       </div>
     </h4>
@@ -589,83 +587,9 @@
     }
   }
 </script>
-<style scoped>
-  .el-loading-mask {
-    background-color: rgba(0, 0, 0, 0.3);
-  }
 
-  .input-with-select {
-    width: 120px;
-    font-size: 12px;
-  }
+<style lang="css" scoped>
+@import "../../static/css/main.css";
 
-  .input-with-select .el-input-group__prepend {
-    background-color: #fff;
-  }
-
-  .el-pagination {
-    float: right;
-    margin-top: 15px;
-  }
-
-  .el-table .cell-ellipsis {
-    display: inline-block;
-    width: 100%;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
-
-  .table-expand .el-form-item {
-    margin-right: 40px;
-    margin-left: 40px;
-    margin-bottom: 0;
-    width: 45%;
-  }
-  .table-expand, .table-expand * {
-    font-size: 12px;
-    margin-right: 20px;
-    margin-left: 20px;
-  }
-
-  .el-checkbox {
-    .el-checkbox__label {
-      font-size: 12px;
-    }
-  }
-
-  .el-select-dropdown__item{
-    font-size: 12px;
-  }
-
-  .el-form-item__label{
-    min-width: 80px;
-  }
-
-  .table-expand .el-form-item__label {
-    text-align: right;
-    font-size: 12px;
-    padding-right: 0;
-    width: auto;
-    min-width: 80px;
-    font-weight: bolder;
-  }
-
-  .table-expand .el-form--label-left .el-form-item__label {
-    text-align: right;
-    min-width: 100px;
-  }
-
-  .word-wrap {
-    word-break: break-all;
-  }
-
-  .el-dropdown-link {
-    cursor: pointer;
-    font-size: 12px;
-  }
-
-  .el-icon-arrow-down {
-    font-size: 12px;
-  }
 </style>
+
