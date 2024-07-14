@@ -2,30 +2,32 @@
   <imp-panel>
     <h4 class="content-header" slot="header">
       <div class="content-header-all">
-        <div>
+        <div class="content-header-left">
           <el-button size="mini" type="primary" @click="addConn" icon="plus">新增</el-button>
         </div>
         <div class="content-header-right">
-          <el-input size="mini" placeholder="请输入内容" v-model="searchVal" @clear="handleSearch" @keyup.enter.native="handleSearch" clearable>
+          <el-input size="mini" placeholder="请输入内容" v-model="searchVal" @clear="handleSearch"
+                    @keyup.enter.native="handleSearch" clearable>
             <el-select class="input-with-select" v-model="searchKey" slot="prepend" placeholder="请选择">
-              <el-option v-for="item in connSearchOption" :key="item.value" :label="item.name" :value="item.value" />
+              <el-option v-for="item in connSearchOption" :key="item.value" :label="item.name" :value="item.value"/>
             </el-select>
             <el-button size="mini" slot="append" icon="el-icon-search" @click="handleSearch"/>
           </el-input>
           <el-button size="mini" icon="el-icon-refresh" @click="handleSearch"/>
-          </div>
+        </div>
       </div>
     </h4>
     <div slot="body">
-      <el-dialog title="添加连接" :visible.sync="dialogAddFormVisible" :close-on-click-modal="false" style="width: 100%;">
+      <el-dialog title="添加连接" :visible.sync="dialogAddFormVisible" :close-on-click-modal="false"
+                 style="width: 100%;">
         <el-form size="mini" :model="form" :rules="rules" ref="form">
           <el-form-item label="目标名称" prop="name" label-width="80px">
             <el-input v-model="form.name" autocomplete="off" clearable/>
           </el-form-item>
-          <el-form-item  label="说明"  label-width="80px">
+          <el-form-item label="说明" label-width="80px">
             <el-input type="textarea" :rows="2" v-model="form.description" clearable/>
           </el-form-item>
-          <el-form-item  label="BU" prop="bu" label-width="80px">
+          <el-form-item label="BU" prop="bu" label-width="80px">
             <el-input v-model="form.bu" clearable/>
           </el-form-item>
           <el-form-item label="归档介质" prop="storage" label-width="80px">
@@ -36,7 +38,7 @@
             </el-select>
           </el-form-item>
           <template v-if="form.storage === 'mysql'">
-            <el-form-item label="Host" prop="mysql_host"  label-width="80px">
+            <el-form-item label="Host" prop="mysql_host" label-width="80px">
               <el-input v-model="form.mysql_host" placeholder="mysql的域名或IP" autocomplete="off"></el-input>
             </el-form-item>
             <el-form-item label="Port" prop="mysql_port" label-width="80px">
@@ -59,22 +61,25 @@
             <el-form-item label="SK" prop="data_bend_ak" label-width="80px">
               <el-input v-model="form.data_bend_sk" placeholder="DataBend的SK" autocomplete="off"></el-input>
             </el-form-item>
-          </template >
+          </template>
         </el-form>
         <div slot="footer" class="dialog-footer">
           <el-button size="mini" @click="cancelAddSubmit('form')">取 消</el-button>
-          <el-button size="mini" type="primary" @click="onAddSubmit('form')" v-loading.fullscreen.lock="fullscreenLoading">确 定</el-button>
+          <el-button size="mini" type="primary" @click="onAddSubmit('form')"
+                     v-loading.fullscreen.lock="fullscreenLoading">确 定
+          </el-button>
         </div>
       </el-dialog>
-      <el-dialog title="修改连接息" :visible.sync="dialogEditFormVisible" :close-on-click-modal="false" style="width: 100%;">
+      <el-dialog title="修改连接息" :visible.sync="dialogEditFormVisible" :close-on-click-modal="false"
+                 style="width: 100%;">
         <el-form size="mini" :model="form" :rules="rules" ref="form">
           <el-form-item label="目标名称" prop="name" label-width="80px">
             <el-input v-model="form.name" autocomplete="off" clearable/>
           </el-form-item>
-          <el-form-item  label="说明"  label-width="80px">
+          <el-form-item label="说明" label-width="80px">
             <el-input type="textarea" :rows="2" v-model="form.description" clearable/>
           </el-form-item>
-          <el-form-item  label="BU" prop="bu" label-width="80px">
+          <el-form-item label="BU" prop="bu" label-width="80px">
             <el-input v-model="form.bu" clearable/>
           </el-form-item>
           <el-form-item label="归档介质" prop="storage" label-width="80px">
@@ -85,7 +90,7 @@
             </el-select>
           </el-form-item>
           <template v-if="form.storage === 'mysql'">
-            <el-form-item label="Host" prop="mysql_host"  label-width="80px">
+            <el-form-item label="Host" prop="mysql_host" label-width="80px">
               <el-input v-model="form.mysql_host" placeholder="mysql的域名或IP" autocomplete="off"></el-input>
             </el-form-item>
             <el-form-item label="Port" prop="mysql_port" label-width="80px">
@@ -108,11 +113,13 @@
             <el-form-item label="SK" label-width="80px">
               <el-input v-model="form.data_bend_sk" placeholder="DataBend的SK" autocomplete="off"></el-input>
             </el-form-item>
-          </template >
+          </template>
         </el-form>
         <div slot="footer" class="dialog-footer">
           <el-button size="mini" @click="cancelEditSubmit('form')">取 消</el-button>
-          <el-button size="mini" type="primary" @click="onEditSubmit('form')" v-loading.fullscreen.lock="fullscreenLoading">确 定</el-button>
+          <el-button size="mini" type="primary" @click="onEditSubmit('form')"
+                     v-loading.fullscreen.lock="fullscreenLoading">确 定
+          </el-button>
         </div>
       </el-dialog>
       <el-tabs v-model="tablePaneName" type="card" @tab-click="handleTablePaneChane">
@@ -125,10 +132,10 @@
               size="mini"
               stripe
               v-loading="listLoading">
-              <el-table-column prop="id" label="ID" width="80px" align="center" sortable> </el-table-column>
-              <el-table-column prop="name" label="连接名称" align="center"  sortable> </el-table-column>
-              <el-table-column prop="description" label="说明" align="center"  sortable> </el-table-column>
-              <el-table-column prop="bu" label="BU"  align="center" sortable> </el-table-column>
+              <el-table-column prop="id" label="ID" width="80px" align="center" sortable></el-table-column>
+              <el-table-column prop="name" label="连接名称" align="center" sortable></el-table-column>
+              <el-table-column prop="description" label="说明" align="center" sortable></el-table-column>
+              <el-table-column prop="bu" label="BU" align="center" sortable></el-table-column>
               <el-table-column prop="storage" label="归档介质" align="center" sortable>
                 <template slot-scope="scope">{{ getOptionName(storageOption, scope.row.storage) }}</template>
               </el-table-column>
@@ -139,7 +146,8 @@
                 <template slot-scope="scope">
                   <el-button-group size="mini">
                     <el-button size="mini" @click="handleEdit(scope.$index, scope.row)" icon="el-icon-edit"></el-button>
-                    <el-button size="mini" @click="handleDelete(scope.$index, scope.row)" icon="el-icon-delete" style="color: red;"></el-button>
+                    <el-button size="mini" @click="handleDelete(scope.$index, scope.row)" icon="el-icon-delete"
+                               style="color: red;"></el-button>
                   </el-button-group>
                 </template>
               </el-table-column>
@@ -155,10 +163,10 @@
               size="mini"
               stripe
               v-loading="listLoading">
-              <el-table-column prop="id" label="ID" width="80px" align="center" sortable> </el-table-column>
-              <el-table-column prop="name" label="连接名称" align="center"  sortable> </el-table-column>
-              <el-table-column prop="description" label="说明" align="center"  sortable> </el-table-column>
-              <el-table-column prop="bu" label="BU"  align="center" sortable> </el-table-column>
+              <el-table-column prop="id" label="ID" width="80px" align="center" sortable></el-table-column>
+              <el-table-column prop="name" label="连接名称" align="center" sortable></el-table-column>
+              <el-table-column prop="description" label="说明" align="center" sortable></el-table-column>
+              <el-table-column prop="bu" label="BU" align="center" sortable></el-table-column>
               <el-table-column prop="storage" label="归档介质" align="center" sortable>
                 <template slot-scope="scope">{{ getOptionName(storageOption, scope.row.storage) }}</template>
               </el-table-column>
@@ -169,7 +177,8 @@
                 <template slot-scope="scope">
                   <el-button-group size="mini">
                     <el-button size="mini" @click="handleEdit(scope.$index, scope.row)" icon="el-icon-edit"/>
-                    <el-button size="mini" @click="handleDelete(scope.$index, scope.row)" icon="el-icon-delete" style="color: red;"/>
+                    <el-button size="mini" @click="handleDelete(scope.$index, scope.row)" icon="el-icon-delete"
+                               style="color: red;"/>
                   </el-button-group>
                 </template>
               </el-table-column>
@@ -191,218 +200,218 @@
 </template>
 
 <script>
-  import panel from "../../components/panel.vue"
-  import * as sysApi from '../../services/sys'
-  import {connSearchOption, getOptionName, storageOption} from "../../common/utils";
-  import * as api from "../../api";
+import panel from "../../components/panel.vue"
+import * as sysApi from '../../services/sys'
+import {connSearchOption, getOptionName, storageOption} from "../../common/utils";
+import * as api from "../../api";
 
-  export default {
-    components: {
-      'imp-panel': panel
-    },
-    watch:{
-      searchKey: function (newVal, oldVal){
-        if (newVal !== oldVal) {
-          window.localStorage.setItem("connSearchKey", newVal);
-        }
-      },
-      tablePaneName: function (newVal, oldVal){
-        if (newVal !== oldVal) {
-          window.localStorage.setItem("connTablePaneName", newVal);
-        }
+export default {
+  components: {
+    'imp-panel': panel
+  },
+  watch: {
+    searchKey: function (newVal, oldVal) {
+      if (newVal !== oldVal) {
+        window.localStorage.setItem("connSearchKey", newVal);
       }
     },
-    data(){
-      return {
-        tablePaneName: "mysql",
-        storageOption,
-        connSearchOption,
-        searchKey: 'name',
-        searchVal: '',
-        dialogEditFormVisible: false,
-        dialogAddFormVisible: false,
-        fullscreenLoading: false,
-        listLoading: false,
-        tableData: {
-          pagination: {
-            total: 0,
-            pageNo: 1,
-            pageSize: 10,
-            parentId: 0
-          },
-          rows: []
-        },
-        form :{
-          name: "",
-          description:"",
-          bu:"",
-          storage:"",
-          data_bend_ak:"",
-          data_bend_sk:"",
-          data_bend_addr:"",
-          mysql_host:"",
-          mysql_port:"",
-          mysql_user:"",
-          mysql_passwd:"",
-        },
-        rules: {
-          name: [
-            { required: true, message: '请输入名称', trigger: 'blur' },
-          ],
-          bu: [
-            { required: true, message: '请输入连接信息所属bu', trigger: 'blur' },
-          ],
-          storage: [
-            { required: true, message: '请选择归档介质', trigger: 'blur' }
-          ],
-          mysql_host: [
-            { required: true, message: '请填写host', trigger: 'blur' }
-          ],
-          mysql_port: [
-            { required: true, message: '请填写port', trigger: 'blur' }
-          ],
-          mysql_user: [
-            { required: true, message: '请填写用户', trigger: 'blur' }
-          ],
-          data_bend_addr: [
-            { required: true, message: '请填写地址', trigger: 'blur' }
-          ]
-        },
+    tablePaneName: function (newVal, oldVal) {
+      if (newVal !== oldVal) {
+        window.localStorage.setItem("connTablePaneName", newVal);
       }
-    },
-    methods: {
-      getOptionName,
-      handleSearch(){
-        this.loadData();
-      },
-      handleTablePaneChane(){
-        this.tableData.rows=[];
-        this.loadData();
-      },
-      handleSizeChange(val) {
-        this.tableData.pagination.pageNo = 1;
-        this.tableData.pagination.pageSize = val;
-        this.loadData();
-        window.localStorage.setItem("connPageSize", val)
-      },
-      handleCurrentChange(val) {
-        this.tableData.pagination.pageNo = val;
-        this.loadData();
-      },
-      handleEdit(index, row){
-        this.dialogEditFormVisible = true;
-        this.form.id = row.id;
-        this.form.name = row.name;
-        this.form.bu = row.bu;
-        this.form.description = row.description;
-        this.form.storage = row.storage;
-        this.form.data_bend_ak = row.data_bend_ak;
-        this.form.data_bend_sk = row.data_bend_sk;
-        this.form.data_bend_addr = row.data_bend_addr;
-        this.form.mysql_host = row.mysql_host;
-        this.form.mysql_port = row.mysql_port;
-        this.form.mysql_user = row.mysql_user;
-        this.form.mysql_passwd = row.mysql_passwd;
-      },
-      handleDelete(index, row){
-        this.$confirm('确定要执行删除操作, 是否继续?', '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }).then(() => {
-          this.$http.delete(api.CONN_LIST_GET,{
-            data: JSON.stringify({id: row.id}),
-          }).then(res => {
-            this.loadData();
-            this.$notify({ title: '成功', message: "删除成功", type: 'success' });
-          });
-        }).catch(() => {
-        });
-      },
-      addConn(){
-        this.dialogAddFormVisible = true;
-        this.form = { storage: "mysql" };
-      },
-      cancelAddSubmit(formName){
-        this.$refs[formName].resetFields();
-        this.fullscreenLoading = false;
-        this.dialogAddFormVisible = false;
-      },
-      onAddSubmit(formName){
-        this.$refs[formName].validate((valid) => {
-          if (!valid) {
-            return false
-          }
-          this.fullscreenLoading = true;
-          setTimeout(() => {
-            this.fullscreenLoading = false;
-          }, 30000);
-
-          this.$http.post(api.CONN_LIST_GET, JSON.stringify(this.form)).then(res => {
-            this.fullscreenLoading = false;
-            this.dialogAddFormVisible = false;
-            this.$refs[formName].resetFields();
-            this.$notify({ title: '成功', message: "添加成功", type: 'success' });
-            this.loadData();
-          }).catch(()=>{
-            this.fullscreenLoading = false;
-          })
-        });
-      },
-      onEditSubmit(formName){
-        this.$refs[formName].validate((valid) => {
-          if (!valid) {
-            return false
-          }
-          this.fullscreenLoading = true;
-          setTimeout(() => {
-            this.fullscreenLoading = false;
-          }, 30000);
-
-          this.$http.put(api.CONN_LIST_GET, JSON.stringify(this.form)).then(res => {
-            this.fullscreenLoading = false;
-            this.dialogEditFormVisible = false;
-            this.$refs[formName].resetFields();
-            this.$notify({ title: '成功', message: "修改成功", type: 'success' });
-            this.loadData();
-          }).catch(()=>{
-            this.fullscreenLoading = false;
-          })
-        });
-      },
-      cancelEditSubmit(formName){
-        this.$refs[formName].resetFields();
-        this.fullscreenLoading = false;
-        this.dialogEditFormVisible = false;
-      },
-      loadData(){
-        let para = {
-          [this.searchKey]: this.searchVal,
-          storage: this.tablePaneName,
-          pageSize: this.tableData.pagination.pageSize,
-          page: this.tableData.pagination.pageNo
-        }
-        sysApi.connList(para).then(res => {
-          this.tableData.rows = res.data.items;
-          this.tableData.pagination.total = res.data.total;
-        });
-      }
-    },
-    created(){
-      this.searchKey = window.localStorage.getItem("connSearchKey");
-      this.searchKey = this.searchKey === null ? "id" : this.searchKey;
-
-      this.tablePaneName = window.localStorage.getItem("connTablePaneName");
-      this.tablePaneName = this.tablePaneName === null ? "mysql" : this.tablePaneName;
-
-      const pageSize = parseInt(window.localStorage.getItem("connPageSize"), 10);
-      this.tableData.pagination.pageSize = Number.isFinite(pageSize) ? pageSize : 10 ;
-
-      this.loadData();
     }
+  },
+  data() {
+    return {
+      tablePaneName: "mysql",
+      storageOption,
+      connSearchOption,
+      searchKey: 'name',
+      searchVal: '',
+      dialogEditFormVisible: false,
+      dialogAddFormVisible: false,
+      fullscreenLoading: false,
+      listLoading: false,
+      tableData: {
+        pagination: {
+          total: 0,
+          pageNo: 1,
+          pageSize: 10,
+          parentId: 0
+        },
+        rows: []
+      },
+      form: {
+        name: "",
+        description: "",
+        bu: "",
+        storage: "",
+        data_bend_ak: "",
+        data_bend_sk: "",
+        data_bend_addr: "",
+        mysql_host: "",
+        mysql_port: "",
+        mysql_user: "",
+        mysql_passwd: "",
+      },
+      rules: {
+        name: [
+          {required: true, message: '请输入名称', trigger: 'blur'},
+        ],
+        bu: [
+          {required: true, message: '请输入连接信息所属bu', trigger: 'blur'},
+        ],
+        storage: [
+          {required: true, message: '请选择归档介质', trigger: 'blur'}
+        ],
+        mysql_host: [
+          {required: true, message: '请填写host', trigger: 'blur'}
+        ],
+        mysql_port: [
+          {required: true, message: '请填写port', trigger: 'blur'}
+        ],
+        mysql_user: [
+          {required: true, message: '请填写用户', trigger: 'blur'}
+        ],
+        data_bend_addr: [
+          {required: true, message: '请填写地址', trigger: 'blur'}
+        ]
+      },
+    }
+  },
+  methods: {
+    getOptionName,
+    handleSearch() {
+      this.loadData();
+    },
+    handleTablePaneChane() {
+      this.tableData.rows = [];
+      this.loadData();
+    },
+    handleSizeChange(val) {
+      this.tableData.pagination.pageNo = 1;
+      this.tableData.pagination.pageSize = val;
+      this.loadData();
+      window.localStorage.setItem("connPageSize", val)
+    },
+    handleCurrentChange(val) {
+      this.tableData.pagination.pageNo = val;
+      this.loadData();
+    },
+    handleEdit(index, row) {
+      this.dialogEditFormVisible = true;
+      this.form.id = row.id;
+      this.form.name = row.name;
+      this.form.bu = row.bu;
+      this.form.description = row.description;
+      this.form.storage = row.storage;
+      this.form.data_bend_ak = row.data_bend_ak;
+      this.form.data_bend_sk = row.data_bend_sk;
+      this.form.data_bend_addr = row.data_bend_addr;
+      this.form.mysql_host = row.mysql_host;
+      this.form.mysql_port = row.mysql_port;
+      this.form.mysql_user = row.mysql_user;
+      this.form.mysql_passwd = row.mysql_passwd;
+    },
+    handleDelete(index, row) {
+      this.$confirm('确定要执行删除操作, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        this.$http.delete(api.CONN_LIST_GET, {
+          data: JSON.stringify({id: row.id}),
+        }).then(res => {
+          this.loadData();
+          this.$notify({title: '成功', message: "删除成功", type: 'success'});
+        });
+      }).catch(() => {
+      });
+    },
+    addConn() {
+      this.dialogAddFormVisible = true;
+      this.form = {storage: "mysql"};
+    },
+    cancelAddSubmit(formName) {
+      this.$refs[formName].resetFields();
+      this.fullscreenLoading = false;
+      this.dialogAddFormVisible = false;
+    },
+    onAddSubmit(formName) {
+      this.$refs[formName].validate((valid) => {
+        if (!valid) {
+          return false
+        }
+        this.fullscreenLoading = true;
+        setTimeout(() => {
+          this.fullscreenLoading = false;
+        }, 30000);
+
+        this.$http.post(api.CONN_LIST_GET, JSON.stringify(this.form)).then(res => {
+          this.fullscreenLoading = false;
+          this.dialogAddFormVisible = false;
+          this.$refs[formName].resetFields();
+          this.$notify({title: '成功', message: "添加成功", type: 'success'});
+          this.loadData();
+        }).catch(() => {
+          this.fullscreenLoading = false;
+        })
+      });
+    },
+    onEditSubmit(formName) {
+      this.$refs[formName].validate((valid) => {
+        if (!valid) {
+          return false
+        }
+        this.fullscreenLoading = true;
+        setTimeout(() => {
+          this.fullscreenLoading = false;
+        }, 30000);
+
+        this.$http.put(api.CONN_LIST_GET, JSON.stringify(this.form)).then(res => {
+          this.fullscreenLoading = false;
+          this.dialogEditFormVisible = false;
+          this.$refs[formName].resetFields();
+          this.$notify({title: '成功', message: "修改成功", type: 'success'});
+          this.loadData();
+        }).catch(() => {
+          this.fullscreenLoading = false;
+        })
+      });
+    },
+    cancelEditSubmit(formName) {
+      this.$refs[formName].resetFields();
+      this.fullscreenLoading = false;
+      this.dialogEditFormVisible = false;
+    },
+    loadData() {
+      let para = {
+        [this.searchKey]: this.searchVal,
+        storage: this.tablePaneName,
+        pageSize: this.tableData.pagination.pageSize,
+        page: this.tableData.pagination.pageNo
+      }
+      sysApi.connList(para).then(res => {
+        this.tableData.rows = res.data.items;
+        this.tableData.pagination.total = res.data.total;
+      });
+    }
+  },
+  created() {
+    this.searchKey = window.localStorage.getItem("connSearchKey");
+    this.searchKey = this.searchKey === null ? "id" : this.searchKey;
+
+    this.tablePaneName = window.localStorage.getItem("connTablePaneName");
+    this.tablePaneName = this.tablePaneName === null ? "mysql" : this.tablePaneName;
+
+    const pageSize = parseInt(window.localStorage.getItem("connPageSize"), 10);
+    this.tableData.pagination.pageSize = Number.isFinite(pageSize) ? pageSize : 10;
+
+    this.loadData();
   }
+}
 </script>
 
 <style scoped>
-@import "../../../static/css/main.css";
+@import "../../../static/css/main.less";
 </style>

@@ -32,7 +32,9 @@
             <el-checkbox v-model="ldap" class="login-box-from-checkbox">使用域账号登陆</el-checkbox>
           </el-form-item>
           <el-form-item>
-            <el-button type="primary" size="medium" :loading="loading" style="width: 100%" @click.native="login('form')">立即登陆</el-button>
+            <el-button type="primary" size="medium" :loading="loading" style="width: 100%"
+                       @click.native="login('form')">立即登陆
+            </el-button>
           </el-form-item>
         </el-form>
       </div>
@@ -43,7 +45,7 @@
 
 <script>
 import types from '../store/mutation-types'
-import  auth from '../common/auth'
+import auth from '../common/auth'
 import * as sysApi from '../services/sys'
 import {mapActions, mapMutations} from 'vuex'
 
@@ -61,10 +63,10 @@ export default {
       },
       rules: {
         username: [
-          { required: true, message: "请输入用户名", trigger: "blur" },
+          {required: true, message: "请输入用户名", trigger: "blur"},
         ],
         password: [
-          { required: true, message: "请输入密码", trigger: "blur" },
+          {required: true, message: "请输入密码", trigger: "blur"},
         ],
       },
     }
@@ -77,7 +79,7 @@ export default {
     ...mapActions({
       loadMenuList: 'loadMenuList'
     }),
-    login(formName){
+    login(formName) {
       this.$refs[formName].validate((valid) => {
         if (!valid) {
           this.loading = false;
@@ -91,12 +93,12 @@ export default {
         }
         this.form.is_ldap = this.ldap ? 1 : 0;
         sysApi.login(this.form).then(res => {
-          this.loginSuccess({data:res.data, redirectUrl})
+          this.loginSuccess({data: res.data, redirectUrl})
         })
         this.loading = false;
       });
     },
-    loginSuccess({data,redirectUrl}){
+    loginSuccess({data, redirectUrl}) {
       auth.login(data.token);
       delete data.password;
       window.localStorage.setItem("user", JSON.stringify(data));
@@ -112,62 +114,62 @@ export default {
 </script>
 
 <style scoped>
-  html, body {
-    height: 100%;
-    margin: 0;
-    overflow: auto;
-  }
+@import "../../static/css/main.less";
 
-  .login {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background-image: url("../../static/img/login.jpg");
-    background-repeat: no-repeat;
-    background-size: 100% 100%;
-    color: #cccccc;
-    position: absolute;
-    overflow: hidden;
-  }
+.login {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-image: url("../../static/img/login.jpg");
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+  color: #cccccc;
+  position: absolute;
+  overflow: hidden;
+}
 
-  .login-box-title {
-    line-height: 50px;
-    font-size: 20px;
-    color: #dddddd;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border-bottom: 1px solid #ffffff;
-  }
-  .login-bg {
-    width: 100%;
-    height: 100%;
-  }
-  .login-box {
-    width: 450px;
-    background: hsla(0, 0%, 100%, 0.1);
-    border-radius: 10px;
+.login-box-title {
+  line-height: 50px;
+  font-size: 20px;
+  color: #dddddd;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-bottom: 1px solid #ffffff;
+}
 
-    border: 0px #f7f7f7;
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
-  }
+.login-bg {
+  width: 100%;
+  height: 100%;
+}
 
-  .login-box-from {
-    width: 100%;
-    height: auto;
-    padding: 30px;
-    box-sizing: border-box;
-  }
-  .login-box-from-checkbox{
-    color: #eeeeee;
-  }
-  .el-checkbox__label {
-    font-size: 13px;
-    color: #eeeeee;
-  }
+.login-box {
+  width: 450px;
+  background: hsla(0, 0%, 100%, 0.1);
+  border-radius: 10px;
+
+  border: 0px #f7f7f7;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.login-box-from {
+  width: 100%;
+  height: auto;
+  padding: 30px;
+  box-sizing: border-box;
+}
+
+.login-box-from-checkbox {
+  color: #eeeeee;
+}
+
+.el-checkbox__label {
+  font-size: 13px;
+  color: #eeeeee;
+}
 </style>

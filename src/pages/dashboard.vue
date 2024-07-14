@@ -1,243 +1,226 @@
 <template>
   <imp-panel>
-  <el-tabs v-model="activeTable" @tab-click="activeTableChanged" style="min-height: 500px;">
-    <el-tab-pane label="任务概览" name="taskStatisticSummary">
-      <div class="demo">
-        <el-row :gutter=24>
-          <el-col :span="8">
-            <el-card class="box-card">
-              <div slot="header">
+    <el-tabs v-model="activeTable" @tab-click="activeTableChanged" style="min-height: 500px;">
+      <el-tab-pane label="任务概览" name="taskStatisticSummary">
+        <div class="demo">
+          <el-row :gutter=24>
+            <el-col :span="8">
+              <el-card class="box-card">
+                <div slot="header">
             <span class="box-card-head">今日任务 -
               <span>
-              {{ statisticToday.success + statisticToday.fail + statisticToday.executing+statisticToday.upcoming}}
+              {{ statisticToday.success + statisticToday.fail + statisticToday.executing + statisticToday.upcoming }}
               </span>
             </span>
-              </div>
-              <div class="box-card-body">
-                <div class="text item">
-                  <i class="el-icon-success"/> 成&#x3000;功：<span>{{ statisticToday.success }}</span>
                 </div>
-                <div class="text item">
-                  <i class="el-icon-error"/> 失&#x3000;败：<span>{{ statisticToday.fail }}</span>
+                <div class="box-card-body">
+                  <div class="text item">
+                    <i class="el-icon-success"/> 成&#x3000;功：<span>{{ statisticToday.success }}</span>
+                  </div>
+                  <div class="text item">
+                    <i class="el-icon-error"/> 失&#x3000;败：<span>{{ statisticToday.fail }}</span>
+                  </div>
+                  <div class="text item">
+                    <i class="el-icon-s-help"/> 执行中：<span>{{ statisticToday.executing }}</span>
+                  </div>
+                  <div class="text item">
+                    <i class="el-icon-info"/> 待执行：<span>{{ statisticToday.upcoming }}</span>
+                  </div>
+                  <div class="text item-rate">
+                    <i class="el-icon-question"/> 成功率：<span>{{ statisticToday.successRate }}%</span>
+                  </div>
                 </div>
-                <div class="text item">
-                  <i class="el-icon-s-help"/> 执行中：<span>{{ statisticToday.executing }}</span>
-                </div>
-                <div class="text item">
-                  <i class="el-icon-info"/> 待执行：<span>{{ statisticToday.upcoming }}</span>
-                </div>
-                <div class="text item-rate">
-                  <i class="el-icon-question"/> 成功率：<span>{{ statisticToday.successRate }}%</span>
-                </div>
-              </div>
-            </el-card>
-          </el-col>
-          <el-col :span="8">
-            <el-card class="box-card">
-              <div slot="header">
+              </el-card>
+            </el-col>
+            <el-col :span="8">
+              <el-card class="box-card">
+                <div slot="header">
             <span class="box-card-head">近一月任务 -
               <span>
-              {{ statisticLastMonth.success + statisticLastMonth.fail + statisticLastMonth.executing + statisticLastMonth.upcoming}}
+              {{
+                  statisticLastMonth.success + statisticLastMonth.fail + statisticLastMonth.executing + statisticLastMonth.upcoming
+                }}
               </span>
             </span>
-              </div>
-              <div class="box-card-body">
-                <div class="text item">
-                  <i class="el-icon-success"/> 成&#x3000;功：<span>{{ statisticLastMonth.success }}</span>
                 </div>
-                <div class="text item">
-                  <i class="el-icon-error"/> 失&#x3000;败：<span>{{ statisticLastMonth.fail }}</span>
+                <div class="box-card-body">
+                  <div class="text item">
+                    <i class="el-icon-success"/> 成&#x3000;功：<span>{{ statisticLastMonth.success }}</span>
+                  </div>
+                  <div class="text item">
+                    <i class="el-icon-error"/> 失&#x3000;败：<span>{{ statisticLastMonth.fail }}</span>
+                  </div>
+                  <div class="text item">
+                    <i class="el-icon-s-help"/> 执行中：<span>{{ statisticLastMonth.executing }}</span>
+                  </div>
+                  <div class="text item">
+                    <i class="el-icon-info"/> 待执行：<span>{{ statisticLastMonth.upcoming }}</span>
+                  </div>
+                  <div class="text item-rate">
+                    <i class="el-icon-question"/> 成功率：<span>{{ statisticLastMonth.successRate }}%</span>
+                  </div>
                 </div>
-                <div class="text item">
-                  <i class="el-icon-s-help"/> 执行中：<span>{{ statisticLastMonth.executing }}</span>
-                </div>
-                <div class="text item">
-                  <i class="el-icon-info"/> 待执行：<span>{{ statisticLastMonth.upcoming }}</span>
-                </div>
-                <div class="text item-rate">
-                  <i class="el-icon-question"/> 成功率：<span>{{ statisticLastMonth.successRate }}%</span>
-                </div>
-              </div>
-            </el-card>
-          </el-col>
-          <el-col :span="8">
-            <el-card class="box-card">
-              <div slot="header">
+              </el-card>
+            </el-col>
+            <el-col :span="8">
+              <el-card class="box-card">
+                <div slot="header">
             <span class="box-card-head">全部任务 -
               <span>
-              {{ statisticTotal.success + statisticTotal.fail + statisticTotal.executing + statisticTotal.upcoming}}
+              {{ statisticTotal.success + statisticTotal.fail + statisticTotal.executing + statisticTotal.upcoming }}
               </span>
             </span>
-              </div>
-              <div class="box-card-body">
-                <div class="text item">
-                  <i class="el-icon-success"/> 成&#x3000;功：<span>{{ statisticTotal.success }}</span>
                 </div>
-                <div class="text item">
-                  <i class="el-icon-error"/> 失&#x3000;败：<span>{{ statisticTotal.fail }}</span>
+                <div class="box-card-body">
+                  <div class="text item">
+                    <i class="el-icon-success"/> 成&#x3000;功：<span>{{ statisticTotal.success }}</span>
+                  </div>
+                  <div class="text item">
+                    <i class="el-icon-error"/> 失&#x3000;败：<span>{{ statisticTotal.fail }}</span>
+                  </div>
+                  <div class="text item">
+                    <i class="el-icon-s-help"/> 执行中：<span>{{ statisticTotal.executing }}</span>
+                  </div>
+                  <div class="text item">
+                    <i class="el-icon-info"/> 待执行：<span>{{ statisticTotal.upcoming }}</span>
+                  </div>
+                  <div class="text item-rate">
+                    <i class="el-icon-question"/> 成功率：<span>{{ statisticTotal.successRate }}%</span>
+                  </div>
                 </div>
-                <div class="text item">
-                  <i class="el-icon-s-help"/> 执行中：<span>{{ statisticTotal.executing }}</span>
-                </div>
-                <div class="text item">
-                  <i class="el-icon-info"/> 待执行：<span>{{ statisticTotal.upcoming }}</span>
-                </div>
-                <div class="text item-rate">
-                  <i class="el-icon-question"/> 成功率：<span>{{ statisticTotal.successRate }}%</span>
-                </div>
-              </div>
-            </el-card>
-          </el-col>
-        </el-row>
-      </div>
-    </el-tab-pane>
-    <el-tab-pane label="任务统计" name="taskStatistic">
-      <div>
-        <el-row :gutter="10">
-          <el-col :span="3">
-            <el-select v-model="taskStatisticFilter.govern"
-                       multiple clearable
-                       size="mini"
-                       collapse-tags
-                       @change="taskStatisticFilterChanged"
-                       placeholder="请选择清理方式">
-              <el-option v-for="i in governOption" :key="i.value" :label="i.name" :value="i.value"></el-option>
-            </el-select>
-          </el-col>
-          <el-col :span="3">
-            <el-cascader
-              v-model="cascaderValue"
-              size="mini"
-              :options="taskStatisticFilterOption"
-              placeholder="请筛选bu、集群、库、表"
-              @change="taskStatisticFilterChanged"></el-cascader>
-          </el-col>
-          <el-col :span="8">
-            <el-date-picker
-              v-model="taskStatisticDateRange"
-              size="mini"
-              type="daterange"
-              value-format="yyyy-MM-dd"
-              range-separator="-"
-              @change="taskStatisticDateRangeChanged"
-              start-placeholder="开始日期"
-              end-placeholder="结束日期">
-            </el-date-picker>
-          </el-col>
-          <el-col :span="10" style="display: flex; justify-content: flex-end">
-            <el-checkbox-group v-model="taskStatisticShow" @change="taskStatisticShowChanged" size="mini">
-              <el-checkbox-button label="bu">BU维度</el-checkbox-button>
-              <el-checkbox-button label="cluster">集群维度</el-checkbox-button>
-              <el-checkbox-button label="database">库维度</el-checkbox-button>
-              <el-checkbox-button label="table">表维度</el-checkbox-button>
-            </el-checkbox-group>
-          </el-col>
-        </el-row>
-      </div>
-      <div class="task-statistic-table" v-if="taskStatisticShow.indexOf('bu') !== -1">
-        <el-table :data="taskStatisticDataBU.rows" size="mini" show-summary border stripe>
+              </el-card>
+            </el-col>
+          </el-row>
+        </div>
+      </el-tab-pane>
+      <el-tab-pane label="任务统计" name="taskStatistic">
+        <div>
+          <el-row :gutter="10">
+            <el-col :span="3">
+              <el-select v-model="taskStatisticFilter.govern"
+                         multiple clearable
+                         size="mini"
+                         collapse-tags
+                         @change="taskStatisticFilterChanged"
+                         placeholder="请选择清理方式">
+                <el-option v-for="i in governOption" :key="i.value" :label="i.name" :value="i.value"></el-option>
+              </el-select>
+            </el-col>
+            <el-col :span="3">
+              <el-cascader
+                v-model="cascaderValue"
+                size="mini"
+                :options="taskStatisticFilterOption"
+                placeholder="请筛选bu、集群、库、表"
+                @change="taskStatisticFilterChanged"></el-cascader>
+            </el-col>
+            <el-col :span="8">
+              <el-date-picker
+                v-model="taskStatisticDateRange"
+                size="mini"
+                type="daterange"
+                value-format="yyyy-MM-dd"
+                range-separator="-"
+                @change="taskStatisticDateRangeChanged"
+                start-placeholder="开始日期"
+                end-placeholder="结束日期">
+              </el-date-picker>
+            </el-col>
+            <el-col :span="10" style="display: flex; justify-content: flex-end">
+              <el-checkbox-group v-model="taskStatisticShow" @change="taskStatisticShowChanged" size="mini">
+                <el-checkbox-button label="bu">BU维度</el-checkbox-button>
+                <el-checkbox-button label="cluster">集群维度</el-checkbox-button>
+                <el-checkbox-button label="database">库维度</el-checkbox-button>
+                <el-checkbox-button label="table">表维度</el-checkbox-button>
+              </el-checkbox-group>
+            </el-col>
+          </el-row>
+        </div>
+        <div class="task-statistic-table" v-if="taskStatisticShow.indexOf('bu') !== -1">
+          <el-table :data="taskStatisticDataBU.rows" size="mini" show-summary border stripe>
             <el-table-column label="BU维度" align="center">
               <el-table-column prop="bu" label="BU" align="center" sortable></el-table-column>
               <el-table-column prop="govern" label="治理方式" align="center" sortable>
                 <template slot-scope="scope">
-                  <span v-for="i in scope.row.govern.split(',')">{{getOptionName(governOption, i)}} </span>
+                  <span v-for="i in scope.row.govern.split(',')">{{ getOptionName(governOption, i) }} </span>
                 </template>
               </el-table-column>
               <el-table-column prop="total_quantity" label="治理数据量" align="center" sortable></el-table-column>
               <el-table-column prop="total_size" label="治理容量大小" align="center" sortable></el-table-column>
               <el-table-column prop="count" label="运行任务次数" align="center" sortable></el-table-column>
-          </el-table-column>
-        </el-table>
-      </div>
-      <div class="task-statistic-table" v-if="taskStatisticShow.indexOf('cluster') !== -1">
-        <el-table :data="taskStatisticDataCluster.rows" size="mini" show-summary border stripe>
-          <el-table-column label="集群维度" align="center">
-            <el-table-column prop="bu" label="BU" align="center" sortable></el-table-column>
-            <el-table-column prop="cluster_name" label="集群名称" align="center" sortable></el-table-column>
-            <el-table-column prop="govern" label="治理方式" align="center" sortable>
-              <template slot-scope="scope">
-                <span v-for="i in scope.row.govern.split(',')">{{getOptionName(governOption, i)}} </span>
-              </template>
             </el-table-column>
-            <el-table-column prop="total_quantity" label="治理数据量" align="center" sortable></el-table-column>
-            <el-table-column prop="total_size" label="治理容量大小" align="center" sortable></el-table-column>
-            <el-table-column prop="count" label="运行任务次数" align="center" sortable></el-table-column>
-          </el-table-column>
-        </el-table>
-      </div>
-      <div class="task-statistic-table" v-if="taskStatisticShow.indexOf('database') !== -1">
-        <el-table :data="taskStatisticDataDatabase.rows" size="mini" show-summary border stripe>
-          <el-table-column label="库维度" align="center">
-            <el-table-column prop="bu" label="BU" align="center" sortable></el-table-column>
-            <el-table-column prop="cluster_name" label="集群名称" align="center" sortable></el-table-column>
-            <el-table-column prop="database" label="库" align="center" sortable></el-table-column>
-            <el-table-column prop="govern" label="治理方式" align="center" sortable>
-              <template slot-scope="scope">
-                <span v-for="i in scope.row.govern.split(',')">{{getOptionName(governOption, i)}} </span>
-              </template>
+          </el-table>
+        </div>
+        <div class="task-statistic-table" v-if="taskStatisticShow.indexOf('cluster') !== -1">
+          <el-table :data="taskStatisticDataCluster.rows" size="mini" show-summary border stripe>
+            <el-table-column label="集群维度" align="center">
+              <el-table-column prop="bu" label="BU" align="center" sortable></el-table-column>
+              <el-table-column prop="cluster_name" label="集群名称" align="center" sortable></el-table-column>
+              <el-table-column prop="govern" label="治理方式" align="center" sortable>
+                <template slot-scope="scope">
+                  <span v-for="i in scope.row.govern.split(',')">{{ getOptionName(governOption, i) }} </span>
+                </template>
+              </el-table-column>
+              <el-table-column prop="total_quantity" label="治理数据量" align="center" sortable></el-table-column>
+              <el-table-column prop="total_size" label="治理容量大小" align="center" sortable></el-table-column>
+              <el-table-column prop="count" label="运行任务次数" align="center" sortable></el-table-column>
             </el-table-column>
-            <el-table-column prop="total_quantity" label="治理数据量" align="center" sortable></el-table-column>
-            <el-table-column prop="total_size" label="治理容量大小" align="center" sortable></el-table-column>
-            <el-table-column prop="count" label="运行任务次数" align="center" sortable></el-table-column>
-          </el-table-column>
-        </el-table>
-      </div>
-      <div class="task-statistic-table" v-if="taskStatisticShow.indexOf('table') !== -1">
-        <el-table :data="taskStatisticDataTable.rows" size="mini" show-summary border stripe>
-          <el-table-column label="表维度" align="center">
-            <el-table-column prop="bu" label="BU" align="center" sortable></el-table-column>
-            <el-table-column prop="cluster_name" label="集群名称" align="center" sortable></el-table-column>
-            <el-table-column prop="database" label="库" align="center" sortable></el-table-column>
-            <el-table-column prop="table" label="表" align="center" sortable></el-table-column>
-            <el-table-column prop="govern" label="治理方式" align="center" sortable>
-              <template slot-scope="scope">
-                <span v-for="i in scope.row.govern.split(',')">{{getOptionName(governOption, i)}} </span>
-              </template>
+          </el-table>
+        </div>
+        <div class="task-statistic-table" v-if="taskStatisticShow.indexOf('database') !== -1">
+          <el-table :data="taskStatisticDataDatabase.rows" size="mini" show-summary border stripe>
+            <el-table-column label="库维度" align="center">
+              <el-table-column prop="bu" label="BU" align="center" sortable></el-table-column>
+              <el-table-column prop="cluster_name" label="集群名称" align="center" sortable></el-table-column>
+              <el-table-column prop="database" label="库" align="center" sortable></el-table-column>
+              <el-table-column prop="govern" label="治理方式" align="center" sortable>
+                <template slot-scope="scope">
+                  <span v-for="i in scope.row.govern.split(',')">{{ getOptionName(governOption, i) }} </span>
+                </template>
+              </el-table-column>
+              <el-table-column prop="total_quantity" label="治理数据量" align="center" sortable></el-table-column>
+              <el-table-column prop="total_size" label="治理容量大小" align="center" sortable></el-table-column>
+              <el-table-column prop="count" label="运行任务次数" align="center" sortable></el-table-column>
             </el-table-column>
-            <el-table-column prop="total_quantity" label="治理数据量" align="center" sortable></el-table-column>
-            <el-table-column prop="total_size" label="治理容量大小" align="center" sortable></el-table-column>
-            <el-table-column prop="count" label="运行任务次数" align="center" sortable></el-table-column>
-          </el-table-column>
-        </el-table>
-      </div>
-    </el-tab-pane>
-    <el-tab-pane label="策略统计" name="policyStatistic">
+          </el-table>
+        </div>
+        <div class="task-statistic-table" v-if="taskStatisticShow.indexOf('table') !== -1">
+          <el-table :data="taskStatisticDataTable.rows" size="mini" show-summary border stripe>
+            <el-table-column label="表维度" align="center">
+              <el-table-column prop="bu" label="BU" align="center" sortable></el-table-column>
+              <el-table-column prop="cluster_name" label="集群名称" align="center" sortable></el-table-column>
+              <el-table-column prop="database" label="库" align="center" sortable></el-table-column>
+              <el-table-column prop="table" label="表" align="center" sortable></el-table-column>
+              <el-table-column prop="govern" label="治理方式" align="center" sortable>
+                <template slot-scope="scope">
+                  <span v-for="i in scope.row.govern.split(',')">{{ getOptionName(governOption, i) }} </span>
+                </template>
+              </el-table-column>
+              <el-table-column prop="total_quantity" label="治理数据量" align="center" sortable></el-table-column>
+              <el-table-column prop="total_size" label="治理容量大小" align="center" sortable></el-table-column>
+              <el-table-column prop="count" label="运行任务次数" align="center" sortable></el-table-column>
+            </el-table-column>
+          </el-table>
+        </div>
+      </el-tab-pane>
+      <el-tab-pane label="策略统计" name="policyStatistic">
 
-    </el-tab-pane>
-  </el-tabs>
+      </el-tab-pane>
+    </el-tabs>
   </imp-panel>
 </template>
-<!--    <el-divider></el-divider>-->
-<!--    <el-row :gutter="24">-->
-<!--      <div id="gantt-chart"></div>-->
-<!--      <div class="chart-title">-->
-<!--        <i class="completed">已完成</i>-->
-<!--        <i class="timeout">执行中</i>-->
-<!--        <i class="to-be-completed">待执行</i>-->
-<!--      </div>-->
-<!--    </el-row>-->
-
 
 <script>
-import echarts from 'echarts'
+
 import moment from 'moment';
 import * as sysApi from "../services/sys";
 import {TaskStatisticSummaryType, governOption, getOptionName, getOptionBackground} from "../common/utils";
-import {taskStatisticGroupByBu} from "../services/sys";
 
 export default {
   name: 'project-progress',
-  // watch:{
-  //   taskStatisticShow: function (newVal, oldVal) {
-  //     console.log(newVal, oldVal);
-  //     if (newVal !== oldVal) {
-  //       window.localStorage.setItem("taskStatisticShow", newVal);
-  //     }
-  //   },
-  // },
   data() {
     return {
-      taskStatisticShow: ['bu','cluster','database','table'],
+      taskStatisticShow: ['bu', 'cluster', 'database', 'table'],
       governOption,
       cascaderValue: "",
       taskStatisticFilter: {
@@ -248,13 +231,13 @@ export default {
         govern: "",
       },
       taskStatisticFilterOption: [],
-      taskStatisticDateRange:[],
+      taskStatisticDateRange: [],
       activeTable: "taskStatisticSummary",
-      statisticToday : TaskStatisticSummaryType,
+      statisticToday: TaskStatisticSummaryType,
       statisticLastMonth: TaskStatisticSummaryType,
       statisticTotal: TaskStatisticSummaryType,
       ganttChart: null,
-      chartData:   [
+      chartData: [
         {
           "id": 434,
           "name": "每天任务-用例30",
@@ -340,129 +323,51 @@ export default {
     }
   },
   mounted() {
-    // window.addEventListener(
-    //   'resize',
-    //   window._.debounce(() => {
-    //     this.resizeCharts()
-    //   }, 100)
-    // )
-    // this.$nextTick(() => {
-    //   this.initChart()
-    // })
+
   },
   methods: {
     getOptionName,
     getOptionBackground,
-    taskStatisticShowChanged(){
+    taskStatisticShowChanged() {
       window.localStorage.setItem("taskStatisticShow", this.taskStatisticShow);
     },
     activeTableChanged(tab, event) {
       this.activeTable = tab.name;
       window.localStorage.setItem("taskStatisticActiveTable", this.activeTable);
     },
-    initChart() {
-      this.ganttChart = echarts.init(document.getElementById('gantt-chart'))
-      const _self = this
-      const chartOption = {
-        title: {
-          text: '任务执行计划',
-          left: 10
-        },
-        grid: {
-          containLabel: true,
-          left: 40
-        },
-        xAxis: {
-          type: 'time',
-        },
-        yAxis: {
-          data: this.chartData.map(item => item.id)
-        },
-        tooltip: {
-          trigger: 'axis',
-          formatter: function (params) {
-            // var res = params[0].name + '</br>'
-            var res = '任务详情:' + '</br>'
-            var date0 = params[0].data
-            var date1 = params[1].data
-            res += date0 + '</br>' + date1 + '</br>'
-            return res
-          }
-        },
-        series: [
-          {
-            name: '实际开始时间',
-            type: 'bar',
-            stack: 'timeout',
-            itemStyle: {
-              normal: {
-                color: 'rgba(0,0,0,0)'
-              }
-            },
-            lineStyle: {},
-            data: this.chartData.map(item => item.task_start_time)
-          },
-          {
-            name: '超时',
-            type: 'bar',
-            stack: 'timeout',
-            barWidth: 10, // 柱宽度
-            itemStyle: {
-              normal: {
-                barBorderRadius: 0, // 柱圆角
-                color: function (params) {
-                  let color = ''
-                  // var colorList = ['#3E84E9','#c23531','#d4cece']; // 超时, 已完成, 待完成
-                  var item = _self.chartData.filter(item => {
-                    return item.id === params.id
-                  })
-                  var status = item && item[0] && item[0].status
-                  // console.log('====', status)
-                  color = status === 1 ? '#d4cece' : (status === 2 ? '#3E84E9' : '#c23531')
-                  return color
-                }
-              }
-            },
-            data: this.chartData.map(item => item.task_end_time)
-          }
-        ]
-      }
-      this.ganttChart.setOption(chartOption)
-      this.resizeCharts()
-    },
     resizeCharts() {
       this.ganttChart && this.ganttChart.resize()
     },
-    todayStatistic(){
+    todayStatistic() {
       sysApi.getTaskStatisticSummary({
         start_date: moment().format('YYYY-MM-DD'),
         end_date: moment().format('YYYY-MM-DD'),
       }).then(res => {
         this.statisticToday = res.data;
         this.statisticToday.successRate = this.statisticToday.success / (this.statisticToday.fail + this.statisticToday.success) * 100
-        this.statisticToday.successRate = Number.isFinite(this.statisticToday.successRate) ? this.statisticToday.successRate.toFixed(0) : 0 ;
+        this.statisticToday.successRate = Number.isFinite(this.statisticToday.successRate) ? this.statisticToday.successRate.toFixed(0) : 0;
       });
     },
-    lastMonthStatistic(){
+    lastMonthStatistic() {
       sysApi.getTaskStatisticSummary({
         end_date: moment().format('YYYY-MM-DD'),
         start_date: moment().subtract(1, 'months').format('YYYY-MM-DD'),
       }).then(res => {
         this.statisticLastMonth = res.data;
         this.statisticLastMonth.successRate = this.statisticLastMonth.success / (this.statisticLastMonth.fail + this.statisticLastMonth.success) * 100
-        this.statisticLastMonth.successRate = Number.isFinite(this.statisticLastMonth.successRate) ? this.statisticLastMonth.successRate.toFixed(0) : 0 ;
+        this.statisticLastMonth.successRate = Number.isFinite(this.statisticLastMonth.successRate) ? this.statisticLastMonth.successRate.toFixed(0) : 0;
       });
     },
-    totalStatistic(){
+    totalStatistic() {
       sysApi.getTaskStatisticSummary({}).then(res => {
         this.statisticTotal = res.data;
         this.statisticTotal.successRate = this.statisticTotal.success / (this.statisticTotal.fail + this.statisticTotal.success) * 100
-        this.statisticTotal.successRate = Number.isFinite(this.statisticTotal.successRate) ? this.statisticTotal.successRate.toFixed(0) : 0 ;
+        this.statisticTotal.successRate = Number.isFinite(this.statisticTotal.successRate) ? this.statisticTotal.successRate.toFixed(0) : 0;
       });
     },
-    taskPlan(){
+    taskPlan() {
       sysApi.getTaskPlan({
-        start_date:moment().subtract(3, 'days').format('YYYY-MM-DD'),
+        start_date: moment().subtract(3, 'days').format('YYYY-MM-DD'),
         end_date: moment().add(3, 'days').format('YYYY-MM-DD'),
       }).then(res => {
         this.chartData = res.data.tasks;
@@ -472,10 +377,10 @@ export default {
       const processedData = {};
       data.forEach(item => {
         if (!processedData[item.bu]) {
-          processedData[item.bu] = [] ;
+          processedData[item.bu] = [];
         }
         if (!processedData[item.bu][item.cluster_name]) {
-          processedData[item.bu][item.cluster_name] = [] ;
+          processedData[item.bu][item.cluster_name] = [];
         }
         if (!processedData[item.bu][item.cluster_name][item.database]) {
           processedData[item.bu][item.cluster_name][item.database] = [];
@@ -502,35 +407,35 @@ export default {
               label: database,
               children: []
             }
-            processedData[bu][cluster][database].forEach(table =>{
+            processedData[bu][cluster][database].forEach(table => {
               const tableItem = {
                 value: table,
                 label: table
               }
-              if (databaseItem.children.length === 0){
-                databaseItem.children.push({value:"", label:"*"});
+              if (databaseItem.children.length === 0) {
+                databaseItem.children.push({value: "", label: "*"});
               }
               databaseItem.children.push(tableItem);
             })
-            if (clusterItem.children.length === 0){
-              clusterItem.children.push({value:"", label:"*"});
+            if (clusterItem.children.length === 0) {
+              clusterItem.children.push({value: "", label: "*"});
             }
             clusterItem.children.push(databaseItem);
           }
-          if (buItem.children.length === 0){
-            buItem.children.push({value:"", label:"*"});
+          if (buItem.children.length === 0) {
+            buItem.children.push({value: "", label: "*"});
           }
           buItem.children.push(clusterItem);
         }
-        if (cascaderOptions.length === 0){
-          cascaderOptions.push({value:"", label:"*"});
+        if (cascaderOptions.length === 0) {
+          cascaderOptions.push({value: "", label: "*"});
         }
         cascaderOptions.push(buItem);
       }
       return cascaderOptions;
     },
 
-    taskStatisticDateRangeChanged(){
+    taskStatisticDateRangeChanged() {
       const params = {
         start_date: this.taskStatisticDateRange[0],
         end_date: this.taskStatisticDateRange[1],
@@ -562,40 +467,40 @@ export default {
     destroyed() {
       window.removeEventListener('resize', this.resizeCharts)
     },
-    taskStatisticFilterChanged(){
+    taskStatisticFilterChanged() {
       const value = this.cascaderValue;
       switch (value) {
-      case 1:
-        this.taskStatisticFilter.bu = value[0];
-        break;
-      case 2:
-        this.taskStatisticFilter.bu = value[0];
-        this.taskStatisticFilter.cluster_name = value[1];
-        break;
-      case 3:
-        this.taskStatisticFilter.bu = value[0];
-        this.taskStatisticFilter.cluster_name = value[1];
-        this.taskStatisticFilter.database = value[2];
-        break;
-      default:
-        this.taskStatisticFilter.bu = value[0];
-        this.taskStatisticFilter.cluster_name = value[1];
-        this.taskStatisticFilter.database = value[2];
-        this.taskStatisticFilter.table = value[3];
+        case 1:
+          this.taskStatisticFilter.bu = value[0];
+          break;
+        case 2:
+          this.taskStatisticFilter.bu = value[0];
+          this.taskStatisticFilter.cluster_name = value[1];
+          break;
+        case 3:
+          this.taskStatisticFilter.bu = value[0];
+          this.taskStatisticFilter.cluster_name = value[1];
+          this.taskStatisticFilter.database = value[2];
+          break;
+        default:
+          this.taskStatisticFilter.bu = value[0];
+          this.taskStatisticFilter.cluster_name = value[1];
+          this.taskStatisticFilter.database = value[2];
+          this.taskStatisticFilter.table = value[3];
       }
       this.taskStatisticDateRangeChanged();
     },
   },
-  created(){
+  created() {
     this.taskStatisticShow = window.localStorage.getItem("taskStatisticShow");
 
-    this.taskStatisticShow = this.taskStatisticShow === null ? ['bu','cluster','database','table'] : this.taskStatisticShow.split(',');
+    this.taskStatisticShow = this.taskStatisticShow === null ? ['bu', 'cluster', 'database', 'table'] : this.taskStatisticShow.split(',');
 
     this.activeTable = window.localStorage.getItem("taskStatisticActiveTable");
     this.activeTable = this.activeTable === null ? 'taskStatisticSummary' : this.activeTable
 
-    this.taskStatisticDateRange[0]= moment().subtract(1, 'months').format('YYYY-MM-DD');
-    this.taskStatisticDateRange[1]= moment().format('YYYY-MM-DD');
+    this.taskStatisticDateRange[0] = moment().subtract(1, 'months').format('YYYY-MM-DD');
+    this.taskStatisticDateRange[1] = moment().format('YYYY-MM-DD');
     this.todayStatistic();
     this.lastMonthStatistic();
     this.totalStatistic();
@@ -605,41 +510,43 @@ export default {
 </script>
 
 <style lang="css" scoped>
-@import "../../static/css/main.css";
-  .box-card-head{
-    font-size: 14px;
-    border-width: medium;
-  }
-  .box-card-body {
-    display: flex;
-    flex-wrap: wrap;
-    font-size: 12px;
-    line-height: 30px;
-  }
-  .text > span, .box-card-head>span{
-    font-size: 16px;
-    font-weight: bold;
-  }
+@import "../../static/css/main.less";
+.box-card-head {
+  font-size: 14px;
+  border-width: medium;
+}
 
-  .text.item {
-    flex: 0 0 45%;
-  }
+.box-card-body {
+  display: flex;
+  flex-wrap: wrap;
+  font-size: 12px;
+  line-height: 30px;
+}
 
-  .text.item-rate {
-    flex: 0 0 95%;
-  }
+.text > span, .box-card-head > span {
+  font-size: 16px;
+  font-weight: bold;
+}
 
-  .el-select-dropdown__item{
-    font-size: 12px;
-  }
+.text.item {
+  flex: 0 0 45%;
+}
 
-  .el-cascader-panel, .el-cascader-node__label {
-    font-size: 12px;
-  }
+.text.item-rate {
+  flex: 0 0 95%;
+}
 
-  .task-statistic-table {
-    width: 100%;
-    margin-top: 20px;
-  }
+.el-select-dropdown__item {
+  font-size: 12px;
+}
+
+.el-cascader-panel, .el-cascader-node__label {
+  font-size: 12px !important;
+}
+
+.task-statistic-table {
+  width: 100%;
+  margin-top: 20px;
+}
 
 </style>

@@ -14,12 +14,12 @@ let usersListData = Mock.mock({
       isMale: '@boolean',
       email: '@email',
       createTime: '@datetime',
-      avatar () {
+      avatar() {
         return Mock.Random.image('100x100', Mock.Random.color(), '#757575', 'png', this.nickName.substr(0, 1))
       },
-      delFlag:0,
-      status:1,
-      userType:'1',
+      delFlag: 0,
+      status: 1,
+      userType: '1',
       no: '@id',
       remarks: '@cparagraph(1, 3)',
     },
@@ -43,9 +43,9 @@ let database = usersListData.data
 
 module.exports = {
   userList: shuffle(database),
-  'GET /sys/user/page' : function (req, res) {
-    const { query } = req
-    let { pageSize, page } = query
+  'GET /sys/user/page': function (req, res) {
+    const {query} = req
+    let {pageSize, page} = query
     pageSize = pageSize || 10
     page = page || 1
 
@@ -59,13 +59,13 @@ module.exports = {
   'POST /login': function (req, res) {
     let newData = shuffle(database)[0]
     res.status(200).json({
-      user:newData,sid:newData.id
+      user: newData, sid: newData.id
     })
   },
-  'GET /sys/user/get' : function (req, res) {
-    const { query } = req
-    let { id } = query
-    let newData = database.filter(p=>p.id===id)[0]
+  'GET /sys/user/get': function (req, res) {
+    const {query} = req
+    let {id} = query
+    let newData = database.filter(p => p.id === id)[0]
     res.status(200).json(newData)
   },
 }

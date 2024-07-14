@@ -15,8 +15,8 @@
             <i style="font-size: 14px; font-style: normal;">&nbsp;{{ userInfo.real_name }}</i>
           </div>
           <el-dropdown-menu slot="dropdown">
-              <el-dropdown-item command="userInfo">个人信息</el-dropdown-item>
-              <el-dropdown-item command="logout">退出</el-dropdown-item>
+            <el-dropdown-item command="userInfo">个人信息</el-dropdown-item>
+            <el-dropdown-item command="logout">退出</el-dropdown-item>
           </el-dropdown-menu>
         </el-dropdown>
       </div>
@@ -46,7 +46,9 @@
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button size="mini" @click="cancelEditSubmit('form')">取 消</el-button>
-        <el-button size="mini" type="primary" @click="onEditSubmit('form')" v-loading.fullscreen.lock="fullscreenLoading">确 定</el-button>
+        <el-button size="mini" type="primary" @click="onEditSubmit('form')"
+                   v-loading.fullscreen.lock="fullscreenLoading">确 定
+        </el-button>
       </div>
     </el-dialog>
   </header>
@@ -86,18 +88,18 @@ export default {
       },
       rules: {
         username: [
-          { required: true, message: '请输入用户名', trigger: 'blur' },
+          {required: true, message: '请输入用户名', trigger: 'blur'},
         ],
         real_name: [
-          { required: true, message: '请输入姓名', trigger: 'blur' }
+          {required: true, message: '请输入姓名', trigger: 'blur'}
         ],
         password: [
-          { required: true, message: '请输入密码', trigger: 'blur' },
-          { validator: validatePassword, trigger: 'blur' }
+          {required: true, message: '请输入密码', trigger: 'blur'},
+          {validator: validatePassword, trigger: 'blur'}
         ],
         passwordConfirm: [
-          { required: true, message: '请确认密码', trigger: 'blur' },
-          { validator: validatePasswordConfirm, trigger: 'blur' }
+          {required: true, message: '请确认密码', trigger: 'blur'},
+          {validator: validatePasswordConfirm, trigger: 'blur'}
         ]
       },
     }
@@ -108,7 +110,7 @@ export default {
     device: 'device',
   }),
   methods: {
-    onEditSubmit(formName){
+    onEditSubmit(formName) {
       this.$refs[formName].validate((valid) => {
         if (!valid) {
           return false
@@ -118,14 +120,14 @@ export default {
           this.fullscreenLoading = false;
         }, 1000);
 
-        if (this.form.password !== "" && this.form.password !== this.form.passwordConfirm){
-          this.$notify({ title: '错误', message: "两次输入密码不一致", type: 'error' });
+        if (this.form.password !== "" && this.form.password !== this.form.passwordConfirm) {
+          this.$notify({title: '错误', message: "两次输入密码不一致", type: 'error'});
           this.fullscreenLoading = false;
           return
         }
 
         const para = {
-          username : this.form.username,
+          username: this.form.username,
           real_name: this.form.real_name,
           email: this.form.email,
           password: this.form.password,
@@ -134,19 +136,19 @@ export default {
           this.fullscreenLoading = false;
           this.dialogEditFormVisible = false;
           this.$refs[formName].resetFields();
-          this.$notify({ title: '成功', message: "修改成功", type: 'success' });
+          this.$notify({title: '成功', message: "修改成功", type: 'success'});
 
           this.form = res.data.data
           this.form.password = ''
           this.form.passwordConfirm = ''
           window.localStorage.setItem("user", JSON.stringify(this.form));
           this.setUserInfo(this.form);
-        }).catch(()=>{
+        }).catch(() => {
           this.fullscreenLoading = false;
         })
       });
     },
-    cancelEditSubmit(formName){
+    cancelEditSubmit(formName) {
       this.$refs[formName].resetFields();
       this.fullscreenLoading = false;
       this.dialogEditFormVisible = false;
@@ -158,7 +160,7 @@ export default {
         this.toggleSidebar();
       }
     },
-    commandHandle(command){
+    commandHandle(command) {
       switch (command) {
         case 'logout':
           auth.logout();

@@ -1,12 +1,12 @@
 export default {
-  randomString:function(len,radix){
+  randomString: function (len, radix) {
     var CHARS = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'.split('');
     var chars = CHARS, uuid = [], i;
     radix = radix || chars.length;
 
     if (len) {
       // Compact form
-      for (i = 0; i < len; i++) uuid[i] = chars[0 | Math.random()*radix];
+      for (i = 0; i < len; i++) uuid[i] = chars[0 | Math.random() * radix];
     } else {
       // rfc4122, version 4 form
       var r;
@@ -19,7 +19,7 @@ export default {
       // per rfc4122, sec. 4.1.5
       for (i = 0; i < 36; i++) {
         if (!uuid[i]) {
-          r = 0 | Math.random()*16;
+          r = 0 | Math.random() * 16;
           uuid[i] = chars[(i == 19) ? (r & 0x3) | 0x8 : r];
         }
       }
@@ -27,37 +27,37 @@ export default {
 
     return uuid.join('');
   },
-  getUid:function(){
+  getUid: function () {
     var uid = window.localStorage.getItem('imp-uuid');
     if (!uid) {
       uid = this.randomString(32);
-      window.localStorage.setItem('imp-uuid',uid);
+      window.localStorage.setItem('imp-uuid', uid);
     }
     return uid;
   },
-  getSid:function(){
+  getSid: function () {
     var sid = window.localStorage.getItem('imp-sid');
-    if(!!sid){
+    if (!!sid) {
       return sid;
     }
     return '';
   },
-  login (token, callback) {
-    window.localStorage.setItem('token',token);
+  login(token, callback) {
+    window.localStorage.setItem('token', token);
     if (callback) callback();
   },
 
-  getToken () {
+  getToken() {
     return window.localStorage.getItem('token');
   },
 
-  logout (cb) {
+  logout(cb) {
     window.localStorage.removeItem('token');
     window.localStorage.removeItem('user');
     if (cb) cb()
   },
 
-  loggedIn () {
+  loggedIn() {
     return !!window.localStorage.getItem('token');
   }
 }

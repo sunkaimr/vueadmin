@@ -11,19 +11,20 @@ import {
 } from "../api";
 import qs from 'qs'
 
-export function login (params) {
+export function login(params) {
   return new Promise((resolve, reject) => {
     axios.put(api.LOGIN, params).then(response => {
-        resolve(response.data);
+      resolve(response.data);
     }).catch((error) => {
       reject(error);
     })
   })
 }
-export function userList (params) {
+
+export function userList(params) {
   const userList = {}
   return new Promise((resolve, reject) => {
-    axios.get(api.SYS_USER, { params }).then(response => {
+    axios.get(api.SYS_USER, {params}).then(response => {
       resolve(response.data);
     }, err => {
       resolve(userList);
@@ -34,10 +35,10 @@ export function userList (params) {
   })
 }
 
-export function sourceList (params) {
+export function sourceList(params) {
   const sourceList = {}
   return new Promise((resolve, reject) => {
-    axios.get(api.SOURCE_LIST, { params }).then(response => {
+    axios.get(api.SOURCE_LIST, {params}).then(response => {
       resolve(response.data);
     }, err => {
       resolve(sourceList);
@@ -48,10 +49,10 @@ export function sourceList (params) {
   })
 }
 
-export function policyList (params) {
+export function policyList(params) {
   const sourceList = {}
   return new Promise((resolve, reject) => {
-    axios.get(api.POLICY_LIST, { params }).then(response => {
+    axios.get(api.POLICY_LIST, {params}).then(response => {
       resolve(response.data);
     }, err => {
       resolve(sourceList);
@@ -62,12 +63,12 @@ export function policyList (params) {
   })
 }
 
-export function taskList (params) {
+export function taskList(params) {
   const sourceList = {}
   return new Promise((resolve, reject) => {
     axios.get(api.TASK_LIST, {
       params,
-      paramsSerializer: (params) => qs.stringify(params, { arrayFormat: 'repeat' }),
+      paramsSerializer: (params) => qs.stringify(params, {arrayFormat: 'repeat'}),
     }).then(response => {
       resolve(response.data);
     }, err => {
@@ -79,10 +80,10 @@ export function taskList (params) {
   })
 }
 
-export function connList (params) {
+export function connList(params) {
   const sourceList = {}
   return new Promise((resolve, reject) => {
-    axios.get(api.CONN_LIST_GET, { params }).then(response => {
+    axios.get(api.CONN_LIST_GET, {params}).then(response => {
       resolve(response.data);
     }, err => {
       resolve(sourceList);
@@ -93,10 +94,10 @@ export function connList (params) {
   })
 }
 
-export function getDestList (params) {
+export function getDestList(params) {
   const sourceList = {}
   return new Promise((resolve, reject) => {
-    axios.get(api.DEST_LIST, { params }).then(response => {
+    axios.get(api.DEST_LIST, {params}).then(response => {
       resolve(response.data);
     }, err => {
       resolve(sourceList);
@@ -107,20 +108,20 @@ export function getDestList (params) {
   })
 }
 
-export function clusterList (params) {
+export function clusterList(params) {
   const clusterList = {}
   return new Promise((resolve, reject) => {
-    axios.get(api.CLUSTER,{params}).then(response => {
+    axios.get(api.CLUSTER, {params}).then(response => {
       resolve(response.data);
     }, err => {
       resolve(clusterList);
     }).catch((error) => {
-        resolve(clusterList)
-      })
+      resolve(clusterList)
+    })
   })
 }
 
-export function clusterDatabaseList (clusterID) {
+export function clusterDatabaseList(clusterID) {
   const databaseList = {}
   const url = api.CLUSTER_DATABASE_LIST.replace('{cluster_id}', clusterID);
   return new Promise((resolve, reject) => {
@@ -134,7 +135,7 @@ export function clusterDatabaseList (clusterID) {
   })
 }
 
-export function clusterTableList (clusterID, database) {
+export function clusterTableList(clusterID, database) {
   const tableList = {}
   const url = api.CLUSTER_TABLE_LIST.replace('{cluster_id}', clusterID).replace('{database}', database);
   return new Promise((resolve, reject) => {
@@ -149,10 +150,10 @@ export function clusterTableList (clusterID, database) {
 }
 
 
-export function destList (params) {
+export function destList(params) {
   const destinationList = {}
   return new Promise((resolve, reject) => {
-    axios.get(api.DEST_LIST, { params }).then(response => {
+    axios.get(api.DEST_LIST, {params}).then(response => {
       resolve(response.data);
     }, err => {
       resolve(destinationList);
@@ -163,7 +164,7 @@ export function destList (params) {
   })
 }
 
-export function getConfig () {
+export function getConfig() {
   return new Promise((resolve, reject) => {
     axios.get(api.SYS_CONFIG).then(response => {
       resolve(response.data);
@@ -176,7 +177,7 @@ export function getConfig () {
   })
 }
 
-export function getPolicyRevision (params) {
+export function getPolicyRevision(params) {
   return new Promise((resolve, reject) => {
     axios.get(api.POLICY_REVISION, {params}).then(response => {
       resolve(response.data);
@@ -189,7 +190,7 @@ export function getPolicyRevision (params) {
   })
 }
 
-export function getTaskRevision (params) {
+export function getTaskRevision(params) {
   return new Promise((resolve, reject) => {
     axios.get(api.TASK_REVISION, {params}).then(response => {
       resolve(response.data);
@@ -202,7 +203,7 @@ export function getTaskRevision (params) {
   })
 }
 
-export function getTaskStatisticSummary(params){
+export function getTaskStatisticSummary(params) {
   return new Promise((resolve, reject) => {
     axios.get(api.TASK_STATISTIC_SUMMARY, {params}).then(response => {
       resolve(response.data);
@@ -215,7 +216,7 @@ export function getTaskStatisticSummary(params){
   })
 }
 
-export function getTaskPlan(params){
+export function getTaskPlan(params) {
   return new Promise((resolve, reject) => {
     axios.get(api.TASK_PLAN, {params}).then(response => {
       resolve(response.data);
@@ -229,9 +230,9 @@ export function getTaskPlan(params){
 }
 
 
-export function taskStatisticGroupByBu (params) {
+export function taskStatisticGroupByBu(params) {
   return new Promise((resolve, reject) => {
-    axios.get(api.TASK_STATISTIC_BU, { params }).then(response => {
+    axios.get(api.TASK_STATISTIC_BU, {params}).then(response => {
       resolve(response.data);
     }, err => {
       resolve([]);
@@ -242,9 +243,9 @@ export function taskStatisticGroupByBu (params) {
   })
 }
 
-export function taskStatisticGroupByCluster (params) {
+export function taskStatisticGroupByCluster(params) {
   return new Promise((resolve, reject) => {
-    axios.get(api.TASK_STATISTIC_CLUSTER, { params }).then(response => {
+    axios.get(api.TASK_STATISTIC_CLUSTER, {params}).then(response => {
       resolve(response.data);
     }, err => {
       resolve([]);
@@ -255,9 +256,9 @@ export function taskStatisticGroupByCluster (params) {
   })
 }
 
-export function taskStatisticGroupByDatabase (params) {
+export function taskStatisticGroupByDatabase(params) {
   return new Promise((resolve, reject) => {
-    axios.get(api.TASK_STATISTIC_DATABASE, { params }).then(response => {
+    axios.get(api.TASK_STATISTIC_DATABASE, {params}).then(response => {
       resolve(response.data);
     }, err => {
       resolve([]);
@@ -268,9 +269,9 @@ export function taskStatisticGroupByDatabase (params) {
   })
 }
 
-export function taskStatisticGroupByTable (params) {
+export function taskStatisticGroupByTable(params) {
   return new Promise((resolve, reject) => {
-    axios.get(api.TASK_STATISTIC_TABLE, { params }).then(response => {
+    axios.get(api.TASK_STATISTIC_TABLE, {params}).then(response => {
       resolve(response.data);
     }, err => {
       resolve([]);

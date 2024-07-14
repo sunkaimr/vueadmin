@@ -11,48 +11,47 @@
   </div>
 </template>
 <script type="text/javascript">
-  export default{
-  }
+export default {}
 </script>
 <style type="text/css">
-  .error-page {
-    width: 100%;
-    height: 100%;
-    text-align: center;
-  }
+.error-page {
+  width: 100%;
+  height: 100%;
+  text-align: center;
+}
 
-  .error-page .errorWarp {
-    margin: 10% auto auto auto;
-  }
+.error-page .errorWarp {
+  margin: 10% auto auto auto;
+}
 
-  .error-page .errorWarp .image {
-  }
+.error-page .errorWarp .image {
+}
 
-  .error-page .errorWarp .title {
-    color: #666;
-    font-size: 36px;
-    padding: 15px 30px;
-    margin-bottom: 10px;
-    margin-top: 20px;
-    font-weight: bold;
-  }
+.error-page .errorWarp .title {
+  color: #666;
+  font-size: 36px;
+  padding: 15px 30px;
+  margin-bottom: 10px;
+  margin-top: 20px;
+  font-weight: bold;
+}
 
-  .error-page .errorWarp .desc {
-    font-size: 24px;
-    color: #474747;
-    font-weight: bold;
-    line-height: 30px;
-  }
+.error-page .errorWarp .desc {
+  font-size: 24px;
+  color: #474747;
+  font-weight: bold;
+  line-height: 30px;
+}
 
-  .error-page .errorWarp .backBtn {
-    display: inline-block;
-    color: white;
-    margin-bottom: 20px;
-    margin-top: 50px;
-    padding: 15px 30px;
-    border: 1px solid #fff;
-    border-radius: 5px;
-    cursor: pointer;
-    background-color: #555555;
-  }
+.error-page .errorWarp .backBtn {
+  display: inline-block;
+  color: white;
+  margin-bottom: 20px;
+  margin-top: 50px;
+  padding: 15px 30px;
+  border: 1px solid #fff;
+  border-radius: 5px;
+  cursor: pointer;
+  background-color: #555555;
+}
 </style>

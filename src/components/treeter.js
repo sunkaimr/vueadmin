@@ -1,5 +1,5 @@
 const findFromTree = (treeArray, id, idPropName = "id", childrenPropName = "children") => {
-  if (!treeArray || treeArray == null || treeArray.length <= 0)return null;
+  if (!treeArray || treeArray == null || treeArray.length <= 0) return null;
   for (var i = 0; i < treeArray.length; i++) {
     if (treeArray[i][idPropName] == id) {
       return treeArray[i];
@@ -14,7 +14,7 @@ const findFromTree = (treeArray, id, idPropName = "id", childrenPropName = "chil
 }
 
 const appendTreeNode = (treeArray, item, idPropName = "id", parentPropName = "parentId", childrenPropName = "children") => {
-  if (treeArray == null || treeArray.length <= 0)return;
+  if (treeArray == null || treeArray.length <= 0) return;
   if (!item[parentPropName] || item[parentPropName] == null) {
     let i = treeArray.findIndex(p => p.sort > item.sort);
     if (i == -1) {
@@ -43,7 +43,7 @@ const appendTreeNode = (treeArray, item, idPropName = "id", parentPropName = "pa
 }
 
 const deleteFromTree = (list, id, idPropName = "id", childrenPropName = "children") => {
-  if (!list || list == null || list.length <= 0)return true;
+  if (!list || list == null || list.length <= 0) return true;
   for (var i = 0; i < list.length; i++) {
     if (list[i][idPropName] == id) {
       list.splice(i, 1);
@@ -59,10 +59,10 @@ const deleteFromTree = (list, id, idPropName = "id", childrenPropName = "childre
 }
 
 const batchDeleteFromTree = (list, ids, idPropName = "id", childrenPropName = "children") => {
-  if (!list || list == null || list.length <= 0)return;
-  if (!ids || ids == null || ids.length <= 0)return;
+  if (!list || list == null || list.length <= 0) return;
+  if (!ids || ids == null || ids.length <= 0) return;
   for (var i = 0; i < list.length; i++) {
-    if (ids.findIndex(x => x == list[i][idPropName])>-1) {
+    if (ids.findIndex(x => x == list[i][idPropName]) > -1) {
       list.splice(i, 1);
       i--;
       continue;
@@ -76,7 +76,7 @@ const updateTreeNode = (list, item, idPropName = "id", childrenPropName = "child
   if (!list || list == null || list.length <= 0) return false;
   for (var i = 0; i < list.length; i++) {
     if (list[i][idPropName] == item[idPropName]) {
-      console.log(list[i][idPropName],item[idPropName]);
+      console.log(list[i][idPropName], item[idPropName]);
       list.splice(i, 1, item);
       return true;
     } else {

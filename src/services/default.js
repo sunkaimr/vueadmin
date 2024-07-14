@@ -1,5 +1,5 @@
 export default {
-  menuList:[
+  menuList: [
     {
       "id": 1,
       "parentId": null,

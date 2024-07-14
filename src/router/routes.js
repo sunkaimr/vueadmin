@@ -24,17 +24,17 @@ const routes = [
   {
     path: '', component: app, children:
       [
-        { path: '/dashboard', component: dashboard },
-        { path: '/source', component: source },
-        { path: '/policy', component: policy },
-        { path: '/task', component: task },
-        { path: '/index', component: task  },
-        { path: '/manage/cluster', component: cluster },
-        { path: '/manage/user', component: sysUser },
-        { path: '/manage/dest', component: dest },
-        { path: '/manage', component: connect },
-        { path: '/manage/connect', component: connect },
-        { path: '/manage/config', component: config },
+        {path: '/dashboard', component: dashboard},
+        {path: '/source', component: source},
+        {path: '/policy', component: policy},
+        {path: '/task', component: task},
+        {path: '/index', component: task},
+        {path: '/manage/cluster', component: cluster},
+        {path: '/manage/user', component: sysUser},
+        {path: '/manage/dest', component: dest},
+        {path: '/manage', component: connect},
+        {path: '/manage/connect', component: connect},
+        {path: '/manage/config', component: config},
       ]
   },
   {
