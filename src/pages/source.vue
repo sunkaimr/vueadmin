@@ -119,7 +119,14 @@
               <el-descriptions-item label="集群ID">{{ props.row.cluster_id }}</el-descriptions-item>
               <el-descriptions-item label="集群名称">{{ props.row.cluster_name }}</el-descriptions-item>
               <el-descriptions-item label="源库名">{{ props.row.database_name }}</el-descriptions-item>
-              <el-descriptions-item label="源表名">{{ props.row.tables_name }}</el-descriptions-item>
+              <el-descriptions-item label="源表名">
+                <div class="ellipsis-container">
+                  <el-tooltip offset="20px" effect="light" :content="props.row.tables_name.split(',').join(' ')" :open-delay="500" placement="top">
+                    <div class="table-expand-cell-ellipsis">{{ props.row.tables_name }}</div>
+                  </el-tooltip>
+                  <el-button v-if="props.row.tables_name.length>40" type="text" class="copy-button" @click="copyText(props.row.tables_name)">复制</el-button>
+                </div>
+              </el-descriptions-item>
             </el-descriptions>
           </template>
         </el-table-column>
@@ -142,7 +149,9 @@
         <el-table-column prop="database_name" label="源库名" sortable></el-table-column>
         <el-table-column prop="tables_name" label="源表名" sortable>
           <template slot-scope="scope">
-            <div class="cell-ellipsis">{{ scope.row.tables_name }}</div>
+              <el-tooltip offset="20px" effect="light" :content="scope.row.tables_name.split(',').join(' ')" :open-delay="500" placement="top">
+                <div class="cell-ellipsis">{{ scope.row.tables_name }}</div>
+              </el-tooltip>
           </template>
         </el-table-column>
         <el-table-column label="操作" width="110" align="center">
@@ -250,6 +259,15 @@ export default {
       let regex = new RegExp(pattern, 'i');
       this.filteredTableList = this.tableList.filter(item => regex.test(item));
       this.form.tables_name = [];
+    },
+    copyText(text) {
+      const textarea = document.createElement('textarea');
+      textarea.value = text;
+      document.body.appendChild(textarea);
+      textarea.select();
+      document.execCommand('copy');
+      document.body.removeChild(textarea);
+      this.$notify({title: '成功', message: "复制成功", type: 'success'});
     },
     addSource() {
       this.dialogAddFormVisible = true;
@@ -417,5 +435,20 @@ export default {
 
 <style lang="css" scoped>
 @import "../../static/css/main.less";
-
+.ellipsis-container {
+  position: relative;
+  display: inline-block;
+  margin: 0 0;
+}
+.copy-button {
+  height: 30px;
+}
+.table-expand-cell-ellipsis {
+  display: inline-block;
+  width: 40em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin: 0 0;
+}
 </style>

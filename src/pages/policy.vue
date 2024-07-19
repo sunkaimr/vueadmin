@@ -6,6 +6,7 @@
           <el-button size="mini" type="primary" @click="addPolicy" icon="plus">新增</el-button>
         </div>
         <div class="content-header-right">
+          <el-checkbox size="mini" v-model="displayEnablePolicy" @change="handleSearch">只看开启</el-checkbox>
           <el-input size="mini" placeholder="请输入内容" v-model="searchVal" @clear="handleSearch"
                     @keyup.enter.native="handleSearch" clearable>
             <el-select class="input-with-select" v-model="searchKey" slot="prepend" placeholder="请选择">
@@ -30,7 +31,7 @@
           <el-form-item label="开启" prop="enable" label-width="80px">
             <el-switch size="mini" v-model="form.enable"/>
           </el-form-item>
-          <el-form-item label="执行频率" prop="period" label-width="80px">
+          <el-form-item label="治理频率" prop="period" label-width="80px">
             <el-select v-model="form.period" placeholder="请选择">
               <el-option v-for="i in periodOption" :key="i.value" :label="i.name" :value="i.value"></el-option>
             </el-select>
@@ -69,11 +70,17 @@
               <el-option v-for="i in governOption" :key="i.value" :label="i.name" :value="i.value"></el-option>
             </el-select>
           </el-form-item>
+          <el-form-item v-if="form.govern === 'delete'" label="重建表" prop="rebuild_flag" label-width="80px">
+              <el-radio-group size="small" v-model="form.rebuild_flag" style="line-height: 30px">
+                <el-radio :label="true" style="line-height: 30px">在执行窗口外仍然重建</el-radio>
+                <el-radio :label="false" style="line-height: 30px">在执行窗口外跳过重建</el-radio>
+              </el-radio-group>
+          </el-form-item>
           <el-form-item v-if="form.govern !=='truncate' && form.govern !=='rebuild'" label="治理条件" prop="condition"
                         label-width="80px">
             <el-input type="textarea" :rows="2" v-model="form.condition" clearable/>
           </el-form-item>
-          <el-form-item label="清理速度" label-width="80px" prop="cleaning_speed">
+          <el-form-item label="治理速度" label-width="80px" prop="cleaning_speed">
             <el-select v-model="form.cleaning_speed" placeholder="请选择" style="width: 100%;">
               <el-option v-for="i in cleaningSpeedOption" :key="i.value" :label="i.name" :value="i.value"></el-option>
             </el-select>
@@ -111,7 +118,7 @@
           <el-form-item label="开启" prop="enable" label-width="80px">
             <el-switch size="mini" v-model="form.enable"/>
           </el-form-item>
-          <el-form-item label="执行频率" prop="period" label-width="80px">
+          <el-form-item label="治理频率" prop="period" label-width="80px">
             <el-select v-model="form.period" placeholder="请选择">
               <el-option v-for="i in periodOption" :key="i.value" :label="i.name" :value="i.value"></el-option>
             </el-select>
@@ -144,11 +151,17 @@
               <el-option v-for="i in governOption" :key="i.value" :label="i.name" :value="i.value"></el-option>
             </el-select>
           </el-form-item>
+          <el-form-item v-if="form.govern === 'delete'" label="重建表" prop="rebuild_flag" label-width="80px">
+            <el-radio-group size="small" v-model="form.rebuild_flag">
+              <el-radio :label="true" style="line-height: 30px">在执行窗口外仍然重建</el-radio>
+              <el-radio :label="false" style="line-height: 30px">在执行窗口外跳过重建</el-radio>
+            </el-radio-group>
+          </el-form-item>
           <el-form-item v-if="form.govern !=='truncate' && form.govern !=='rebuild'" label="治理条件" prop="condition"
                         label-width="80px">
             <el-input type="textarea" :rows="2" v-model="form.condition" clearable/>
           </el-form-item>
-          <el-form-item label="清理速度" prop="cleaning_speed" label-width="80px">
+          <el-form-item label="治理速度" prop="cleaning_speed" label-width="80px">
             <el-select v-model="form.cleaning_speed" placeholder="请选择">
               <el-option v-for="i in cleaningSpeedOption" :key="i.value" :label="i.name" :value="i.value"></el-option>
             </el-select>
@@ -224,7 +237,7 @@
               </el-descriptions-item>
               <el-descriptions-item label="源端ID">{{ props.row.src_id }}</el-descriptions-item>
               <el-descriptions-item label="目标端ID">{{ props.row.dest_id }}</el-descriptions-item>
-              <el-descriptions-item label="清理速度">{{
+              <el-descriptions-item label="治理速度">{{
                   getOptionName(cleaningSpeedOption, props.row.cleaning_speed)
                 }}
               </el-descriptions-item>
@@ -252,12 +265,12 @@
         </el-table-column>
         <el-table-column prop="src_id" label="源端ID" align="center" width="100px" sortable></el-table-column>
         <el-table-column prop="bu" label="BU" sortable></el-table-column>
-        <el-table-column prop="period" label="清理周期" align="center" width="100px" sortable>
+        <el-table-column prop="period" label="治理频率" align="center" width="100px" sortable>
           <template slot-scope="scope">
             {{ getOptionName(periodOption, scope.row.period) }}
           </template>
         </el-table-column>
-        <el-table-column prop="cleaning_speed" label="清理速度" align="center" width="100px" sortable>
+        <el-table-column prop="cleaning_speed" label="治理速度" align="center" width="100px" sortable>
           <template slot-scope="scope">
             {{ getOptionName(cleaningSpeedOption, scope.row.cleaning_speed) }}
           </template>
@@ -365,6 +378,7 @@ export default {
         day: 1,
         execute_window: ["00:00:00", "23:59:59"],
         govern: "delete",
+        rebuild_flag: true,
         condition: "",
         src_id: 0,
         dest_id: 0,
@@ -407,7 +421,7 @@ export default {
           // { required: true, message: '请输入数据治理条件', trigger: 'blur' }
         ],
         cleaning_speed: [
-          {required: true, message: '请选择数据清理速度', trigger: 'blur'}
+          {required: true, message: '请选择数据治理速度', trigger: 'blur'}
         ],
         notify_policy: [
           {required: true, message: '请选择通知策略', trigger: 'blur'}
@@ -439,6 +453,7 @@ export default {
         id: row.id,
         name: row.name,
         enable: row.enable,
+        rebuild_flag: row.rebuild_flag,
         description: row.description,
       }
       this.$http.put(api.POLICY_ADD, JSON.stringify(data)).then(res => {
@@ -466,6 +481,7 @@ export default {
           day: this.form.day,
           execute_window: this.form.execute_window,
           govern: this.form.govern,
+          rebuild_flag: this.form.rebuild_flag,
           condition: this.form.condition,
           cleaning_speed: this.form.cleaning_speed,
           notify_policy: this.form.notify_policy,
@@ -522,12 +538,13 @@ export default {
         day: 1,
         execute_window: ["00:00:00", "23:59:59"],
         govern: "delete",
+        rebuild_flag: true,
         cleaning_speed: "steady",
         notify_policy: "failed",
       };
       this.dialogAddFormVisible = true;
       sysApi.sourceList({
-        pageSize: 10000,
+        pageSize: -1,
       }).then(res => {
         this.sourceList = res.data.items;
       });
@@ -565,6 +582,7 @@ export default {
       // this.form.pause = row.pause;
       // this.form.src_id = row.src_id;
       this.form.govern = row.govern;
+      this.form.rebuild_flag = row.rebuild_flag;
       this.form.condition = row.condition;
       this.form.cleaning_speed = row.cleaning_speed;
       this.form.dest_id = row.dest_id;
@@ -626,5 +644,9 @@ export default {
 <style lang="css" scoped>
 @import "../../static/css/main.less";
 
+.el-checkbox {
+  margin-right: 10px;
+  font-size: 12px;
+}
 </style>
 

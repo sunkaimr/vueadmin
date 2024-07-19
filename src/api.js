@@ -19,6 +19,7 @@ export const SYS_USER = CONTEXT + '/manage/user';
 export const SYS_USER_REGISTER = CONTEXT + '/manage/user/register';
 export const SYS_USER_DELETE = CONTEXT + '/manage/user/{user}';
 export const SYS_CONFIG = CONTEXT + '/manage/config';
+export const SYS_CONFIG_NOTICE_TEST = CONTEXT + '/manage/notice/test';
 export const USER_UPDATE = CONTEXT + '/user';
 export const TASK_STATISTIC_SUMMARY = CONTEXT + '/task/statistic/summary';
 export const TASK_PLAN = CONTEXT + '/task/plan';

@@ -68,6 +68,12 @@
               </el-time-picker>
             </template>
           </el-form-item>
+          <el-form-item v-if="form.govern === 'delete'" label="重建表" prop="rebuild_flag" label-width="120px">
+            <el-radio-group size="small" v-model="form.rebuild_flag">
+              <el-radio :label="true" style="line-height: 30px">在执行窗口外仍然重建</el-radio>
+              <el-radio :label="false" style="line-height: 30px">在执行窗口外跳过重建</el-radio>
+            </el-radio-group>
+          </el-form-item>
           <el-form-item label="通知策略" prop="notify_policy" label-width="120px">
             <el-select v-model="form.notify_policy" placeholder="请选择">
               <el-option v-for="i in notifyPolicyOption" :key="i.value" :label="i.name" :value="i.value"></el-option>
@@ -152,7 +158,14 @@
               <el-descriptions-item label="集群ID">{{ props.row.cluster_id }}</el-descriptions-item>
               <el-descriptions-item label="集群名称">{{ props.row.src_cluster_name }}</el-descriptions-item>
               <el-descriptions-item label="源库名">{{ props.row.src_database_name }}</el-descriptions-item>
-              <el-descriptions-item label="源表名">{{ props.row.src_tables_name }}</el-descriptions-item>
+              <el-descriptions-item label="源表名">
+                <div class="ellipsis-container">
+                  <el-tooltip offset="20px" effect="light" :content="props.row.src_tables_name.split(',').join(' ')" :open-delay="500" placement="top">
+                    <div class="table-expand-cell-ellipsis">{{ props.row.src_tables_name }}</div>
+                  </el-tooltip>
+                  <el-button v-if="props.row.src_tables_name.length>40" type="text" class="copy-button" @click="copyText(props.row.src_tables_name)">复制</el-button>
+                </div>
+              </el-descriptions-item>
               <el-descriptions-item label="源列名">{{ props.row.src_columns }}</el-descriptions-item>
               <!--              <el-descriptions-item label="源端磁盘剩余">{{ props.row.src_cluster_free_disk }}</el-descriptions-item>-->
               <!--              <el-descriptions-item label="清理前表大小">{{ props.row.src_cluster_sum_table_size }}</el-descriptions-item>-->
@@ -163,9 +176,7 @@
                 <el-descriptions-item label="连接ID">{{ props.row.dest_connection_id }}</el-descriptions-item>
                 <el-descriptions-item label="归档库名">{{ props.row.dest_database_name }}</el-descriptions-item>
                 <el-descriptions-item label="归档表名">{{ props.row.dest_table_name }}</el-descriptions-item>
-                <el-descriptions-item label="压缩存储">{{
-                    props.row.dest_compress ? "是" : "否"
-                  }}
+                <el-descriptions-item label="压缩存储">{{ props.row.dest_compress ? "是" : "否" }}
                 </el-descriptions-item>
               </template>
               <el-descriptions-item label="任务状态">{{
@@ -178,9 +189,8 @@
               <el-descriptions-item label="治理数据大小(MB)">{{ props.row.task_result_size }}</el-descriptions-item>
               <el-descriptions-item label="任务开始时间">{{ props.row.task_start_time }}</el-descriptions-item>
               <el-descriptions-item label="任务结束时间">{{ props.row.task_end_time }}</el-descriptions-item>
-              <el-descriptions-item label="执行时长">{{ formatSecondsPrecisely(props.row.task_duration) }}
-              </el-descriptions-item>
-              <el-descriptions-item label="工作流">{{ props.row.workflow }}</el-descriptions-item>
+              <el-descriptions-item label="执行时长">{{ formatSecondsPrecisely(props.row.task_duration) }} </el-descriptions-item>
+              <el-descriptions-item label="工作流"><a :href="props.row.workflow_url" target="_blank" style="text-decoration: none; margin: 0">{{props.row.workflow}}</a></el-descriptions-item>
             </el-descriptions>
           </template>
         </el-table-column>
@@ -201,16 +211,15 @@
             </el-tooltip>
           </template>
         </el-table-column>
-        <el-table-column prop="govern" label="清理方式" align="center" width="100px" sortable>
+        <el-table-column prop="govern" label="治理方式" align="center" width="100px" sortable>
           <template slot-scope="scope">{{ getOptionName(governOption, scope.row.govern) }}</template>
         </el-table-column>
-        <!--        <el-table-column prop="cleaning_speed" label="清理速度" align="center" width="100px" sortable>-->
+        <!--        <el-table-column prop="cleaning_speed" label="治理速度" align="center" width="100px" sortable>-->
         <!--          <template slot-scope="scope">-->
         <!--            {{ getOptionName(cleaningSpeedOption, scope.row.cleaning_speed ) }}-->
         <!--          </template>-->
         <!--        </el-table-column>-->
-        <el-table-column prop="execute_date" label="计划执行日期" align="center" width="120px"
-                         sortable></el-table-column>
+        <el-table-column prop="execute_date" label="计划执行日期" align="center" width="120px" sortable></el-table-column>
         <el-table-column prop="execute_window" label="执行窗口" align="center" width="150px" sortable>
           <template slot-scope="scope">{{ scope.row.execute_window[0] + '-' + scope.row.execute_window[1] }}</template>
         </el-table-column>
@@ -344,6 +353,7 @@ export default {
         enable: true,
         execute_date: "",
         execute_window: ["00:00:00", "23:59:59"],
+        rebuild_flag: true,
         notify_policy: "failed",
         relevant: "",
       },
@@ -386,6 +396,15 @@ export default {
           break;
       }
     },
+    copyText(text) {
+      const textarea = document.createElement('textarea');
+      textarea.value = text;
+      document.body.appendChild(textarea);
+      textarea.select();
+      document.execCommand('copy');
+      document.body.removeChild(textarea);
+      this.$notify({title: '成功', message: "复制成功", type: 'success'});
+    },
     taskCanModify(status) {
       return (status === 'executing' || status === 'success' || status === 'exec_failed' || status === 'timeout');
     },
@@ -412,6 +431,7 @@ export default {
           enable: this.form.enable,
           execute_date: this.form.execute_date,
           execute_window: this.form.execute_window,
+          rebuild_flag: this.form.rebuild_flag,
           notify_policy: this.form.notify_policy,
           relevant: this.form.relevant.split(/[ ,;]+/),
         }
@@ -451,6 +471,7 @@ export default {
         id: row.id,
         name: row.name,
         enable: row.enable,
+        rebuild_flag: row.rebuild_flag,
         execute_date: row.execute_date,
         description: row.description,
       }
@@ -479,6 +500,8 @@ export default {
       this.form.enable = row.enable;
       this.form.execute_date = row.execute_date;
       this.form.execute_window = row.execute_window;
+      this.form.govern = row.govern;
+      this.form.rebuild_flag = row.rebuild_flag;
       this.form.relevant = row.relevant.join(",");
       this.form.notify_policy = row.notify_policy;
     },
@@ -577,5 +600,20 @@ export default {
 
 <style lang="css" scoped>
 @import "../../static/css/main.less";
-
+.ellipsis-container {
+  position: relative;
+  display: inline-block;
+  margin: 0 0;
+}
+.copy-button {
+  height: 30px;
+}
+.table-expand-cell-ellipsis {
+  display: inline-block;
+  width: 40em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin: 0 0;
+}
 </style>

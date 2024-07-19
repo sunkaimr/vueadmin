@@ -89,7 +89,7 @@ export const policySearchOption = [
   {name: "ID", value: "id"},
   {name: "策略名称", value: "name"},
   {name: "清理频率", value: "period"},
-  {name: "清理速度", value: "cleaning_speed"},
+  {name: "治理速度", value: "cleaning_speed"},
   {name: "治理方式", value: "govern"},
   {name: "治理条件", value: "condition"},
   {name: "源端ID", value: "src_id"},
@@ -101,7 +101,7 @@ export const taskSearchOption = [
   {name: "任务名称", value: "name"},
   {name: "策略ID", value: "policy_id"},
   {name: "清理频率", value: "period"},
-  {name: "清理速度", value: "cleaning_speed"},
+  {name: "治理速度", value: "cleaning_speed"},
   {name: "治理方式", value: "govern"},
   {name: "治理条件", value: "condition"},
   {name: "源端ID", value: "src_id"},
@@ -123,7 +123,7 @@ export const periodOption = [
 export const governOption = [
   {name: "清空数据", value: "truncate", background: "#FFAAAA"},
   {name: "删除数据", value: "delete", background: "#FFFFE0"},
-  {name: "备份删除", value: "backup-delete", background: "#DDA0DD"},
+  // {name: "备份删除", value: "backup-delete", background: "#DDA0DD"},
   {name: "归档数据", value: "archive", background: "#90EE90"},
   {name: "重建表", value: "rebuild", background: "#ADD8E6"},
 ]
@@ -202,7 +202,8 @@ export const policyNameMap = [
   {name: "清理频率", value: "Period"},
   {name: "期望执行日期", value: "Day"},
   {name: "执行窗口", value: "ExecuteWindow"},
-  {name: "清理速度", value: "CleaningSpeed"},
+  {name: "治理速度", value: "CleaningSpeed"},
+  {name: "重建表", value: "RebuildFlag"},
   {name: "治理方式", value: "Govern"},
   {name: "治理条件", value: "Condition"},
   {name: "通知策略", value: "NotifyPolicy"},
@@ -215,6 +216,7 @@ export const taskNameMap = [
   {name: "开启", value: "Enable"},
   {name: "期望执行日期", value: "Day"},
   {name: "执行窗口", value: "ExecuteWindow"},
+  {name: "重建表", value: "RebuildFlag"},
   {name: "通知策略", value: "NotifyPolicy"},
   {name: "关注人", value: "Relevant"},
 ]
@@ -235,6 +237,11 @@ export const taskConflictLevelOption = [
   {name: "库级", value: "database"},
   {name: "表级", value: "table"},
 ]
+
+export const noticeOption = [
+  {name: "邮件", value: "email"},
+]
+
 
 export let TaskStatisticSummaryType = {
   success: 0,
