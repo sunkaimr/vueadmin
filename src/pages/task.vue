@@ -160,10 +160,15 @@
               <el-descriptions-item label="源库名">{{ props.row.src_database_name }}</el-descriptions-item>
               <el-descriptions-item label="源表名">
                 <div class="ellipsis-container">
-                  <el-tooltip offset="20px" effect="light" :content="props.row.src_tables_name.split(',').join(' ')" :open-delay="500" placement="top">
+                  <template v-if="props.row.src_tables_name.length>30">
+                    <el-tooltip effect="light" :content="props.row.src_tables_name.split(',').join(' ')" :open-delay="500" placement="top">
+                      <div class="table-expand-cell-ellipsis">{{ props.row.src_tables_name }}</div>
+                    </el-tooltip>
+                    <el-button v-if="props.row.src_tables_name.length>30" type="text" class="copy-button" @click="copyText(props.row.src_tables_name)">复制</el-button>
+                  </template>
+                  <template v-else>
                     <div class="table-expand-cell-ellipsis">{{ props.row.src_tables_name }}</div>
-                  </el-tooltip>
-                  <el-button v-if="props.row.src_tables_name.length>40" type="text" class="copy-button" @click="copyText(props.row.src_tables_name)">复制</el-button>
+                  </template>
                 </div>
               </el-descriptions-item>
               <el-descriptions-item label="源列名">{{ props.row.src_columns }}</el-descriptions-item>
@@ -189,12 +194,16 @@
               <el-descriptions-item label="治理数据大小(MB)">{{ props.row.task_result_size }}</el-descriptions-item>
               <el-descriptions-item label="任务开始时间">{{ props.row.task_start_time }}</el-descriptions-item>
               <el-descriptions-item label="任务结束时间">{{ props.row.task_end_time }}</el-descriptions-item>
-              <el-descriptions-item label="执行时长">{{ formatSecondsPrecisely(props.row.task_duration) }} </el-descriptions-item>
+              <el-descriptions-item label="任务执行时长">{{ formatSecondsPrecisely(props.row.task_duration) }} </el-descriptions-item>
               <el-descriptions-item label="工作流"><a :href="props.row.workflow_url" target="_blank" style="text-decoration: none; margin: 0">{{props.row.workflow}}</a></el-descriptions-item>
             </el-descriptions>
           </template>
         </el-table-column>
-        <el-table-column prop="id" label="ID" width="80px" align="center" sortable></el-table-column>
+        <el-table-column prop="id" label="ID" width="80px" align="center" sortable>
+          <template slot-scope="scope">
+            <a style="cursor: pointer; color: blueviolet" @click="gotoTaskDetail(scope.row.id)">{{scope.row.id}}</a>
+          </template>
+        </el-table-column>
         <el-table-column prop="enable" label="开启" align="center" width="100px" sortable>
           <template slot-scope="scope">
             <el-switch v-model="scope.row.enable"
@@ -203,10 +212,14 @@
                        @change="handleEnableChange(scope.$index, scope.row)"/>
           </template>
         </el-table-column>
-        <el-table-column prop="policy_id" label="策略ID" align="center" width="90px" sortable></el-table-column>
+        <el-table-column prop="policy_id" label="策略ID" align="center" width="90px" sortable>
+          <template slot-scope="scope">
+            <a style="cursor: pointer; color: blueviolet" @click="gotoPolicyDetail(scope.row.policy_id)">{{scope.row.policy_id}}</a>
+          </template>
+        </el-table-column>
         <el-table-column prop="name" label="任务名称" sortable>
           <template slot-scope="scope">
-            <el-tooltip class="item" effect="light" :content="scope.row.name" :open-delay="1000" placement="top">
+            <el-tooltip class="item" effect="dark" :content="scope.row.name" :open-delay="1000" placement="top">
               <div class="cell-ellipsis">{{ scope.row.name }}</div>
             </el-tooltip>
           </template>
@@ -245,23 +258,29 @@
             </template>
           </template>
         </el-table-column>
-        <el-table-column label="操作" width="90" align="center">
+        <el-table-column label="操作" width="110px" align="center">
           <template slot-scope="scope">
-            <el-dropdown size="small" @command="handleDropdownCommand" :hide-on-click="false">
-              <span class="el-dropdown-link">更多 <i class="el-icon-arrow-down"></i></span>
-              <el-dropdown-menu slot="dropdown">
-                <el-dropdown-item :command="beforeHandleDropdownCommand(scope.$index, scope.row, 'edit')"
-                                  icon="el-icon-edit"> 修改
-                </el-dropdown-item>
-                <el-dropdown-item :command="beforeHandleDropdownCommand(scope.$index, scope.row, 'delete')"
-                                  icon="el-icon-delete"> 删除
-                </el-dropdown-item>
-                <el-dropdown-item :command="beforeHandleDropdownCommand(scope.$index, scope.row, 'revision')"
-                                  icon="el-icon-tickets"> 修改记录
-                </el-dropdown-item>
-              </el-dropdown-menu>
-            </el-dropdown>
+            <el-button-group size="mini">
+              <el-button size="mini" @click="handleEdit(scope.$index, scope.row)" icon="el-icon-edit"/>
+              <el-button size="mini" @click="handleDelete(scope.$index, scope.row)" icon="el-icon-delete" style="color: red;"/>
+            </el-button-group>
           </template>
+<!--          <template slot-scope="scope">-->
+<!--            <el-dropdown size="small" @command="handleDropdownCommand" :hide-on-click="false">-->
+<!--              <span class="el-dropdown-link">更多 <i class="el-icon-arrow-down"></i></span>-->
+<!--              <el-dropdown-menu slot="dropdown">-->
+<!--                <el-dropdown-item :command="beforeHandleDropdownCommand(scope.$index, scope.row, 'edit')"-->
+<!--                                  icon="el-icon-edit"> 修改-->
+<!--                </el-dropdown-item>-->
+<!--                <el-dropdown-item :command="beforeHandleDropdownCommand(scope.$index, scope.row, 'delete')"-->
+<!--                                  icon="el-icon-delete"> 删除-->
+<!--                </el-dropdown-item>-->
+<!--                <el-dropdown-item :command="beforeHandleDropdownCommand(scope.$index, scope.row, 'revision')"-->
+<!--                                  icon="el-icon-tickets"> 修改记录-->
+<!--                </el-dropdown-item>-->
+<!--              </el-dropdown-menu>-->
+<!--            </el-dropdown>-->
+<!--          </template>-->
         </el-table-column>
       </el-table>
       <el-pagination
@@ -294,7 +313,7 @@ import {
   taskNameMap,
   beforeHandleDropdownCommand,
   tableExpandLabelStyle,
-  tableExpandContentStyle,
+  tableExpandContentStyle, formatSecondsPrecisely, copyText, gotoTaskDetail,gotoPolicyDetail,
 } from "../common/utils";
 
 export default {
@@ -380,6 +399,10 @@ export default {
     }
   },
   methods: {
+    gotoTaskDetail,
+    gotoPolicyDetail,
+    copyText,
+    formatSecondsPrecisely,
     getOptionBackground,
     getOptionName,
     beforeHandleDropdownCommand,
@@ -395,15 +418,6 @@ export default {
           this.handleRevision(command.index, command.row);
           break;
       }
-    },
-    copyText(text) {
-      const textarea = document.createElement('textarea');
-      textarea.value = text;
-      document.body.appendChild(textarea);
-      textarea.select();
-      document.execCommand('copy');
-      document.body.removeChild(textarea);
-      this.$notify({title: '成功', message: "复制成功", type: 'success'});
     },
     taskCanModify(status) {
       return (status === 'executing' || status === 'success' || status === 'exec_failed' || status === 'timeout');
@@ -544,26 +558,7 @@ export default {
         this.tableData.pagination.total = res.data.total;
       });
     },
-    formatSecondsPrecisely(seconds) {
-      if (seconds === 0) {
-        return ""
-      }
-      let days = Math.floor(seconds / (24 * 60 * 60));
-      let hours = Math.floor((seconds % (24 * 60 * 60)) / (60 * 60));
-      let minutes = Math.floor((seconds % (60 * 60)) / 60);
-      seconds = Math.floor(seconds % 60);
 
-      days = days.toString().padStart(2, '0');
-      hours = hours.toString().padStart(2, '0');
-      minutes = minutes.toString().padStart(2, '0');
-      seconds = seconds.toString().padStart(2, '0');
-
-      if (days === '00') {
-        return `${hours}:${minutes}:${seconds}`;
-      } else {
-        return `${days}d ${hours}:${minutes}:${seconds}`;
-      }
-    },
   },
   created() {
     this.searchTaskStatus = window.localStorage.getItem("searchTaskStatus");
@@ -600,20 +595,5 @@ export default {
 
 <style lang="css" scoped>
 @import "../../static/css/main.less";
-.ellipsis-container {
-  position: relative;
-  display: inline-block;
-  margin: 0 0;
-}
-.copy-button {
-  height: 30px;
-}
-.table-expand-cell-ellipsis {
-  display: inline-block;
-  width: 40em;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  margin: 0 0;
-}
+
 </style>

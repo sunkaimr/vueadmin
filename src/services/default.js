@@ -3,7 +3,7 @@ export default {
     {
       "id": 1,
       "parentId": null,
-      "sort": 0,
+      "sort": 1,
       "name": "首页",
       "href": "/dashboard",
       "icon": "fa fa-area-chart",
@@ -13,7 +13,7 @@ export default {
     {
       "id": 21,
       "parentId": null,
-      "sort": 1,
+      "sort": 21,
       "name": "源端管理",
       "href": "/source",
       "icon": "fa fa-database",
@@ -21,37 +21,59 @@ export default {
       "isShow": "1"
     },
     {
-      "id": 51,
+      "id": 31,
       "parentId": null,
-      "sort": 2,
+      "sort": 31,
       "name": "策略管理",
       "href": "/policy",
       "icon": "fa fa-calendar",
-      "children": [],
+      "children": [
+        // {
+        //   "id": 32,
+        //   "parentId": 31,
+        //   "sort": 32,
+        //   "name": "策略详情",
+        //   "href": "/policy/detail",
+        //   "icon": "fa fa-calendar",
+        //   "children": [],
+        //   "isShow": "0"
+        // },
+      ],
       "isShow": "1"
     },
     {
-      "id": 102,
+      "id": 41,
       "parentId": null,
-      "sort": 3,
+      "sort": 41,
       "name": "任务管理",
       "href": "/task",
       "icon": "fa fa-calendar-check-o",
-      "children": [],
+      "children": [
+        // {
+        //   "id": 42,
+        //   "parentId": 41,
+        //   "sort": 42,
+        //   "name": "任务详情",
+        //   "href": "/task/detail",
+        //   "icon": "fa fa-calendar-check-o",
+        //   "children": [],
+        //   "isShow": "0"
+        // },
+      ],
       "isShow": "1"
     },
     {
-      "id": 6,
+      "id": 51,
       "parentId": null,
-      "sort": 6,
+      "sort": 51,
       "name": "系统管理",
       "href": "/manage",
       "icon": "fa fa-cog",
       "children": [
         {
-          "id": 7,
-          "parentId": 6,
-          "sort": 7,
+          "id": 52,
+          "parentId": 51,
+          "sort": 52,
           "name": "集群管理",
           "href": "/manage/cluster",
           "icon": "fa fa-server",
@@ -59,9 +81,9 @@ export default {
           "isShow": "1"
         },
         {
-          "id": 8,
-          "parentId": 6,
-          "sort": 8,
+          "id": 53,
+          "parentId": 51,
+          "sort": 53,
           "name": "连接信息",
           "href": "/manage/connect",
           "icon": "fa fa-exchange",
@@ -69,9 +91,9 @@ export default {
           "isShow": "1"
         },
         {
-          "id": 9,
-          "parentId": 6,
-          "sort": 9,
+          "id": 54,
+          "parentId": 51,
+          "sort": 54,
           "name": "目标管理",
           "href": "/manage/dest",
           "icon": "fa fa-archive",
@@ -79,9 +101,9 @@ export default {
           "isShow": "1"
         },
         {
-          "id": 10,
-          "parentId": 6,
-          "sort": 10,
+          "id": 55,
+          "parentId": 51,
+          "sort": 55,
           "name": "用户管理",
           "href": "/manage/user",
           "icon": "fa fa-user-plus",
@@ -89,9 +111,9 @@ export default {
           "isShow": "1"
         },
         {
-          "id": 11,
-          "parentId": 6,
-          "sort": 12,
+          "id": 56,
+          "parentId": 51,
+          "sort": 56,
           "name": "系统设置",
           "href": "/manage/config",
           "icon": "fa fa-cog",

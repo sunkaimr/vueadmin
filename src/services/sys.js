@@ -4,7 +4,7 @@ import defaultValue from "./default";
 import {
   CLUSTER,
   CLUSTER_DATABASE_LIST,
-  CLUSTER_TABLE_LIST,
+  CLUSTER_TABLE_LIST, POLICY_CHANGELOG, TASK_CHANGELOG,
   TASK_PLAN,
   TASK_REVISION, TASK_STATISTIC_BU, TASK_STATISTIC_CLUSTER, TASK_STATISTIC_DATABASE,
   TASK_STATISTIC_SUMMARY, TASK_STATISTIC_TABLE
@@ -64,7 +64,6 @@ export function policyList(params) {
 }
 
 export function taskList(params) {
-  const sourceList = {}
   return new Promise((resolve, reject) => {
     axios.get(api.TASK_LIST, {
       params,
@@ -72,10 +71,10 @@ export function taskList(params) {
     }).then(response => {
       resolve(response.data);
     }, err => {
-      resolve(sourceList);
+      resolve([]);
     })
       .catch((error) => {
-        resolve(sourceList)
+        resolve(error)
       })
   })
 }
@@ -278,6 +277,32 @@ export function taskStatisticGroupByTable(params) {
     })
       .catch((error) => {
         resolve([])
+      })
+  })
+}
+
+export function getTaskChangelog(params) {
+  return new Promise((resolve, reject) => {
+    axios.get(api.TASK_CHANGELOG, {params}).then(response => {
+      resolve(response.data);
+    }, err => {
+      resolve(err);
+    })
+      .catch((error) => {
+        resolve(error)
+      })
+  })
+}
+
+export function getPolicyChangelog(params) {
+  return new Promise((resolve, reject) => {
+    axios.get(api.POLICY_CHANGELOG, {params}).then(response => {
+      resolve(response.data);
+    }, err => {
+      resolve(err);
+    })
+      .catch((error) => {
+        resolve(error)
       })
   })
 }

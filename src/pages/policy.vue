@@ -182,25 +182,25 @@
           </el-button>
         </div>
       </el-dialog>
-      <el-dialog title="修改记录" :visible.sync="dialogRevisionFormVisible" style="width: 100%;">
-        <el-table
-          :data="revisionTableData.rows"
-          border
-          style="width: 100%;"
-          size="mini"
-          stripe
-          v-loading="listLoading">
-          <el-table-column prop="created_at" label="修改时间" align="center" sortable/>
-          <el-table-column prop="creator" label="修改人" align="center" sortable/>
-          <el-table-column prop="modify_field" label="修改字段" align="center" sortable>
-            <template slot-scope="scope">
-              {{ getOptionName(policyNameMap, scope.row.modify_field) }}
-            </template>
-          </el-table-column>
-          <el-table-column prop="old_value" label="原始值" align="center" sortable/>
-          <el-table-column prop="new_value" label="修改值" align="center" sortable/>
-        </el-table>
-      </el-dialog>
+<!--      <el-dialog title="修改记录" :visible.sync="dialogRevisionFormVisible" style="width: 100%;">-->
+<!--        <el-table-->
+<!--          :data="revisionTableData.rows"-->
+<!--          border-->
+<!--          style="width: 100%;"-->
+<!--          size="mini"-->
+<!--          stripe-->
+<!--          v-loading="listLoading">-->
+<!--          <el-table-column prop="created_at" label="修改时间" align="center" sortable/>-->
+<!--          <el-table-column prop="creator" label="修改人" align="center" sortable/>-->
+<!--          <el-table-column prop="modify_field" label="修改字段" align="center" sortable>-->
+<!--            <template slot-scope="scope">-->
+<!--              {{ getOptionName(policyNameMap, scope.row.modify_field) }}-->
+<!--            </template>-->
+<!--          </el-table-column>-->
+<!--          <el-table-column prop="old_value" label="原始值" align="center" sortable/>-->
+<!--          <el-table-column prop="new_value" label="修改值" align="center" sortable/>-->
+<!--        </el-table>-->
+<!--      </el-dialog>-->
       <el-table
         :data="tableData.rows"
         border
@@ -227,7 +227,7 @@
                   getOptionName(governOption, props.row.govern)
                 }}
               </el-descriptions-item>
-              <el-descriptions-item label="清理频率">{{
+              <el-descriptions-item label="治理频率">{{
                   getOptionName(periodOption, props.row.period)
                 }}
               </el-descriptions-item>
@@ -250,10 +250,14 @@
             </el-descriptions>
           </template>
         </el-table-column>
-        <el-table-column prop="id" label="ID" width="80px" align="center" sortable></el-table-column>
+        <el-table-column prop="id" label="ID" width="80px" align="center" sortable>
+          <template slot-scope="scope">
+            <a style="cursor: pointer; color: blueviolet" @click="gotoPolicyDetail(scope.row.id)">{{scope.row.id}}</a>
+          </template>
+        </el-table-column>
         <el-table-column prop="name" label="策略名称" sortable>
           <template slot-scope="scope">
-            <el-tooltip class="item" effect="light" :content="scope.row.name" :open-delay="1000" placement="top">
+            <el-tooltip class="item" effect="dark" :content="scope.row.name" :open-delay="500" placement="top">
               <div class="cell-ellipsis">{{ scope.row.name }}</div>
             </el-tooltip>
           </template>
@@ -264,7 +268,7 @@
           </template>
         </el-table-column>
         <el-table-column prop="src_id" label="源端ID" align="center" width="100px" sortable></el-table-column>
-        <el-table-column prop="bu" label="BU" sortable></el-table-column>
+        <el-table-column prop="bu" label="BU" align="center" sortable></el-table-column>
         <el-table-column prop="period" label="治理频率" align="center" width="100px" sortable>
           <template slot-scope="scope">
             {{ getOptionName(periodOption, scope.row.period) }}
@@ -286,28 +290,34 @@
         </el-table-column>
         <el-table-column prop="condition" label="清理条件" sortable>
           <template slot-scope="scope">
-            <el-tooltip class="item" effect="light" :content="scope.row.condition" :open-delay="1000" placement="top">
+            <el-tooltip class="item" effect="dark" :content="scope.row.condition" :open-delay="500" placement="top">
               <div class="cell-ellipsis">{{ scope.row.condition }}</div>
             </el-tooltip>
           </template>
         </el-table-column>
-        <el-table-column label="操作" width="90px" align="center">
+        <el-table-column label="操作" width="110px" align="center">
           <template slot-scope="scope">
-            <el-dropdown size="small" @command="handleDropdownCommand" :hide-on-click="false">
-              <span class="el-dropdown-link">更多 <i class="el-icon-arrow-down"></i></span>
-              <el-dropdown-menu slot="dropdown">
-                <el-dropdown-item :command="beforeHandleDropdownCommand(scope.$index, scope.row, 'edit')"
-                                  icon="el-icon-edit"> 修改
-                </el-dropdown-item>
-                <el-dropdown-item :command="beforeHandleDropdownCommand(scope.$index, scope.row, 'delete')"
-                                  icon="el-icon-delete"> 删除
-                </el-dropdown-item>
-                <el-dropdown-item :command="beforeHandleDropdownCommand(scope.$index, scope.row, 'revision')"
-                                  icon="el-icon-tickets"> 修改记录
-                </el-dropdown-item>
-              </el-dropdown-menu>
-            </el-dropdown>
+            <el-button-group size="mini">
+              <el-button size="mini" @click="handleEdit(scope.$index, scope.row)" icon="el-icon-edit"/>
+              <el-button size="mini" @click="handleDelete(scope.$index, scope.row)" icon="el-icon-delete" style="color: red;"/>
+            </el-button-group>
           </template>
+<!--          <template slot-scope="scope">-->
+<!--            <el-dropdown size="small" @command="handleDropdownCommand" :hide-on-click="false">-->
+<!--              <span class="el-dropdown-link">更多 <i class="el-icon-arrow-down"></i></span>-->
+<!--              <el-dropdown-menu slot="dropdown">-->
+<!--                <el-dropdown-item :command="beforeHandleDropdownCommand(scope.$index, scope.row, 'edit')"-->
+<!--                                  icon="el-icon-edit"> 修改-->
+<!--                </el-dropdown-item>-->
+<!--                <el-dropdown-item :command="beforeHandleDropdownCommand(scope.$index, scope.row, 'delete')"-->
+<!--                                  icon="el-icon-delete"> 删除-->
+<!--                </el-dropdown-item>-->
+<!--                <el-dropdown-item :command="beforeHandleDropdownCommand(scope.$index, scope.row, 'revision')"-->
+<!--                                  icon="el-icon-tickets"> 修改记录-->
+<!--                </el-dropdown-item>-->
+<!--              </el-dropdown-menu>-->
+<!--            </el-dropdown>-->
+<!--          </template>-->
         </el-table-column>
       </el-table>
       <el-pagination
@@ -338,7 +348,8 @@ import {
   policyNameMap,
   beforeHandleDropdownCommand,
   tableExpandLabelStyle,
-  tableExpandContentStyle
+  tableExpandContentStyle,
+  gotoPolicyDetail,
 } from "../common/utils";
 
 export default {
@@ -382,8 +393,8 @@ export default {
         condition: "",
         src_id: 0,
         dest_id: 0,
-        cleaning_speed: "steady",
-        notify_policy: "failed",
+        cleaning_speed: "balanced",
+        notify_policy: "always",
         relevant: "",
       },
       tableData: {
@@ -406,7 +417,7 @@ export default {
           {required: true, message: '是否开启', trigger: 'blur'}
         ],
         period: [
-          {required: true, message: '请选择清理频率', trigger: 'blur'}
+          {required: true, message: '请选择治理频率', trigger: 'blur'}
         ],
         execute_window: [
           {required: true, message: '请选择执行窗口', trigger: 'blur'}
@@ -432,6 +443,7 @@ export default {
     }
   },
   methods: {
+    gotoPolicyDetail,
     beforeHandleDropdownCommand,
     getOptionName,
     getOptionBackground,
@@ -539,8 +551,8 @@ export default {
         execute_window: ["00:00:00", "23:59:59"],
         govern: "delete",
         rebuild_flag: true,
-        cleaning_speed: "steady",
-        notify_policy: "failed",
+        cleaning_speed: "balanced",
+        notify_policy: "always",
       };
       this.dialogAddFormVisible = true;
       sysApi.sourceList({
@@ -645,8 +657,11 @@ export default {
 @import "../../static/css/main.less";
 
 .el-checkbox {
-  margin-right: 10px;
-  font-size: 12px;
+  margin-right: 15px;
+
+  .el-checkbox__label {
+    font-size: 12px;
+  }
 }
 </style>
 

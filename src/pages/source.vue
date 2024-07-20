@@ -133,12 +133,12 @@
         <el-table-column prop="id" label="ID" width="80px" align="center" sortable></el-table-column>
         <el-table-column prop="name" label="源端名称" sortable>
           <template slot-scope="scope">
-            <el-tooltip class="item" effect="light" :content="scope.row.name" :open-delay="500" placement="top">
+            <el-tooltip class="item" effect="dark" :content="scope.row.name" :open-delay="500" placement="top">
               <div class="cell-ellipsis">{{ scope.row.name }}</div>
             </el-tooltip>
           </template>
         </el-table-column>
-        <el-table-column prop="bu" label="BU" width="120px" sortable></el-table-column>
+        <el-table-column prop="bu" label="BU" width="120px" align="center" sortable></el-table-column>
         <el-table-column prop="cluster_name" label="集群名称" sortable>
           <template slot-scope="scope">
             <el-tooltip class="item" effect="light" :content="scope.row.cluster_name" :open-delay="500" placement="top">
@@ -154,7 +154,7 @@
               </el-tooltip>
           </template>
         </el-table-column>
-        <el-table-column label="操作" width="110" align="center">
+        <el-table-column label="操作" width="110px" align="center">
           <template slot-scope="scope">
             <el-button-group size="mini">
               <el-button size="mini" @click="handleEdit(scope.$index, scope.row)" icon="el-icon-edit"/>
@@ -445,7 +445,7 @@ export default {
 }
 .table-expand-cell-ellipsis {
   display: inline-block;
-  width: 40em;
+  width: 30em;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;

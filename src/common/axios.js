@@ -10,8 +10,8 @@ axios.defaults.timeout = 600000;
 //axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded;charset=UTF-8';
 //axios.defaults.baseURL = 'http://localhost:8008';
 axios.defaults.baseURL = getBaseUrl(window.location.href);
-axios.defaults.headers.common['authUid'] = auth.getUid();
-axios.defaults.headers.common['authSid'] = auth.getSid();
+// axios.defaults.headers.common['authUid'] = auth.getUid();
+// axios.defaults.headers.common['authSid'] = auth.getSid();
 
 //POST传参序列化
 axios.interceptors.request.use((config) => {
@@ -41,9 +41,11 @@ axios.interceptors.response.use(
     return response;
   },
   error => {
+
     if (error.response && error.response.data &&
       (error.response.data.code === 4010001 || error.response.data.code === 4010002 || error.response.data.code === 4010003)) {
-      router.push({name: "login", path: "/login"});
+      Message({type: "error", message: error.response.data.message});
+      router.push({path: "/login"});
       return;
     }
     Message({type: "error", message: error.response.data.message});

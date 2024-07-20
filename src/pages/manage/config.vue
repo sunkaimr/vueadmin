@@ -20,7 +20,7 @@
               <el-input v-model="form.email_username" autocomplete="off" placeholder="请输入账户名称" clearable/>
             </el-form-item>
             <el-form-item label="密码" label-width="150px">
-              <el-input v-model="form.email_password" placeholder="请输入密码" lplaceholder="请输入账户密码" show-password></el-input>
+              <el-input v-model="form.email_password" placeholder="请输入密码" show-password></el-input>
             </el-form-item>
             <el-form-item label="不校验服务端证书" prop="email_insecure_skip_verify" label-width="150px">
               <el-radio-group size="small" v-model="form.email_insecure_skip_verify">
@@ -113,10 +113,10 @@ export default {
       fullscreenLoading: false,
       tablePaneName: "notice",
       form: {
-        cluster_default_user: "",
-        cluster_default_passwd: "",
-        cluster_exclude_database: "",
-        cluster_exclude_tables: "",
+        cluster_default_user: "  ",
+        cluster_default_passwd: "  ",
+        cluster_exclude_database: "  ",
+        cluster_exclude_tables: "  ",
         thanos_url: "",
         task_max_parallel: 0,
         task_timeout: 3600,
@@ -126,8 +126,8 @@ export default {
         notice: "email",
         email_host: "",
         email_port: 465,
-        email_username: "",
-        email_password: "",
+        email_username: "  ",
+        email_password: "  ",
         email_insecure_skip_verify: true,
         test_user: "",
       },

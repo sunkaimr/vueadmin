@@ -75,6 +75,86 @@ export function getCurrentMenu(location, arrayMenu) {
   return null;
 }
 
+export function Task(){
+  return {
+    id: 0,
+    created_at: "",
+    updated_at: "",
+    creator: "",
+    editor: "",
+    name: "",
+    description: "",
+    enable: true,
+    policy_id: 0,
+    execute_window: ["",""],
+    execute_date: "",
+    pause: false,
+    rebuild_flag: true,
+    task_status: "",
+    task_reason: "",
+    task_detail: "",
+    task_result_quantity: 0,
+    task_result_size: 0,
+    task_start_time: "",
+    task_end_time: "",
+    task_duration: 0,
+    workflow: "",
+    workflow_url: "",
+    src_id: 0,
+    src_name: "0",
+    src_bu: "",
+    src_cluster_name: "",
+    cluster_id: "",
+    src_addr: "",
+    src_database_name: "",
+    src_tables_name: "",
+    src_columns: "",
+    dest_id: 0,
+    dest_name: "",
+    dest_storage: "",
+    dest_connection_id: 0,
+    dest_database_name: "",
+    dest_table_name: "",
+    dest_compress: false,
+    govern: "delete",
+    condition: "",
+    retain_src_data: false,
+    cleaning_speed: "",
+    relevant: [""],
+    notify_policy: ""
+    }
+}
+
+
+export function Policy(){
+  return {
+    id: 0,
+    created_at: "",
+    updated_at: "",
+    creator: "",
+    editor: "",
+    name: "",
+    description: "",
+    bu: "",
+    enable: false,
+    period: "",
+    day: 1,
+    execute_window: ["",""],
+    pause: false,
+    rebuild_flag: true,
+    cleaning_speed: "",
+    src_id: 0,
+    govern: "",
+    condition: "",
+    archive_scope: "",
+    retain_src_data: false,
+    dest_id: 0,
+    force_archive: false,
+    relevant: [""],
+    notify_policy: ""
+  }
+}
+
 export const sourceSearchOption = [
   {name: "ID", value: "id"},
   {name: "源端名称", value: "name"},
@@ -144,9 +224,9 @@ export const notifyPolicyOption = [
 export const taskStatusOption = [
   {name: "已排期", value: "scheduled", background: "#eee"},
   {name: "填充信息失败", value: "supplement_failed", background: "#FFAAAA"},
-  {name: "等待执行", value: "waiting", background: "#aaccff"},
+  {name: "等待执行", value: "waiting", background: "#ADD8E6"},
   {name: "执行前检查失败", value: "exec_check_failed", background: "#FFAAAA"},
-  {name: "执行中", value: "executing", background: "#ADD8E6"},
+  {name: "执行中", value: "executing", background: "#aaccff"},
   {name: "执行成功", value: "success", background: "#90EE90"},
   {name: "执行失败", value: "failed", background: "#FFAAAA"},
   {name: "执行超时", value: "timeout", background: "#FFAAAA"},
@@ -286,4 +366,45 @@ export const tableExpandLabelStyle = {
 export const tableExpandContentStyle = {
   'min-width': '200px',
   'word-break': 'break-all'
+}
+
+
+
+export function formatSecondsPrecisely(seconds) {
+  if (seconds === 0) {
+    return ""
+  }
+  let days = Math.floor(seconds / (24 * 60 * 60));
+  let hours = Math.floor((seconds % (24 * 60 * 60)) / (60 * 60));
+  let minutes = Math.floor((seconds % (60 * 60)) / 60);
+  seconds = Math.floor(seconds % 60);
+
+  days = days.toString();
+  hours = hours.toString().padStart(2, '0');
+  minutes = minutes.toString().padStart(2, '0');
+  seconds = seconds.toString().padStart(2, '0');
+
+  if (days === '0') {
+    return `${hours}:${minutes}:${seconds}`;
+  } else {
+    return `${days}天 ${hours}:${minutes}:${seconds}`;
+  }
+}
+
+export function copyText(text) {
+  const textarea = document.createElement('textarea');
+  textarea.value = text;
+  document.body.appendChild(textarea);
+  textarea.select();
+  document.execCommand('copy');
+  document.body.removeChild(textarea);
+  this.$notify({title: '成功', message: "复制成功", type: 'success'});
+}
+
+export function gotoTaskDetail(task_id){
+  this.$router.push({path: "/task/detail?task_id=" + task_id});
+}
+
+export function gotoPolicyDetail(policy_id){
+  this.$router.push({path: "/policy/detail?policy_id=" + policy_id});
 }

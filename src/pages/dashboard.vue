@@ -327,7 +327,6 @@ export default {
   },
   methods: {
     getOptionName,
-    getOptionBackground,
     taskStatisticShowChanged() {
       window.localStorage.setItem("taskStatisticShow", this.taskStatisticShow);
     },

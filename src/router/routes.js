@@ -10,6 +10,8 @@ import cluster from "../pages/manage/cluster.vue";
 import source from "../pages/source.vue";
 import policy from "../pages/policy.vue";
 import task from "../pages/task.vue";
+import taskDetail from "../pages/task_detail.vue";
+import policyDetail from "../pages/policy_detail.vue";
 // Routes
 const routes = [
   {
@@ -27,7 +29,9 @@ const routes = [
         {path: '/dashboard', component: dashboard},
         {path: '/source', component: source},
         {path: '/policy', component: policy},
+        {path: '/policy/detail', component: policyDetail},
         {path: '/task', component: task},
+        {path: '/task/detail', component: taskDetail},
         {path: '/index', component: task},
         {path: '/manage/cluster', component: cluster},
         {path: '/manage/user', component: sysUser},
