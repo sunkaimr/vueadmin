@@ -29,4 +29,8 @@ export const TASK_STATISTIC_BU = CONTEXT + '/task/statistic/bu';
 export const TASK_STATISTIC_CLUSTER = CONTEXT + '/task/statistic/cluster';
 export const TASK_STATISTIC_DATABASE = CONTEXT + '/task/statistic/database';
 export const TASK_STATISTIC_TABLE = CONTEXT + '/task/statistic/table';
+export const POLICY_STATISTIC_BU = CONTEXT + '/policy/statistic/bu';
+export const POLICY_STATISTIC_CLUSTER = CONTEXT + '/policy/statistic/cluster';
+export const POLICY_STATISTIC_DATABASE = CONTEXT + '/policy/statistic/database';
+export const POLICY_STATISTIC_TABLE = CONTEXT + '/policy/statistic/table';
 

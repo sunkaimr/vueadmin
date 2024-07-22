@@ -108,7 +108,7 @@
             </el-col>
             <el-col :span="3">
               <el-cascader
-                v-model="cascaderValue"
+                v-model="taskCascaderValue"
                 size="mini"
                 :options="taskStatisticFilterOption"
                 placeholder="请筛选bu、集群、库、表"
@@ -137,7 +137,7 @@
           </el-row>
         </div>
         <div class="task-statistic-table" v-if="taskStatisticShow.indexOf('bu') !== -1">
-          <el-table :data="taskStatisticDataBU.rows" size="mini" show-summary border stripe>
+          <el-table :data="taskStatisticDataBU" size="mini" show-summary border stripe>
             <el-table-column label="BU维度" align="center">
               <el-table-column prop="bu" label="BU" align="center" sortable></el-table-column>
               <el-table-column prop="govern" label="治理方式" align="center" sortable>
@@ -152,7 +152,7 @@
           </el-table>
         </div>
         <div class="task-statistic-table" v-if="taskStatisticShow.indexOf('cluster') !== -1">
-          <el-table :data="taskStatisticDataCluster.rows" size="mini" show-summary border stripe>
+          <el-table :data="taskStatisticDataCluster" size="mini" show-summary border stripe>
             <el-table-column label="集群维度" align="center">
               <el-table-column prop="bu" label="BU" align="center" sortable></el-table-column>
               <el-table-column prop="cluster_name" label="集群名称" align="center" sortable></el-table-column>
@@ -168,7 +168,7 @@
           </el-table>
         </div>
         <div class="task-statistic-table" v-if="taskStatisticShow.indexOf('database') !== -1">
-          <el-table :data="taskStatisticDataDatabase.rows" size="mini" show-summary border stripe>
+          <el-table :data="taskStatisticDataDatabase" size="mini" show-summary border stripe>
             <el-table-column label="库维度" align="center">
               <el-table-column prop="bu" label="BU" align="center" sortable></el-table-column>
               <el-table-column prop="cluster_name" label="集群名称" align="center" sortable></el-table-column>
@@ -185,7 +185,7 @@
           </el-table>
         </div>
         <div class="task-statistic-table" v-if="taskStatisticShow.indexOf('table') !== -1">
-          <el-table :data="taskStatisticDataTable.rows" size="mini" show-summary border stripe>
+          <el-table :data="taskStatisticDataTable" size="mini" show-summary border stripe>
             <el-table-column label="表维度" align="center">
               <el-table-column prop="bu" label="BU" align="center" sortable></el-table-column>
               <el-table-column prop="cluster_name" label="集群名称" align="center" sortable></el-table-column>
@@ -204,7 +204,104 @@
         </div>
       </el-tab-pane>
       <el-tab-pane label="策略统计" name="policyStatistic">
-
+        <div>
+          <el-row :gutter="10">
+            <el-col :span="4">
+              <el-select v-model="policyStatisticFilter.govern"
+                         multiple clearable
+                         size="mini"
+                         collapse-tags
+                         @change="policyStatisticFilterChanged"
+                         placeholder="请选择清理方式">
+                <el-option v-for="i in governOption" :key="i.value" :label="i.name" :value="i.value"></el-option>
+              </el-select>
+            </el-col>
+            <el-col :span="10">
+              <el-cascader
+                v-model="policyCascaderValue"
+                size="mini"
+                :options="policyStatisticFilterOption"
+                placeholder="请筛选bu、集群、库、表"
+                @change="policyStatisticFilterChanged"></el-cascader>
+            </el-col>
+            <el-col :span="10" style="display: flex; justify-content: flex-end">
+              <el-checkbox-group v-model="policyStatisticShow" @change="policyStatisticShowChanged" size="mini">
+                <el-checkbox-button label="bu">BU维度</el-checkbox-button>
+                <el-checkbox-button label="cluster">集群维度</el-checkbox-button>
+                <el-checkbox-button label="database">库维度</el-checkbox-button>
+                <el-checkbox-button label="table">表维度</el-checkbox-button>
+              </el-checkbox-group>
+            </el-col>
+          </el-row>
+        </div>
+        <div class="task-statistic-table" v-if="policyStatisticShow.indexOf('bu') !== -1">
+          <el-table :data="policyStatisticDataBU" size="mini" show-summary border stripe>
+            <el-table-column label="BU维度" align="center">
+              <el-table-column prop="bu" label="BU" align="center" sortable></el-table-column>
+              <el-table-column prop="govern" label="治理方式" align="center" sortable>
+                <template slot-scope="scope">
+                  <span v-for="i in scope.row.govern.split(',')">{{ getOptionName(governOption, i) }} </span>
+                </template>
+              </el-table-column>
+              <el-table-column prop="count" label="策略个数" align="center" sortable></el-table-column>
+            </el-table-column>
+          </el-table>
+        </div>
+        <div class="task-statistic-table" v-if="policyStatisticShow.indexOf('cluster') !== -1">
+          <el-table :data="policyStatisticDataCluster" size="mini" show-summary border stripe>
+            <el-table-column label="集群维度" align="center">
+              <el-table-column prop="bu" label="BU" align="center" sortable></el-table-column>
+              <el-table-column prop="cluster_name" label="集群名称" align="center" sortable></el-table-column>
+              <el-table-column prop="govern" label="治理方式" align="center" sortable>
+                <template slot-scope="scope">
+                  <span v-for="i in scope.row.govern.split(',')">{{ getOptionName(governOption, i) }} </span>
+                </template>
+              </el-table-column>
+              <el-table-column prop="count" label="策略个数" align="center" sortable></el-table-column>
+            </el-table-column>
+          </el-table>
+        </div>
+        <div class="task-statistic-table" v-if="policyStatisticShow.indexOf('database') !== -1">
+          <el-table :data="policyStatisticDataDatabase" size="mini" show-summary border stripe>
+            <el-table-column label="库维度" align="center">
+              <el-table-column prop="bu" label="BU" align="center" sortable></el-table-column>
+              <el-table-column prop="cluster_name" label="集群名称" align="center" sortable></el-table-column>
+              <el-table-column prop="database" label="库" align="center" sortable></el-table-column>
+              <el-table-column prop="govern" label="治理方式" align="center" sortable>
+                <template slot-scope="scope">
+                  <span v-for="i in scope.row.govern.split(',')">{{ getOptionName(governOption, i) }} </span>
+                </template>
+              </el-table-column>
+              <el-table-column prop="count" label="策略个数" align="center" sortable></el-table-column>
+            </el-table-column>
+          </el-table>
+        </div>
+        <div class="task-statistic-table" v-if="policyStatisticShow.indexOf('table') !== -1">
+          <el-table :data="policyStatisticDataTable" size="mini" show-summary border stripe>
+            <el-table-column label="表维度" align="center">
+              <el-table-column prop="bu" label="BU" align="center" sortable></el-table-column>
+              <el-table-column prop="cluster_name" label="集群名称" align="center" sortable></el-table-column>
+              <el-table-column prop="database" label="库" align="center" sortable></el-table-column>
+              <el-table-column prop="table" label="表" align="center" sortable></el-table-column>
+              <el-table-column prop="govern" label="治理方式" align="center" sortable>
+                <template slot-scope="scope">
+                  <span v-for="i in scope.row.govern.split(',')">{{ getOptionName(governOption, i) }} </span>
+                </template>
+              </el-table-column>
+              <el-descriptions-item label="治理频率">
+                <template slot-scope="scope">
+                  {{getOptionName(periodOption, scope.row.period)}}
+                </template>
+              </el-descriptions-item>
+              <el-table-column prop="condition" label="治理条件" align="center" sortable>
+                <template slot-scope="scope">
+                  {{scope.row.condition}}
+                </template>
+              </el-table-column>
+              <el-table-column prop="count" label="策略个数" align="center" sortable></el-table-column>
+            </el-table-column>
+          </el-table>
+        </div>
       </el-tab-pane>
     </el-tabs>
   </imp-panel>
@@ -214,15 +311,18 @@
 
 import moment from 'moment';
 import * as sysApi from "../services/sys";
-import {TaskStatisticSummaryType, governOption, getOptionName, getOptionBackground} from "../common/utils";
+import {TaskStatisticSummaryType, governOption, getOptionName, periodOption} from "../common/utils";
 
 export default {
   name: 'project-progress',
   data() {
     return {
+      periodOption,
       taskStatisticShow: ['bu', 'cluster', 'database', 'table'],
+      policyStatisticShow: ['bu', 'cluster', 'database', 'table'],
       governOption,
-      cascaderValue: "",
+      taskCascaderValue: "",
+      policyCascaderValue: "",
       taskStatisticFilter: {
         bu: "",
         cluster_name: "",
@@ -230,96 +330,76 @@ export default {
         table: "",
         govern: "",
       },
+      policyStatisticFilter: {
+        bu: "",
+        cluster_name: "",
+        database: "",
+        table: "",
+        govern: "",
+      },
       taskStatisticFilterOption: [],
+      policyStatisticFilterOption: [],
       taskStatisticDateRange: [],
       activeTable: "taskStatisticSummary",
       statisticToday: TaskStatisticSummaryType,
       statisticLastMonth: TaskStatisticSummaryType,
       statisticTotal: TaskStatisticSummaryType,
       ganttChart: null,
-      chartData: [
-        {
-          "id": 434,
-          "name": "每天任务-用例30",
-          "task_start_time": "2024-07-02 02:00:05",
-          "task_end_time": "2024-07-02 02:00:37",
-          "task_status": "success",
-          "task_result_quantity": 0,
-          "task_result_size": 0
-        },
-        {
-          "id": 436,
-          "name": "每天任务-用例31",
-          "task_start_time": "2024-07-02 02:00:02",
-          "task_end_time": "2024-07-02 02:00:35",
-          "task_status": "success",
-          "task_result_quantity": 0,
-          "task_result_size": 0
-        },
-        {
-          "id": 446,
-          "name": "单次任务-truncate_iop___TEST_mysql-04_performance_sale_performance_sale_detail_20cf",
-          "task_start_time": "2024-07-02 15:45:04",
-          "task_end_time": "2024-07-02 15:47:00",
-          "task_status": "failed",
-          "task_result_quantity": 0,
-          "task_result_size": 0
-        },
-        {
-          "id": 448,
-          "name": "单次任务-truncate_iop___TEST_mysql-04_performance_sale_performance_sale_detail_20cf",
-          "task_start_time": "2024-07-02 15:52:04",
-          "task_end_time": "2024-07-02 15:53:16",
-          "task_status": "success",
-          "task_result_quantity": 0,
-          "task_result_size": 0
-        },
-        {
-          "id": 450,
-          "name": "单次任务-truncate_iop___TEST_mysql-04_performance_sale_performance_sale_detail_20cf",
-          "task_start_time": "2024-07-02 18:26:04",
-          "task_end_time": "2024-07-02 18:27:14",
-          "task_status": "success",
-          "task_result_quantity": 0,
-          "task_result_size": 0
-        }
-      ],
-      taskStatisticDataBU: {
-        pagination: {
-          total: 0,
-          pageNo: 1,
-          pageSize: 10,
-          parentId: 0
-        },
-        rows: []
-      },
-      taskStatisticDataCluster: {
-        pagination: {
-          total: 0,
-          pageNo: 1,
-          pageSize: 10,
-          parentId: 0
-        },
-        rows: []
-      },
-      taskStatisticDataDatabase: {
-        pagination: {
-          total: 0,
-          pageNo: 1,
-          pageSize: 10,
-          parentId: 0
-        },
-        rows: []
-      },
-      taskStatisticDataTable: {
-        pagination: {
-          total: 0,
-          pageNo: 1,
-          pageSize: 10,
-          parentId: 0
-        },
-        rows: []
-      },
+      // chartData: [
+      //   {
+      //     "id": 434,
+      //     "name": "每天任务-用例30",
+      //     "task_start_time": "2024-07-02 02:00:05",
+      //     "task_end_time": "2024-07-02 02:00:37",
+      //     "task_status": "success",
+      //     "task_result_quantity": 0,
+      //     "task_result_size": 0
+      //   },
+      //   {
+      //     "id": 436,
+      //     "name": "每天任务-用例31",
+      //     "task_start_time": "2024-07-02 02:00:02",
+      //     "task_end_time": "2024-07-02 02:00:35",
+      //     "task_status": "success",
+      //     "task_result_quantity": 0,
+      //     "task_result_size": 0
+      //   },
+      //   {
+      //     "id": 446,
+      //     "name": "单次任务-truncate_iop___TEST_mysql-04_performance_sale_performance_sale_detail_20cf",
+      //     "task_start_time": "2024-07-02 15:45:04",
+      //     "task_end_time": "2024-07-02 15:47:00",
+      //     "task_status": "failed",
+      //     "task_result_quantity": 0,
+      //     "task_result_size": 0
+      //   },
+      //   {
+      //     "id": 448,
+      //     "name": "单次任务-truncate_iop___TEST_mysql-04_performance_sale_performance_sale_detail_20cf",
+      //     "task_start_time": "2024-07-02 15:52:04",
+      //     "task_end_time": "2024-07-02 15:53:16",
+      //     "task_status": "success",
+      //     "task_result_quantity": 0,
+      //     "task_result_size": 0
+      //   },
+      //   {
+      //     "id": 450,
+      //     "name": "单次任务-truncate_iop___TEST_mysql-04_performance_sale_performance_sale_detail_20cf",
+      //     "task_start_time": "2024-07-02 18:26:04",
+      //     "task_end_time": "2024-07-02 18:27:14",
+      //     "task_status": "success",
+      //     "task_result_quantity": 0,
+      //     "task_result_size": 0
+      //   }
+      // ],
+      taskStatisticDataBU: [],
+      taskStatisticDataCluster: [],
+      taskStatisticDataDatabase: [],
+      taskStatisticDataTable: [],
+      policyStatisticDataBU: [],
+      policyStatisticDataCluster: [],
+      policyStatisticDataDatabase: [],
+      policyStatisticDataTable: [],
     }
   },
   mounted() {
@@ -329,6 +409,9 @@ export default {
     getOptionName,
     taskStatisticShowChanged() {
       window.localStorage.setItem("taskStatisticShow", this.taskStatisticShow);
+    },
+    policyStatisticShowChanged() {
+      window.localStorage.setItem("policyStatisticShow", this.policyStatisticShow);
     },
     activeTableChanged(tab, event) {
       this.activeTable = tab.name;
@@ -364,14 +447,14 @@ export default {
         this.statisticTotal.successRate = Number.isFinite(this.statisticTotal.successRate) ? this.statisticTotal.successRate.toFixed(0) : 0;
       });
     },
-    taskPlan() {
-      sysApi.getTaskPlan({
-        start_date: moment().subtract(3, 'days').format('YYYY-MM-DD'),
-        end_date: moment().add(3, 'days').format('YYYY-MM-DD'),
-      }).then(res => {
-        this.chartData = res.data.tasks;
-      });
-    },
+    // taskPlan() {
+    //   sysApi.getTaskPlan({
+    //     start_date: moment().subtract(3, 'days').format('YYYY-MM-DD'),
+    //     end_date: moment().add(3, 'days').format('YYYY-MM-DD'),
+    //   }).then(res => {
+    //     this.chartData = res.data.tasks;
+    //   });
+    // },
     transformData(data) {
       const processedData = {};
       data.forEach(item => {
@@ -445,29 +528,48 @@ export default {
         govern: this.taskStatisticFilter.govern[0],
       }
       sysApi.taskStatisticGroupByBu(params).then(res => {
-        this.taskStatisticDataBU.rows = res.data.data;
-        this.taskStatisticDataBU.pagination.total = res.data.data.length;
+        this.taskStatisticDataBU = res.data.data;
       });
 
       sysApi.taskStatisticGroupByCluster(params).then(res => {
-        this.taskStatisticDataCluster.rows = res.data.data;
-        this.taskStatisticDataCluster.pagination.total = res.data.data.length;
+        this.taskStatisticDataCluster = res.data.data;
       });
       sysApi.taskStatisticGroupByDatabase(params).then(res => {
-        this.taskStatisticDataDatabase.rows = res.data.data;
-        this.taskStatisticDataDatabase.pagination.total = res.data.data.length;
+        this.taskStatisticDataDatabase = res.data.data;
       });
       sysApi.taskStatisticGroupByTable(params).then(res => {
-        this.taskStatisticDataTable.rows = res.data.data;
-        this.taskStatisticDataTable.pagination.total = res.data.data.length;
-        this.taskStatisticFilterOption = this.transformData(this.taskStatisticDataTable.rows);
+        this.taskStatisticDataTable = res.data.data;
+        this.taskStatisticFilterOption = this.transformData(this.taskStatisticDataTable);
+      });
+    },
+    policyStatisticDateRangeChanged() {
+      const params = {
+        bu: this.policyStatisticFilter.bu,
+        cluster_name: this.policyStatisticFilter.cluster_name,
+        database: this.policyStatisticFilter.database,
+        table: this.policyStatisticFilter.table,
+        govern: this.policyStatisticFilter.govern[0],
+      }
+      sysApi.policyStatisticGroupByBu(params).then(res => {
+        this.policyStatisticDataBU = res.data.data;
+      });
+
+      sysApi.policyStatisticGroupByCluster(params).then(res => {
+        this.policyStatisticDataCluster = res.data.data;
+      });
+      sysApi.policyStatisticGroupByDatabase(params).then(res => {
+        this.policyStatisticDataDatabase = res.data.data;
+      });
+      sysApi.policyStatisticGroupByTable(params).then(res => {
+        this.policyStatisticDataTable = res.data.data;
+        this.policyStatisticFilterOption = this.transformData(this.policyStatisticDataTable);
       });
     },
     destroyed() {
       window.removeEventListener('resize', this.resizeCharts)
     },
     taskStatisticFilterChanged() {
-      const value = this.cascaderValue;
+      const value = this.taskCascaderValue;
       switch (value) {
         case 1:
           this.taskStatisticFilter.bu = value[0];
@@ -489,11 +591,36 @@ export default {
       }
       this.taskStatisticDateRangeChanged();
     },
+    policyStatisticFilterChanged() {
+      const value = this.policyCascaderValue;
+      switch (value) {
+        case 1:
+          this.policyStatisticFilter.bu = value[0];
+          break;
+        case 2:
+          this.policyStatisticFilter.bu = value[0];
+          this.policyStatisticFilter.cluster_name = value[1];
+          break;
+        case 3:
+          this.policyStatisticFilter.bu = value[0];
+          this.policyStatisticFilter.cluster_name = value[1];
+          this.policyStatisticFilter.database = value[2];
+          break;
+        default:
+          this.policyStatisticFilter.bu = value[0];
+          this.policyStatisticFilter.cluster_name = value[1];
+          this.policyStatisticFilter.database = value[2];
+          this.policyStatisticFilter.table = value[3];
+      }
+      this.policyStatisticDateRangeChanged();
+    },
   },
   created() {
     this.taskStatisticShow = window.localStorage.getItem("taskStatisticShow");
-
     this.taskStatisticShow = this.taskStatisticShow === null ? ['bu', 'cluster', 'database', 'table'] : this.taskStatisticShow.split(',');
+
+    this.policyStatisticShow = window.localStorage.getItem("policyStatisticShow");
+    this.policyStatisticShow = this.policyStatisticShow === null ? ['bu', 'cluster', 'database', 'table'] : this.policyStatisticShow.split(',');
 
     this.activeTable = window.localStorage.getItem("taskStatisticActiveTable");
     this.activeTable = this.activeTable === null ? 'taskStatisticSummary' : this.activeTable
@@ -504,6 +631,7 @@ export default {
     this.lastMonthStatistic();
     this.totalStatistic();
     this.taskStatisticDateRangeChanged();
+    this.policyStatisticDateRangeChanged();
   },
 }
 </script>

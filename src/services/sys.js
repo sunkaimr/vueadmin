@@ -306,3 +306,56 @@ export function getPolicyChangelog(params) {
       })
   })
 }
+
+
+export function policyStatisticGroupByBu(params) {
+  return new Promise((resolve, reject) => {
+    axios.get(api.POLICY_STATISTIC_BU, {params}).then(response => {
+      resolve(response.data);
+    }, err => {
+      resolve([]);
+    })
+      .catch((error) => {
+        resolve([])
+      })
+  })
+}
+
+export function policyStatisticGroupByCluster(params) {
+  return new Promise((resolve, reject) => {
+    axios.get(api.POLICY_STATISTIC_CLUSTER, {params}).then(response => {
+      resolve(response.data);
+    }, err => {
+      resolve([]);
+    })
+      .catch((error) => {
+        resolve([])
+      })
+  })
+}
+
+export function policyStatisticGroupByDatabase(params) {
+  return new Promise((resolve, reject) => {
+    axios.get(api.POLICY_STATISTIC_DATABASE, {params}).then(response => {
+      resolve(response.data);
+    }, err => {
+      resolve([]);
+    })
+      .catch((error) => {
+        resolve([])
+      })
+  })
+}
+
+export function policyStatisticGroupByTable(params) {
+  return new Promise((resolve, reject) => {
+    axios.get(api.POLICY_STATISTIC_TABLE, {params}).then(response => {
+      resolve(response.data);
+    }, err => {
+      resolve([]);
+    })
+      .catch((error) => {
+        resolve([])
+      })
+  })
+}

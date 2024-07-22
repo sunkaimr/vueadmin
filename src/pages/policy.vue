@@ -182,25 +182,6 @@
           </el-button>
         </div>
       </el-dialog>
-<!--      <el-dialog title="修改记录" :visible.sync="dialogRevisionFormVisible" style="width: 100%;">-->
-<!--        <el-table-->
-<!--          :data="revisionTableData.rows"-->
-<!--          border-->
-<!--          style="width: 100%;"-->
-<!--          size="mini"-->
-<!--          stripe-->
-<!--          v-loading="listLoading">-->
-<!--          <el-table-column prop="created_at" label="修改时间" align="center" sortable/>-->
-<!--          <el-table-column prop="creator" label="修改人" align="center" sortable/>-->
-<!--          <el-table-column prop="modify_field" label="修改字段" align="center" sortable>-->
-<!--            <template slot-scope="scope">-->
-<!--              {{ getOptionName(policyNameMap, scope.row.modify_field) }}-->
-<!--            </template>-->
-<!--          </el-table-column>-->
-<!--          <el-table-column prop="old_value" label="原始值" align="center" sortable/>-->
-<!--          <el-table-column prop="new_value" label="修改值" align="center" sortable/>-->
-<!--        </el-table>-->
-<!--      </el-dialog>-->
       <el-table
         :data="tableData.rows"
         border
@@ -236,6 +217,23 @@
                 {{ props.row.execute_window[0] + ' - ' + props.row.execute_window[1] }}
               </el-descriptions-item>
               <el-descriptions-item label="源端ID">{{ props.row.src_id }}</el-descriptions-item>
+              <el-descriptions-item label="源端名称">{{ props.row.src_name }}</el-descriptions-item>
+              <el-descriptions-item label="源端集群名称">{{ props.row.src_cluster_name }}</el-descriptions-item>
+              <el-descriptions-item label="源端集群ID">{{ props.row.src_cluster_id }}</el-descriptions-item>
+              <el-descriptions-item label="源库名">{{ props.row.src_database_name }}</el-descriptions-item>
+              <el-descriptions-item label="源表名">
+                <div class="ellipsis-container">
+                  <template v-if="props.row.src_tables_name.length>30">
+                    <el-tooltip effect="light" :content="props.row.src_tables_name.split(',').join(' ')" :open-delay="500" placement="top">
+                      <div class="table-expand-cell-ellipsis">{{ props.row.src_tables_name }}</div>
+                    </el-tooltip>
+                    <el-button v-if="props.row.src_tables_name.length>30" type="text" class="copy-button" @click="copyText(props.row.src_tables_name)">复制</el-button>
+                  </template>
+                  <template v-else>
+                    <div class="table-expand-cell-ellipsis">{{ props.row.src_tables_name }}</div>
+                  </template>
+                </div>
+              </el-descriptions-item>
               <el-descriptions-item label="目标端ID">{{ props.row.dest_id }}</el-descriptions-item>
               <el-descriptions-item label="治理速度">{{
                   getOptionName(cleaningSpeedOption, props.row.cleaning_speed)
@@ -302,22 +300,6 @@
               <el-button size="mini" @click="handleDelete(scope.$index, scope.row)" icon="el-icon-delete" style="color: red;"/>
             </el-button-group>
           </template>
-<!--          <template slot-scope="scope">-->
-<!--            <el-dropdown size="small" @command="handleDropdownCommand" :hide-on-click="false">-->
-<!--              <span class="el-dropdown-link">更多 <i class="el-icon-arrow-down"></i></span>-->
-<!--              <el-dropdown-menu slot="dropdown">-->
-<!--                <el-dropdown-item :command="beforeHandleDropdownCommand(scope.$index, scope.row, 'edit')"-->
-<!--                                  icon="el-icon-edit"> 修改-->
-<!--                </el-dropdown-item>-->
-<!--                <el-dropdown-item :command="beforeHandleDropdownCommand(scope.$index, scope.row, 'delete')"-->
-<!--                                  icon="el-icon-delete"> 删除-->
-<!--                </el-dropdown-item>-->
-<!--                <el-dropdown-item :command="beforeHandleDropdownCommand(scope.$index, scope.row, 'revision')"-->
-<!--                                  icon="el-icon-tickets"> 修改记录-->
-<!--                </el-dropdown-item>-->
-<!--              </el-dropdown-menu>-->
-<!--            </el-dropdown>-->
-<!--          </template>-->
         </el-table-column>
       </el-table>
       <el-pagination
@@ -350,6 +332,7 @@ import {
   tableExpandLabelStyle,
   tableExpandContentStyle,
   gotoPolicyDetail,
+  copyText,
 } from "../common/utils";
 
 export default {
@@ -443,6 +426,7 @@ export default {
     }
   },
   methods: {
+    copyText,
     gotoPolicyDetail,
     beforeHandleDropdownCommand,
     getOptionName,

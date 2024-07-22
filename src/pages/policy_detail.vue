@@ -106,8 +106,25 @@
           <el-descriptions-item label="治理频率">{{getOptionName(periodOption, policyInfo.period)}}</el-descriptions-item>
           <el-descriptions-item label="期望执行日">{{ policyInfo.day }}</el-descriptions-item>
           <el-descriptions-item label="执行窗口">{{ policyInfo.execute_window[0] + ' - ' + policyInfo.execute_window[1] }}</el-descriptions-item>
-          <el-descriptions-item label="源端ID">{{ policyInfo.src_id }}</el-descriptions-item>
           <el-descriptions-item label="BU">{{ policyInfo.bu }}</el-descriptions-item>
+          <el-descriptions-item label="源端ID">{{ policyInfo.src_id }}</el-descriptions-item>
+          <el-descriptions-item label="源端名称">{{ policyInfo.src_name }}</el-descriptions-item>
+          <el-descriptions-item label="源端集群名称">{{ policyInfo.src_cluster_name }}</el-descriptions-item>
+          <el-descriptions-item label="源端集群ID">{{ policyInfo.src_cluster_id }}</el-descriptions-item>
+          <el-descriptions-item label="源库名">{{ policyInfo.src_database_name }}</el-descriptions-item>
+          <el-descriptions-item label="源表名">
+            <div class="ellipsis-container">
+              <template v-if="policyInfo.src_tables_name.length>30">
+                <el-tooltip effect="light" :content="policyInfo.src_tables_name.split(',').join(' ')" :open-delay="500" placement="top">
+                  <div class="table-expand-cell-ellipsis">{{ policyInfo.src_tables_name }}</div>
+                </el-tooltip>
+                <el-button v-if="policyInfo.src_tables_name.length>30" type="text" class="copy-button" @click="copyText(policyInfo.src_tables_name)">复制</el-button>
+              </template>
+              <template v-else>
+                <div class="table-expand-cell-ellipsis">{{policyInfo.src_tables_name }}</div>
+              </template>
+            </div>
+          </el-descriptions-item>
 
           <!--          <el-descriptions-item label="源端名称">{{ policyInfo.src_name }}</el-descriptions-item>-->
 <!--          <el-descriptions-item label="源端集群ID">{{ policyInfo.cluster_id }}</el-descriptions-item>-->
@@ -137,10 +154,10 @@
             <el-descriptions-item label=""></el-descriptions-item>
           </template>
 
+          <el-descriptions-item label="是否重建表">{{ policyInfo.rebuild_flag ? "是" : "否" }}</el-descriptions-item>
           <el-descriptions-item label="治理方式"> {{ getOptionName(governOption, policyInfo.govern) }}</el-descriptions-item>
           <el-descriptions-item label="治理条件"> {{ policyInfo.condition }}</el-descriptions-item>
           <el-descriptions-item label="治理速度">{{ getOptionName(cleaningSpeedOption, policyInfo.cleaning_speed) }}</el-descriptions-item>
-          <el-descriptions-item label="是否重建表">{{ policyInfo.rebuild_flag ? "是" : "否" }}</el-descriptions-item>
           <el-descriptions-item label="通知策略">{{ getOptionName(notifyPolicyOption, policyInfo.notify_policy) }}</el-descriptions-item>
           <el-descriptions-item label="相关人">{{ policyInfo.relevant }}</el-descriptions-item>
         </el-descriptions>

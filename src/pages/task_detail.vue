@@ -166,8 +166,8 @@
               :key="index"
               :timestamp="log.time">
               <span>
+                <el-tag size="small" :style="{'background-color': getOptionBackground(taskStatusOption, log.task_status)}"> {{ getOptionName(taskStatusOption, log.task_status) }}</el-tag>
                 <el-tag size="small" effect="light">{{log.user_name}}</el-tag>
-                 <el-tag size="small" :style="{'background-color': getOptionBackground(taskStatusOption, log.task_status)}"> {{ getOptionName(taskStatusOption, log.task_status) }}</el-tag>
                  {{log.content}}
               </span>
             </el-timeline-item>
