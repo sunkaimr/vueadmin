@@ -117,7 +117,7 @@
           <el-descriptions-item label="源端ID">{{ taskInfo.src_id }}</el-descriptions-item>
           <el-descriptions-item label="源端名称">{{ taskInfo.src_name }}</el-descriptions-item>
           <el-descriptions-item label="源端BU">{{ taskInfo.src_bu }}</el-descriptions-item>
-          <el-descriptions-item label="源端集群ID">{{ taskInfo.cluster_id }}</el-descriptions-item>
+          <el-descriptions-item label="源端集群ID">{{ taskInfo.src_cluster_id }}</el-descriptions-item>
           <el-descriptions-item label="源端库名">{{ taskInfo.src_database_name }}</el-descriptions-item>
           <el-descriptions-item label="源端表名">
             <div class="ellipsis-container">
