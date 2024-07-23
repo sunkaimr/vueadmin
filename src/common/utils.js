@@ -160,6 +160,31 @@ export function Policy(){
   }
 }
 
+
+export function Config(){
+  return {
+    cluster_default_user: "root",
+    cluster_default_passwd: "123456",
+    cluster_exclude_database: "",
+    cluster_exclude_tables: "",
+    thanos_url: "",
+    task_max_parallel: 0,
+    task_timeout: 3600,
+    workflow_retention_days: 30,
+    task_conflict_level: "",
+    task_conflict_max: 0,
+    notice: "email",
+    email_host: "",
+    email_port: 465,
+    email_username: "test",
+    email_password: "123456",
+    email_insecure_skip_verify: true,
+    test_user: "",
+    source_status_detect: false,
+    source_status_detect_disk_usage: 95,
+  }
+}
+
 export const sourceSearchOption = [
   {name: "ID", value: "id"},
   {name: "源端名称", value: "name"},
