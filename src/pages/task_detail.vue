@@ -396,7 +396,7 @@ export default {
     margin-right: 8px;
   }
 
-  .el-tag:first-child{
+  .el-tag:last-child{
     width: 60px;
   }
 

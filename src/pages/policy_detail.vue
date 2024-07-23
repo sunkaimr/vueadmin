@@ -125,23 +125,6 @@
               </template>
             </div>
           </el-descriptions-item>
-
-          <!--          <el-descriptions-item label="源端名称">{{ policyInfo.src_name }}</el-descriptions-item>-->
-<!--          <el-descriptions-item label="源端集群ID">{{ policyInfo.cluster_id }}</el-descriptions-item>-->
-<!--          <el-descriptions-item label="源端库名">{{ policyInfo.src_database_name }}</el-descriptions-item>-->
-<!--          <el-descriptions-item label="源端表名">-->
-<!--            <div class="ellipsis-container">-->
-<!--              <template v-if="policyInfo.src_tables_name.length>30">-->
-<!--                <el-tooltip effect="light" :content="policyInfo.src_tables_name.split(',').join(' ')" :open-delay="500" placement="top">-->
-<!--                  <div class="table-expand-cell-ellipsis">{{ policyInfo.src_tables_name }}</div>-->
-<!--                </el-tooltip>-->
-<!--                <el-button v-if="policyInfo.src_tables_name.length>30" type="text" class="copy-button" @click="copyText(policyInfo.src_tables_name)">复制</el-button>-->
-<!--              </template>-->
-<!--              <template v-else>-->
-<!--                <div class="table-expand-cell-ellipsis">{{ policyInfo.src_tables_name }}</div>-->
-<!--              </template>-->
-<!--            </div>-->
-<!--          </el-descriptions-item>-->
           <template v-if="policyInfo.govern === 'archive'">
             <el-descriptions-item label="归档范围">{{ policyInfo.archive_scope }}</el-descriptions-item>
             <el-descriptions-item label="目标端ID">{{ policyInfo.dest_id }}</el-descriptions-item>
@@ -153,7 +136,6 @@
             <el-descriptions-item label="压缩存储">{{ policyInfo.dest_compress ? "是" : "否" }}</el-descriptions-item>
             <el-descriptions-item label=""></el-descriptions-item>
           </template>
-
           <el-descriptions-item label="是否重建表">{{ policyInfo.rebuild_flag ? "是" : "否" }}</el-descriptions-item>
           <el-descriptions-item label="治理方式"> {{ getOptionName(governOption, policyInfo.govern) }}</el-descriptions-item>
           <el-descriptions-item label="治理条件"> {{ policyInfo.condition }}</el-descriptions-item>
@@ -244,7 +226,7 @@
           <el-table-column prop="creator" label="修改人" align="center" sortable/>
           <el-table-column prop="modify_field" label="修改字段" align="center" sortable>
             <template slot-scope="scope">
-              {{ getOptionName(taskNameMap, scope.row.modify_field) }}
+              {{ getOptionName(policyNameMap, scope.row.modify_field) }}
             </template>
           </el-table-column>
           <el-table-column prop="old_value" label="原始值" align="center" sortable/>
@@ -268,9 +250,13 @@ import {
   taskStatusOption,
   getOptionBackground,
   cleaningSpeedOption,
-  taskNameMap,
   tableExpandLabelStyle,
-  tableExpandContentStyle, formatSecondsPrecisely, copyText, Task, Policy, gotoTaskDetail, gotoPolicyDetail,
+  tableExpandContentStyle,
+  copyText,
+  Policy,
+  gotoTaskDetail,
+  gotoPolicyDetail,
+  policyNameMap,
 } from "../common/utils";
 
 export default {
@@ -286,7 +272,7 @@ export default {
       policyInfo: new Policy(),
       tableExpandLabelStyle,
       tableExpandContentStyle,
-      taskNameMap,
+      policyNameMap,
       taskStatusRadio: 0,
       periodOption,
       governOption,
@@ -330,9 +316,7 @@ export default {
   methods: {
     gotoPolicyDetail,
     gotoTaskDetail,
-    Policy,
     copyText,
-    formatSecondsPrecisely,
     getOptionBackground,
     getOptionName,
     activeTableChanged(tab) {

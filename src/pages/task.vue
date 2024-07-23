@@ -90,26 +90,6 @@
           </el-button>
         </div>
       </el-dialog>
-      <el-dialog title="修改记录" :visible.sync="dialogRevisionFormVisible" :close-on-click-modal="false"
-                 style="width: 100%;">
-        <el-table
-          :data="revisionTableData.rows"
-          border
-          style="width: 100%;"
-          size="mini"
-          stripe
-          v-loading="listLoading">
-          <el-table-column prop="created_at" label="修改时间" align="center" sortable/>
-          <el-table-column prop="creator" label="修改人" align="center" sortable/>
-          <el-table-column prop="modify_field" label="修改字段" align="center" sortable>
-            <template slot-scope="scope">
-              {{ getOptionName(taskNameMap, scope.row.modify_field) }}
-            </template>
-          </el-table-column>
-          <el-table-column prop="old_value" label="原始值" align="center" sortable/>
-          <el-table-column prop="new_value" label="修改值" align="center" sortable/>
-        </el-table>
-      </el-dialog>
       <el-table
         :data="tableData.rows"
         border
@@ -265,22 +245,6 @@
               <el-button size="mini" @click="handleDelete(scope.$index, scope.row)" icon="el-icon-delete" style="color: red;"/>
             </el-button-group>
           </template>
-<!--          <template slot-scope="scope">-->
-<!--            <el-dropdown size="small" @command="handleDropdownCommand" :hide-on-click="false">-->
-<!--              <span class="el-dropdown-link">更多 <i class="el-icon-arrow-down"></i></span>-->
-<!--              <el-dropdown-menu slot="dropdown">-->
-<!--                <el-dropdown-item :command="beforeHandleDropdownCommand(scope.$index, scope.row, 'edit')"-->
-<!--                                  icon="el-icon-edit"> 修改-->
-<!--                </el-dropdown-item>-->
-<!--                <el-dropdown-item :command="beforeHandleDropdownCommand(scope.$index, scope.row, 'delete')"-->
-<!--                                  icon="el-icon-delete"> 删除-->
-<!--                </el-dropdown-item>-->
-<!--                <el-dropdown-item :command="beforeHandleDropdownCommand(scope.$index, scope.row, 'revision')"-->
-<!--                                  icon="el-icon-tickets"> 修改记录-->
-<!--                </el-dropdown-item>-->
-<!--              </el-dropdown-menu>-->
-<!--            </el-dropdown>-->
-<!--          </template>-->
         </el-table-column>
       </el-table>
       <el-pagination
@@ -393,9 +357,6 @@ export default {
           {required: true, message: '请选择通知策略', trigger: 'blur'}
         ]
       },
-      revisionTableData: {
-        rows: []
-      },
     }
   },
   methods: {
@@ -405,20 +366,6 @@ export default {
     formatSecondsPrecisely,
     getOptionBackground,
     getOptionName,
-    beforeHandleDropdownCommand,
-    handleDropdownCommand(command) {
-      switch (command.command) {
-        case "edit":
-          this.handleEdit(command.index, command.row);
-          break;
-        case "delete":
-          this.handleDelete(command.index, command.row);
-          break;
-        case "revision":
-          this.handleRevision(command.index, command.row);
-          break;
-      }
-    },
     taskCanModify(status) {
       return (status === 'executing' || status === 'success' || status === 'exec_failed' || status === 'timeout');
     },
@@ -484,10 +431,13 @@ export default {
       const data = {
         id: row.id,
         name: row.name,
-        enable: row.enable,
-        rebuild_flag: row.rebuild_flag,
-        execute_date: row.execute_date,
         description: row.description,
+        rebuild_flag: row.rebuild_flag,
+        enable: row.enable,
+        execute_date: row.execute_date,
+        execute_window: row.execute_window,
+        notify_policy: row.notify_policy,
+        relevant: row.relevant,
       }
       this.$http.put(api.TASK_LIST, JSON.stringify(data)).then(res => {
         this.$notify({title: '成功', message: "修改成功", type: 'success'});
@@ -533,17 +483,6 @@ export default {
         });
       }).catch(() => {
       });
-    },
-    handleRevision(index, row) {
-      this.revisionTableData.rows = [];
-      sysApi.getTaskRevision({
-        task_id: row.id,
-        pageSize: 0,
-        page: 0,
-      }).then(res => {
-        this.revisionTableData.rows = res.data.items;
-      });
-      this.dialogRevisionFormVisible = true;
     },
     loadData() {
       let para = {

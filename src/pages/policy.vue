@@ -328,11 +328,10 @@ import {
   notifyPolicyOption,
   policySearchOption,
   policyNameMap,
-  beforeHandleDropdownCommand,
   tableExpandLabelStyle,
   tableExpandContentStyle,
   gotoPolicyDetail,
-  copyText,
+  copyText, Policy,
 } from "../common/utils";
 
 export default {
@@ -364,22 +363,7 @@ export default {
       dialogRevisionFormVisible: false,
       fullscreenLoading: false,
       listLoading: false,
-      form: {
-        name: "",
-        enable: true,
-        description: "",
-        period: "monthly",
-        day: 1,
-        execute_window: ["00:00:00", "23:59:59"],
-        govern: "delete",
-        rebuild_flag: true,
-        condition: "",
-        src_id: 0,
-        dest_id: 0,
-        cleaning_speed: "balanced",
-        notify_policy: "always",
-        relevant: "",
-      },
+      form: new Policy(),
       tableData: {
         pagination: {
           total: 0,
@@ -387,9 +371,6 @@ export default {
           pageSize: 10,
           parentId: 0
         },
-        rows: []
-      },
-      revisionTableData: {
         rows: []
       },
       rules: {
@@ -428,29 +409,23 @@ export default {
   methods: {
     copyText,
     gotoPolicyDetail,
-    beforeHandleDropdownCommand,
     getOptionName,
     getOptionBackground,
-    handleDropdownCommand(command) {
-      switch (command.command) {
-        case "edit":
-          this.handleEdit(command.index, command.row);
-          break;
-        case "delete":
-          this.handleDelete(command.index, command.row);
-          break;
-        case "revision":
-          this.handleRevision(command.index, command.row);
-          break;
-      }
-    },
     handleEnableChange(index, row) {
       const data = {
         id: row.id,
         name: row.name,
-        enable: row.enable,
-        rebuild_flag: row.rebuild_flag,
         description: row.description,
+        enable: row.enable,
+        period: row.period,
+        day: row.day,
+        execute_window: row.execute_window,
+        govern: row.govern,
+        rebuild_flag: row.rebuild_flag,
+        condition: row.condition,
+        cleaning_speed: row.cleaning_speed,
+        notify_policy: row.notify_policy,
+        relevant: row.relevant,
       }
       this.$http.put(api.POLICY_ADD, JSON.stringify(data)).then(res => {
         this.$notify({title: '成功', message: "修改成功", type: 'success'});
@@ -599,16 +574,6 @@ export default {
         });
       }).catch(() => {
       });
-    },
-    handleRevision(index, row) {
-      this.revisionTableData.rows = [];
-      sysApi.getPolicyRevision({
-        policy_id: row.id,
-        pageSize: 50,
-      }).then(res => {
-        this.revisionTableData.rows = res.data.items;
-      });
-      this.dialogRevisionFormVisible = true;
     },
     loadData() {
       let para = {

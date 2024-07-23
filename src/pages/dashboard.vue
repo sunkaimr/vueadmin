@@ -204,35 +204,37 @@
         </div>
       </el-tab-pane>
       <el-tab-pane label="策略统计" name="policyStatistic">
-        <div>
-          <el-row :gutter="10">
-            <el-col :span="4">
-              <el-select v-model="policyStatisticFilter.govern"
-                         multiple clearable
-                         size="mini"
-                         collapse-tags
-                         @change="policyStatisticFilterChanged"
-                         placeholder="请选择清理方式">
-                <el-option v-for="i in governOption" :key="i.value" :label="i.name" :value="i.value"></el-option>
-              </el-select>
-            </el-col>
-            <el-col :span="10">
-              <el-cascader
-                v-model="policyCascaderValue"
-                size="mini"
-                :options="policyStatisticFilterOption"
-                placeholder="请筛选bu、集群、库、表"
-                @change="policyStatisticFilterChanged"></el-cascader>
-            </el-col>
-            <el-col :span="10" style="display: flex; justify-content: flex-end">
+        <div style="display: flex; justify-content: space-between">
+          <div style="display: flex;">
+            <el-select v-model="policyStatisticFilter.govern"
+                       multiple clearable
+                       size="mini"
+                       collapse-tags
+                       @change="policyStatisticFilterChanged"
+                       placeholder="请选择清理方式">
+              <el-option v-for="i in governOption" :key="i.value" :label="i.name" :value="i.value"></el-option>
+            </el-select>
+            <el-cascader style="margin: 0 10px"
+              v-model="policyCascaderValue"
+              size="mini"
+              :options="policyStatisticFilterOption"
+              placeholder="请筛选BU、集群、库、表"
+              @change="policyStatisticFilterChanged">
+            </el-cascader>
+            <el-radio-group size="mini" @input="policyEnableRadioChanged" v-model="policyEnableRadio">
+              <el-radio :label="1">开启</el-radio>
+              <el-radio :label="2">关闭</el-radio>
+              <el-radio :label="0">全部</el-radio>
+            </el-radio-group>
+          </div>
+            <div style="display: flex; justify-content: flex-end">
               <el-checkbox-group v-model="policyStatisticShow" @change="policyStatisticShowChanged" size="mini">
                 <el-checkbox-button label="bu">BU维度</el-checkbox-button>
                 <el-checkbox-button label="cluster">集群维度</el-checkbox-button>
                 <el-checkbox-button label="database">库维度</el-checkbox-button>
                 <el-checkbox-button label="table">表维度</el-checkbox-button>
               </el-checkbox-group>
-            </el-col>
-          </el-row>
+            </div>
         </div>
         <div class="task-statistic-table" v-if="policyStatisticShow.indexOf('bu') !== -1">
           <el-table :data="policyStatisticDataBU" size="mini" show-summary border stripe>
@@ -295,7 +297,9 @@
               </el-descriptions-item>
               <el-table-column prop="condition" label="治理条件" align="center" sortable>
                 <template slot-scope="scope">
-                  {{scope.row.condition}}
+                  <el-tooltip class="item" effect="dark" :content="scope.row.condition" :open-delay="500" placement="top">
+                    <div class="cell-ellipsis">{{ scope.row.condition }}</div>
+                  </el-tooltip>
                 </template>
               </el-table-column>
               <el-table-column prop="count" label="策略个数" align="center" sortable></el-table-column>
@@ -317,6 +321,7 @@ export default {
   name: 'project-progress',
   data() {
     return {
+      policyEnableRadio: 0,
       periodOption,
       taskStatisticShow: ['bu', 'cluster', 'database', 'table'],
       policyStatisticShow: ['bu', 'cluster', 'database', 'table'],
@@ -409,6 +414,10 @@ export default {
     getOptionName,
     taskStatisticShowChanged() {
       window.localStorage.setItem("taskStatisticShow", this.taskStatisticShow);
+    },
+    policyEnableRadioChanged(){
+      window.localStorage.setItem("policyEnableRadio", this.policyEnableRadio);
+      this.policyStatisticFilterChanged()
     },
     policyStatisticShowChanged() {
       window.localStorage.setItem("policyStatisticShow", this.policyStatisticShow);
@@ -550,6 +559,18 @@ export default {
         table: this.policyStatisticFilter.table,
         govern: this.policyStatisticFilter.govern[0],
       }
+
+      switch (this.policyEnableRadio) {
+        case 0:
+          break;
+        case 1:
+          params.enable = true;
+          break;
+        case 2:
+          params.enable = false;
+          break
+      }
+
       sysApi.policyStatisticGroupByBu(params).then(res => {
         this.policyStatisticDataBU = res.data.data;
       });
@@ -619,6 +640,9 @@ export default {
     this.taskStatisticShow = window.localStorage.getItem("taskStatisticShow");
     this.taskStatisticShow = this.taskStatisticShow === null ? ['bu', 'cluster', 'database', 'table'] : this.taskStatisticShow.split(',');
 
+    const radio = parseInt(window.localStorage.getItem("policyEnableRadio"));
+    this.policyEnableRadio = Number.isFinite(radio) ? radio : 0;
+
     this.policyStatisticShow = window.localStorage.getItem("policyStatisticShow");
     this.policyStatisticShow = this.policyStatisticShow === null ? ['bu', 'cluster', 'database', 'table'] : this.policyStatisticShow.split(',');
 
@@ -676,4 +700,7 @@ export default {
   margin-top: 20px;
 }
 
+.el-radio {
+  line-height: 30px;
+}
 </style>
