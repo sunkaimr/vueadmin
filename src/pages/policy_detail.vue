@@ -104,7 +104,7 @@
           <el-descriptions-item label="更新时间">{{ policyInfo.updated_at }}</el-descriptions-item>
           <el-descriptions-item label="开启">{{ policyInfo.enable ? "开启" : "关闭" }}</el-descriptions-item>
           <el-descriptions-item label="治理频率">{{getOptionName(periodOption, policyInfo.period)}}</el-descriptions-item>
-          <el-descriptions-item label="期望执行日">{{ policyInfo.day }}</el-descriptions-item>
+          <el-descriptions-item label="期望执行日">{{ policyNeedSetExecuteDate(policyInfo.period) ? policyInfo.day : "-" }}</el-descriptions-item>
           <el-descriptions-item label="执行窗口">{{ policyInfo.execute_window[0] + ' - ' + policyInfo.execute_window[1] }}</el-descriptions-item>
           <el-descriptions-item label="BU">{{ policyInfo.bu }}</el-descriptions-item>
           <el-descriptions-item label="源端ID">{{ policyInfo.src_id }}</el-descriptions-item>
@@ -257,6 +257,7 @@ import {
   gotoTaskDetail,
   gotoPolicyDetail,
   policyNameMap,
+  policyNeedSetExecuteDate,
 } from "../common/utils";
 
 export default {
@@ -319,6 +320,7 @@ export default {
     copyText,
     getOptionBackground,
     getOptionName,
+    policyNeedSetExecuteDate,
     activeTableChanged(tab) {
       this.activeTable = tab.name;
       window.localStorage.setItem("policyDetailActiveTable", this.activeTable);

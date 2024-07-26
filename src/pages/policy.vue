@@ -211,7 +211,7 @@
                   getOptionName(periodOption, props.row.period)
                 }}
               </el-descriptions-item>
-              <el-descriptions-item label="期望执行日">{{ props.row.day }}</el-descriptions-item>
+              <el-descriptions-item label="期望执行日">{{ policyNeedSetExecuteDate(props.row.period) ? props.row.day : "-" }}</el-descriptions-item>
               <el-descriptions-item label="执行窗口">
                 {{ props.row.execute_window[0] + ' - ' + props.row.execute_window[1] }}
               </el-descriptions-item>
