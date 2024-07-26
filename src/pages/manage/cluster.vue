@@ -10,7 +10,7 @@
           <el-input
             size="mini"
             placeholder="请输入内容"
-            v-model="searchVal"
+            v-model.trim="searchVal"
             @clear="handleSearch"
             @keyup.enter.native="handleSearch"
             clearable>
@@ -166,7 +166,14 @@
 <script>
 import panel from "../../components/panel.vue"
 import * as sysApi from '../../services/sys'
-import {getOptionName, envNameMap, clusterSearchOption, importFromNameMap} from "../../common/utils";
+import {
+  getOptionName,
+  envNameMap,
+  clusterSearchOption,
+  importFromNameMap,
+  getOptionValue,
+  periodOption, cleaningSpeedOption, governOption
+} from "../../common/utils";
 import * as api from "../../api";
 import {CLUSTER_SYNC} from "../../api";
 
@@ -353,6 +360,16 @@ export default {
         pageSize: this.tableData.pagination.pageSize,
         page: this.tableData.pagination.pageNo
       }
+
+      switch (this.searchKey){
+        case "env":
+          para.env = getOptionValue(envNameMap, para.env)
+          break
+        case "import_from":
+          para.import_from = getOptionValue(importFromNameMap, para.import_from)
+          break
+      }
+
       sysApi.clusterList(para).then(res => {
         this.tableData.rows = res.data.items;
         this.tableData.pagination.total = res.data.total;

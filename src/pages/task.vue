@@ -16,7 +16,7 @@
             <el-select size="mini" v-model="searchTaskStatus" @change="handleSearch" placeholder="任务状态" multiple collapse-tags clearable>
               <el-option v-for="item in taskStatusOption" :key="item.value" :label="item.name" :value="item.value"/>
             </el-select>
-            <el-input size="mini" placeholder="请输入内容" v-model="searchVal" @clear="handleSearch" @keyup.enter.native="handleSearch" clearable>
+            <el-input size="mini" placeholder="请输入内容" v-model.trim="searchVal" @clear="handleSearch" @keyup.enter.native="handleSearch" clearable>
               <el-select class="input-with-select" v-model="searchKey" slot="prepend" placeholder="请选择">
                 <el-option v-for="item in taskSearchOption" :key="item.value" :label="item.name" :value="item.value"/>
               </el-select>
@@ -275,9 +275,13 @@ import {
   getOptionBackground,
   cleaningSpeedOption,
   taskNameMap,
-  beforeHandleDropdownCommand,
   tableExpandLabelStyle,
-  tableExpandContentStyle, formatSecondsPrecisely, copyText, gotoTaskDetail,gotoPolicyDetail,
+  tableExpandContentStyle,
+  formatSecondsPrecisely,
+  copyText,
+  gotoTaskDetail,
+  gotoPolicyDetail,
+  getOptionValue,
 } from "../common/utils";
 
 export default {
@@ -491,6 +495,18 @@ export default {
         page: this.tableData.pagination.pageNo
       }
       para.task_status = this.searchTaskStatus;
+
+      switch (this.searchKey){
+        case "period":
+          para.period = getOptionValue(periodOption, para.period)
+          break
+        case "cleaning_speed":
+          para.cleaning_speed = getOptionValue(cleaningSpeedOption, para.cleaning_speed)
+          break
+        case "govern":
+          para.govern = getOptionValue(governOption, para.govern)
+          break
+      }
 
       sysApi.taskList(para).then(res => {
         this.tableData.rows = res.data.items;

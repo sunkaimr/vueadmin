@@ -198,7 +198,7 @@ export const sourceSearchOption = [
 export const policySearchOption = [
   {name: "ID", value: "id"},
   {name: "策略名称", value: "name"},
-  {name: "清理频率", value: "period"},
+  {name: "治理频率", value: "period"},
   {name: "治理速度", value: "cleaning_speed"},
   {name: "治理方式", value: "govern"},
   {name: "治理条件", value: "condition"},
@@ -210,11 +210,16 @@ export const taskSearchOption = [
   {name: "ID", value: "id"},
   {name: "任务名称", value: "name"},
   {name: "策略ID", value: "policy_id"},
-  {name: "清理频率", value: "period"},
+  {name: "治理频率", value: "period"},
   {name: "治理速度", value: "cleaning_speed"},
   {name: "治理方式", value: "govern"},
   {name: "治理条件", value: "condition"},
   {name: "源端ID", value: "src_id"},
+  {name: "源端名称", value: "src_name"},
+  {name: "集群ID", value: "src_cluster_id"},
+  {name: "集群名称", value: "src_cluster_name"},
+  {name: "源库名", value: "src_database_name"},
+  {name: "源表名", value: "src_tables_name"},
   {name: "目标端ID", value: "dest_id"},
   {name: "原因", value: "task_reason"},
 ]
@@ -385,6 +390,11 @@ export function getOptionBackground(optionsArray, propValue) {
 export function getOptionName(optionsArray, propValue) {
   const foundOption = optionsArray.find(option => option.value === propValue);
   return foundOption ? foundOption.name : propValue;
+}
+
+export function getOptionValue(optionsArray, propName) {
+  const foundOption = optionsArray.find(option => option.name === propName);
+  return foundOption ? foundOption.value : propName;
 }
 
 export function beforeHandleDropdownCommand(index, row, command) {

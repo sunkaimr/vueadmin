@@ -6,7 +6,7 @@
           <el-button size="mini" type="primary" @click="addDest" icon="plus">新增</el-button>
         </div>
         <div class="content-header-right">
-          <el-input size="mini" placeholder="请输入内容" v-model="searchVal" @clear="handleSearch"
+          <el-input size="mini" placeholder="请输入内容" v-model.trim="searchVal" @clear="handleSearch"
                     @keyup.enter.native="handleSearch" clearable>
             <el-select size="mini" class="input-with-select" v-model="searchKey" slot="prepend" placeholder="请选择">
               <el-option v-for="item in destSearchOption" :key="item.value" :label="item.name" :value="item.value"/>
@@ -150,7 +150,14 @@
 <script>
 import panel from "../../components/panel.vue"
 import * as sysApi from '../../services/sys'
-import {destSearchOption, storageOption, getOptionName} from "../../common/utils";
+import {
+  destSearchOption,
+  storageOption,
+  getOptionName,
+  getOptionValue,
+  envNameMap,
+  importFromNameMap
+} from "../../common/utils";
 import * as api from "../../api";
 
 export default {
@@ -318,6 +325,13 @@ export default {
         pageSize: this.tableData.pagination.pageSize,
         page: this.tableData.pagination.pageNo
       }
+
+      switch (this.searchKey){
+        case "storage":
+          para.storage = getOptionValue(storageOption, para.storage)
+          break
+      }
+
       sysApi.getDestList(para).then(res => {
         this.tableData.rows = res.data.items;
         this.tableData.pagination.total = res.data.total;

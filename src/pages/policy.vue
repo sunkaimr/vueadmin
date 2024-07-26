@@ -6,8 +6,12 @@
           <el-button size="mini" type="primary" @click="addPolicy" icon="plus">新增</el-button>
         </div>
         <div class="content-header-right">
-          <el-checkbox size="mini" v-model="displayEnablePolicy" @change="handleSearch">只看开启</el-checkbox>
-          <el-input size="mini" placeholder="请输入内容" v-model="searchVal" @clear="handleSearch"
+          <el-radio-group size="mini" v-model="policyEnableRadio">
+            <el-radio :label="1">开启</el-radio>
+            <el-radio :label="2">关闭</el-radio>
+            <el-radio :label="0">全部</el-radio>
+          </el-radio-group>
+          <el-input size="mini" placeholder="请输入内容" v-model.trim="searchVal" @clear="handleSearch"
                     @keyup.enter.native="handleSearch" clearable>
             <el-select class="input-with-select" v-model="searchKey" slot="prepend" placeholder="请选择">
               <el-option v-for="item in policySearchOption" :key="item.value" :label="item.name" :value="item.value"/>
@@ -36,7 +40,7 @@
               <el-option v-for="i in periodOption" :key="i.value" :label="i.name" :value="i.value"></el-option>
             </el-select>
             <span>&nbsp;&nbsp;&nbsp;</span>
-<!--            <template v-if="form.period !== 'once' && form.period !== 'day' && form.period !== 'two-day' && form.period !== 'weekly'">-->
+            <!--            <template v-if="form.period !== 'once' && form.period !== 'day' && form.period !== 'two-day' && form.period !== 'weekly'">-->
             <template v-if="policyNeedSetExecuteDate(form.period)">
               <span>执行一次，当月第&nbsp;</span>
               <el-input-number prop="period" v-model="form.day" :min="1" :max="31" placeholder=""></el-input-number>
@@ -71,10 +75,10 @@
             </el-select>
           </el-form-item>
           <el-form-item v-if="form.govern === 'delete'" label="重建表" prop="rebuild_flag" label-width="80px">
-              <el-radio-group size="small" v-model="form.rebuild_flag" style="line-height: 30px">
-                <el-radio :label="true" style="line-height: 30px">在执行窗口外仍然重建</el-radio>
-                <el-radio :label="false" style="line-height: 30px">在执行窗口外跳过重建</el-radio>
-              </el-radio-group>
+            <el-radio-group size="small" v-model="form.rebuild_flag" style="line-height: 30px">
+              <el-radio :label="true" style="line-height: 30px">在执行窗口外仍然重建</el-radio>
+              <el-radio :label="false" style="line-height: 30px">在执行窗口外跳过重建</el-radio>
+            </el-radio-group>
           </el-form-item>
           <el-form-item v-if="form.govern !=='truncate' && form.govern !=='rebuild'" label="治理条件" prop="condition"
                         label-width="80px">
@@ -211,7 +215,10 @@
                   getOptionName(periodOption, props.row.period)
                 }}
               </el-descriptions-item>
-              <el-descriptions-item label="期望执行日">{{ policyNeedSetExecuteDate(props.row.period) ? props.row.day : "-" }}</el-descriptions-item>
+              <el-descriptions-item label="期望执行日">{{
+                  policyNeedSetExecuteDate(props.row.period) ? props.row.day : "-"
+                }}
+              </el-descriptions-item>
               <el-descriptions-item label="执行窗口">
                 {{ props.row.execute_window[0] + ' - ' + props.row.execute_window[1] }}
               </el-descriptions-item>
@@ -223,10 +230,13 @@
               <el-descriptions-item label="源表名">
                 <div class="ellipsis-container">
                   <template v-if="props.row.src_tables_name.length>30">
-                    <el-tooltip effect="light" :content="props.row.src_tables_name.split(',').join(' ')" :open-delay="500" placement="top">
+                    <el-tooltip effect="light" :content="props.row.src_tables_name.split(',').join(' ')"
+                                :open-delay="500" placement="top">
                       <div class="table-expand-cell-ellipsis">{{ props.row.src_tables_name }}</div>
                     </el-tooltip>
-                    <el-button v-if="props.row.src_tables_name.length>30" type="text" class="copy-button" @click="copyText(props.row.src_tables_name)">复制</el-button>
+                    <el-button v-if="props.row.src_tables_name.length>30" type="text" class="copy-button"
+                               @click="copyText(props.row.src_tables_name)">复制
+                    </el-button>
                   </template>
                   <template v-else>
                     <div class="table-expand-cell-ellipsis">{{ props.row.src_tables_name }}</div>
@@ -249,7 +259,7 @@
         </el-table-column>
         <el-table-column prop="id" label="ID" width="80px" align="center" sortable>
           <template slot-scope="scope">
-            <a style="cursor: pointer; color: blueviolet" @click="gotoPolicyDetail(scope.row.id)">{{scope.row.id}}</a>
+            <a style="cursor: pointer; color: blueviolet" @click="gotoPolicyDetail(scope.row.id)">{{ scope.row.id }}</a>
           </template>
         </el-table-column>
         <el-table-column prop="name" label="策略名称" sortable>
@@ -296,7 +306,8 @@
           <template slot-scope="scope">
             <el-button-group size="mini">
               <el-button size="mini" @click="handleEdit(scope.$index, scope.row)" icon="el-icon-edit"/>
-              <el-button size="mini" @click="handleDelete(scope.$index, scope.row)" icon="el-icon-delete" style="color: red;"/>
+              <el-button size="mini" @click="handleDelete(scope.$index, scope.row)" icon="el-icon-delete"
+                         style="color: red;"/>
             </el-button-group>
           </template>
         </el-table-column>
@@ -331,7 +342,7 @@ import {
   tableExpandContentStyle,
   gotoPolicyDetail,
   copyText, Policy,
-  policyNeedSetExecuteDate,
+  policyNeedSetExecuteDate, getOptionValue,
 } from "../common/utils";
 
 export default {
@@ -339,17 +350,23 @@ export default {
     'imp-panel': panel
   },
   watch: {
-    searchKey: function (newVal, oldVal) {
+    searchKey(newVal, oldVal) {
       if (newVal !== oldVal) {
         window.localStorage.setItem("policySearchKey", newVal);
       }
+    },
+    policyEnableRadio(newVal, oldVal) {
+      if (newVal !== oldVal) {
+        window.localStorage.setItem("policyEnableRadio", newVal);
+      }
+      this.loadData();
     },
   },
   data() {
     return {
       tableExpandLabelStyle,
       tableExpandContentStyle,
-      displayEnablePolicy: false,
+      policyEnableRadio: 0,
       periodOption,
       governOption,
       cleaningSpeedOption,
@@ -583,9 +600,29 @@ export default {
         page: this.tableData.pagination.pageNo
       }
 
-      if (this.displayEnablePolicy) {
-        para.enable = true;
+      switch (this.policyEnableRadio) {
+        case 0:
+          break;
+        case 1:
+          para.enable = true;
+          break;
+        case 2:
+          para.enable = false;
+          break
       }
+
+      switch (this.searchKey){
+        case "period":
+          para.period = getOptionValue(periodOption, para.period)
+          break
+        case "cleaning_speed":
+          para.cleaning_speed = getOptionValue(cleaningSpeedOption, para.cleaning_speed)
+          break
+        case "govern":
+          para.govern = getOptionValue(governOption, para.govern)
+          break
+      }
+
       sysApi.policyList(para).then(res => {
         this.tableData.rows = res.data.items;
         this.tableData.pagination.total = res.data.total;
@@ -598,6 +635,9 @@ export default {
     this.tableData.pagination.pageSize = Number.isFinite(pageSize) ? pageSize : 10;
     this.searchKey = this.searchKey === null ? "id" : this.searchKey;
 
+    const radio = parseInt(window.localStorage.getItem("policyEnableRadio"));
+    this.policyEnableRadio = Number.isFinite(radio) ? radio : 0;
+
     this.loadData();
   }
 }
@@ -606,12 +646,5 @@ export default {
 <style lang="css" scoped>
 @import "../../static/css/main.less";
 
-.el-checkbox {
-  margin-right: 15px;
-
-  .el-checkbox__label {
-    font-size: 12px;
-  }
-}
 </style>
 

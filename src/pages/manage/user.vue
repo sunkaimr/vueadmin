@@ -6,7 +6,7 @@
           <el-button size="mini" type="primary" @click="addUser" icon="plus">新增</el-button>
         </div>
         <div class="content-header-right">
-          <el-input size="mini" placeholder="请输入内容" v-model="searchVal" @clear="handleSearch"
+          <el-input size="mini" placeholder="请输入内容" v-model.trim="searchVal" @clear="handleSearch"
                     @keyup.enter.native="handleSearch" clearable>
             <el-select size="mini" class="input-with-select" v-model="searchKey" slot="prepend" placeholder="请选择">
               <el-option v-for="item in userSearchOption" :key="item.value" :label="item.name" :value="item.value"/>
