@@ -6,18 +6,18 @@
           <el-button size="mini" type="primary" @click="addPolicy" icon="plus">新增</el-button>
         </div>
         <div class="content-header-right">
-          <el-radio-group size="mini" v-model="policyEnableRadio">
-            <el-radio :label="1">开启</el-radio>
-            <el-radio :label="2">关闭</el-radio>
-            <el-radio :label="0">全部</el-radio>
-          </el-radio-group>
-          <el-input size="mini" placeholder="请输入内容" v-model.trim="searchVal" @clear="handleSearch"
-                    @keyup.enter.native="handleSearch" clearable>
-            <el-select class="input-with-select" v-model="searchKey" slot="prepend" placeholder="请选择">
-              <el-option v-for="item in policySearchOption" :key="item.value" :label="item.name" :value="item.value"/>
-            </el-select>
-            <el-button size="mini" slot="append" icon="el-icon-search" @click="handleSearch"/>
-          </el-input>
+            <el-radio-group size="mini" v-model="policyEnableRadio">
+              <el-radio :label="1">开启</el-radio>
+              <el-radio :label="2">关闭</el-radio>
+              <el-radio :label="0">全部</el-radio>
+            </el-radio-group>
+            <el-input size="mini" placeholder="请输入内容" v-model.trim="searchVal" @clear="handleSearch"
+                      @keyup.enter.native="handleSearch" clearable>
+              <el-select class="input-with-select" v-model="searchKey" slot="prepend" placeholder="请选择">
+                <el-option v-for="item in policySearchOption" :key="item.value" :label="item.name" :value="item.value"/>
+              </el-select>
+              <el-button size="mini" slot="append" icon="el-icon-search" @click="handleSearch"/>
+            </el-input>
           <el-button size="mini" icon="el-icon-refresh" @click="handleSearch"/>
         </div>
       </div>

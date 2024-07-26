@@ -1,6 +1,6 @@
 <template>
   <imp-panel>
-    <el-tabs v-model="activeTable" @tab-click="activeTableChanged" style="min-height: 500px;">
+    <el-tabs v-model="activeTable" @tab-click="activeTableChanged" style="min-height:550px;">
       <el-tab-pane label="任务概览" name="taskStatisticSummary">
         <div class="demo">
           <el-row :gutter=24>
@@ -94,47 +94,43 @@
         </div>
       </el-tab-pane>
       <el-tab-pane label="任务统计" name="taskStatistic">
-        <div>
-          <el-row :gutter="10">
-            <el-col :span="3">
-              <el-select v-model="taskStatisticFilter.govern"
-                         multiple clearable
-                         size="mini"
-                         collapse-tags
-                         @change="taskStatisticFilterChanged"
-                         placeholder="请选择清理方式">
-                <el-option v-for="i in governOption" :key="i.value" :label="i.name" :value="i.value"></el-option>
-              </el-select>
-            </el-col>
-            <el-col :span="3">
-              <el-cascader
-                v-model="taskCascaderValue"
-                size="mini"
-                :options="taskStatisticFilterOption"
-                placeholder="请筛选bu、集群、库、表"
-                @change="taskStatisticFilterChanged"></el-cascader>
-            </el-col>
-            <el-col :span="8">
-              <el-date-picker
-                v-model="taskStatisticDateRange"
-                size="mini"
-                type="daterange"
-                value-format="yyyy-MM-dd"
-                range-separator="-"
-                @change="taskStatisticDateRangeChanged"
-                start-placeholder="开始日期"
-                end-placeholder="结束日期">
-              </el-date-picker>
-            </el-col>
-            <el-col :span="10" style="display: flex; justify-content: flex-end">
-              <el-checkbox-group v-model="taskStatisticShow" @change="taskStatisticShowChanged" size="mini">
-                <el-checkbox-button label="bu">BU维度</el-checkbox-button>
-                <el-checkbox-button label="cluster">集群维度</el-checkbox-button>
-                <el-checkbox-button label="database">库维度</el-checkbox-button>
-                <el-checkbox-button label="table">表维度</el-checkbox-button>
-              </el-checkbox-group>
-            </el-col>
-          </el-row>
+        <div class="header-all">
+          <div class="header-left">
+            <el-select v-model="taskStatisticFilter.govern"
+                       multiple clearable
+                       size="mini"
+                       collapse-tags
+                       @change="taskStatisticFilterChanged"
+                       placeholder="请选择清理方式">
+              <el-option v-for="i in governOption" :key="i.value" :label="i.name" :value="i.value"></el-option>
+            </el-select>
+            <el-cascader
+              v-model="taskCascaderValue"
+              size="mini"
+              :options="taskStatisticFilterOption"
+              placeholder="请筛选bu、集群、库、表"
+              @change="taskStatisticFilterChanged"
+            />
+            <el-date-picker
+              v-model="taskStatisticDateRange"
+              size="mini"
+              type="daterange"
+              value-format="yyyy-MM-dd"
+              range-separator="-"
+              @change="taskStatisticDateRangeChanged"
+              start-placeholder="开始日期"
+              end-placeholder="结束日期"
+              :picker-options="taskStatisticDateRangeOptions"
+            />
+          </div>
+          <div class="header-rigth" style="display: flex; justify-content: flex-end">
+            <el-checkbox-group v-model="taskStatisticShow" @change="taskStatisticShowChanged" size="mini">
+              <el-checkbox-button label="bu">BU维度</el-checkbox-button>
+              <el-checkbox-button label="cluster">集群维度</el-checkbox-button>
+              <el-checkbox-button label="database">库维度</el-checkbox-button>
+              <el-checkbox-button label="table">表维度</el-checkbox-button>
+            </el-checkbox-group>
+          </div>
         </div>
         <div class="task-statistic-table" v-if="taskStatisticShow.indexOf('bu') !== -1">
           <el-table :data="taskStatisticDataBU" size="mini" show-summary border stripe>
@@ -204,8 +200,8 @@
         </div>
       </el-tab-pane>
       <el-tab-pane label="策略统计" name="policyStatistic">
-        <div style="display: flex; justify-content: space-between">
-          <div style="display: flex;">
+        <div class="header-all">
+          <div class="header-left">
             <el-select v-model="policyStatisticFilter.govern"
                        multiple clearable
                        size="mini"
@@ -227,14 +223,14 @@
               <el-radio :label="0">全部</el-radio>
             </el-radio-group>
           </div>
-            <div style="display: flex; justify-content: flex-end">
-              <el-checkbox-group v-model="policyStatisticShow" @change="policyStatisticShowChanged" size="mini">
-                <el-checkbox-button label="bu">BU维度</el-checkbox-button>
-                <el-checkbox-button label="cluster">集群维度</el-checkbox-button>
-                <el-checkbox-button label="database">库维度</el-checkbox-button>
-                <el-checkbox-button label="table">表维度</el-checkbox-button>
-              </el-checkbox-group>
-            </div>
+          <div class="header-right">
+            <el-checkbox-group v-model="policyStatisticShow" @change="policyStatisticShowChanged" size="mini">
+              <el-checkbox-button label="bu">BU维度</el-checkbox-button>
+              <el-checkbox-button label="cluster">集群维度</el-checkbox-button>
+              <el-checkbox-button label="database">库维度</el-checkbox-button>
+              <el-checkbox-button label="table">表维度</el-checkbox-button>
+            </el-checkbox-group>
+          </div>
         </div>
         <div class="task-statistic-table" v-if="policyStatisticShow.indexOf('bu') !== -1">
           <el-table :data="policyStatisticDataBU" size="mini" show-summary border stripe>
@@ -350,6 +346,49 @@ export default {
       statisticLastMonth: TaskStatisticSummaryType,
       statisticTotal: TaskStatisticSummaryType,
       ganttChart: null,
+      taskStatisticDateRangeOptions: {
+        shortcuts: [{
+          text: '今天',
+          onClick(picker) {
+            picker.$emit('pick', [moment().format('YYYY-MM-DD'), moment().format('YYYY-MM-DD')]);
+          }},
+          {
+            text: '最近一周',
+            onClick(picker) {
+              picker.$emit('pick', [moment().subtract(1, 'weeks').format('YYYY-MM-DD'), moment().format('YYYY-MM-DD')]);
+          }},
+          {
+            text: '最近一月',
+            onClick(picker) {
+              picker.$emit('pick', [moment().subtract(1, 'months').format('YYYY-MM-DD'), moment().format('YYYY-MM-DD')]);
+            }
+          },
+          {
+            text: '最近三月',
+            onClick(picker) {
+              picker.$emit('pick', [moment().subtract(3, 'months').format('YYYY-MM-DD'), moment().format('YYYY-MM-DD')]);
+            }
+          },
+          {
+            text: '最近半年',
+            onClick(picker) {
+              picker.$emit('pick', [moment().subtract(6, 'months').format('YYYY-MM-DD'), moment().format('YYYY-MM-DD')]);
+            }
+          },
+          {
+            text: '最近一年',
+            onClick(picker) {
+              picker.$emit('pick', [moment().subtract(1, 'year').format('YYYY-MM-DD'), moment().format('YYYY-MM-DD')]);
+            }
+          },
+          {
+            text: '全部',
+            onClick(picker) {
+              picker.$emit('pick', ['', '']);
+            }
+          },
+        ]
+      },
       // chartData: [
       //   {
       //     "id": 434,
@@ -425,10 +464,24 @@ export default {
     activeTableChanged(tab, event) {
       this.activeTable = tab.name;
       window.localStorage.setItem("taskStatisticActiveTable", this.activeTable);
+
+      switch (this.activeTable) {
+        case "taskStatisticSummary":
+          this.todayStatistic();
+          this.lastMonthStatistic();
+          this.totalStatistic();
+          break;
+        case "taskStatistic":
+          this.taskStatisticDateRangeChanged();
+          break;
+        case "policyStatistic":
+          this.policyStatisticDateRangeChanged();
+          break;
+      }
     },
-    resizeCharts() {
-      this.ganttChart && this.ganttChart.resize()
-    },
+    // resizeCharts() {
+    //   this.ganttChart && this.ganttChart.resize()
+    // },
     todayStatistic() {
       sysApi.getTaskStatisticSummary({
         start_date: moment().format('YYYY-MM-DD'),
@@ -536,6 +589,7 @@ export default {
         table: this.taskStatisticFilter.table,
         govern: this.taskStatisticFilter.govern[0],
       }
+
       sysApi.taskStatisticGroupByBu(params).then(res => {
         this.taskStatisticDataBU = res.data.data;
       });
@@ -543,9 +597,11 @@ export default {
       sysApi.taskStatisticGroupByCluster(params).then(res => {
         this.taskStatisticDataCluster = res.data.data;
       });
+
       sysApi.taskStatisticGroupByDatabase(params).then(res => {
         this.taskStatisticDataDatabase = res.data.data;
       });
+
       sysApi.taskStatisticGroupByTable(params).then(res => {
         this.taskStatisticDataTable = res.data.data;
         this.taskStatisticFilterOption = this.transformData(this.taskStatisticDataTable);
@@ -648,14 +704,10 @@ export default {
 
     this.activeTable = window.localStorage.getItem("taskStatisticActiveTable");
     this.activeTable = this.activeTable === null ? 'taskStatisticSummary' : this.activeTable
+    this.activeTableChanged({name:this.activeTable})
 
     this.taskStatisticDateRange[0] = moment().subtract(1, 'months').format('YYYY-MM-DD');
     this.taskStatisticDateRange[1] = moment().format('YYYY-MM-DD');
-    this.todayStatistic();
-    this.lastMonthStatistic();
-    this.totalStatistic();
-    this.taskStatisticDateRangeChanged();
-    this.policyStatisticDateRangeChanged();
   },
 }
 </script>
@@ -687,12 +739,30 @@ export default {
   flex: 0 0 95%;
 }
 
-.el-select-dropdown__item {
-  font-size: 12px;
-}
+.header-all {
+  display: flex;
+  justify-content: space-between;
 
-.el-cascader-panel, .el-cascader-node__label {
-  font-size: 12px !important;
+  .header-left {
+    display: flex;
+    align-items: center;
+
+    .el-select {
+      width: 150px
+    }
+
+    .el-cascader {
+      margin: 0 5px;
+
+      /deep/ .el-cascader-node__label, .el-select-dropdown__item, .el-cascader-panel {
+        font-size: 12px !important;
+      }
+    }
+  }
+
+  .header-rigth {
+    display: flex;
+  }
 }
 
 .task-statistic-table {
@@ -700,7 +770,4 @@ export default {
   margin-top: 20px;
 }
 
-.el-radio {
-  line-height: 30px;
-}
 </style>

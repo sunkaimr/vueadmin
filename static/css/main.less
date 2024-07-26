@@ -13,13 +13,26 @@ html, body {
 
     .content-header-left {
       display: flex;
-      height: 30px;
+      align-items: center;
+
+      .el-select {
+        margin-right: 10px;
+      }
+
+      .el-radio .el-radio-group{
+        display: flex;
+        line-height: 30px;
+
+      }
     }
 
     .content-header-right {
       display: flex;
-      height: 30px;
       align-items: center;
+
+      > .el-radio-group {
+        display: flex !important;
+      }
 
       .content-header-right-filter {
         display: flex;

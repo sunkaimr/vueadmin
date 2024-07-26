@@ -2,28 +2,25 @@
   <imp-panel>
     <h4 class="content-header" slot="header">
       <div class="content-header-all">
-        <div class="content-header-left"></div>
+        <div class="content-header-left">
+          <el-radio-group size="mini" @input="taskStatusRadioChanged" v-model="taskStatusRadio">
+            <el-radio :label="1">待执行</el-radio>
+            <el-radio :label="2">执行中</el-radio>
+            <el-radio :label="3">已执行</el-radio>
+            <el-radio :label="0">全部</el-radio>
+          </el-radio-group>
+          <el-select size="mini" v-model="searchTaskStatus" @change="handleSearch" placeholder="任务状态" multiple collapse-tags clearable>
+            <el-option v-for="item in taskStatusOption" :key="item.value" :label="item.name" :value="item.value"/>
+          </el-select>
+        </div>
         <div class="content-header-right">
-          <div class="content-header-right-filter">
-            <el-radio-group size="mini" @input="taskStatusRadioChanged" v-model="taskStatusRadio">
-              <el-radio :label="1">待执行</el-radio>
-              <el-radio :label="2">执行中</el-radio>
-              <el-radio :label="3">已执行</el-radio>
-              <el-radio :label="0">全部</el-radio>
-            </el-radio-group>
-          </div>
-          <div class="content-header-right-search">
-            <el-select size="mini" v-model="searchTaskStatus" @change="handleSearch" placeholder="任务状态" multiple collapse-tags clearable>
-              <el-option v-for="item in taskStatusOption" :key="item.value" :label="item.name" :value="item.value"/>
+          <el-input size="mini" placeholder="请输入内容" v-model.trim="searchVal" @clear="handleSearch" @keyup.enter.native="handleSearch" clearable>
+            <el-select class="input-with-select" v-model="searchKey" slot="prepend" placeholder="请选择">
+              <el-option v-for="item in taskSearchOption" :key="item.value" :label="item.name" :value="item.value"/>
             </el-select>
-            <el-input size="mini" placeholder="请输入内容" v-model.trim="searchVal" @clear="handleSearch" @keyup.enter.native="handleSearch" clearable>
-              <el-select class="input-with-select" v-model="searchKey" slot="prepend" placeholder="请选择">
-                <el-option v-for="item in taskSearchOption" :key="item.value" :label="item.name" :value="item.value"/>
-              </el-select>
-              <el-button size="mini" slot="append" icon="el-icon-search" @click="handleSearch"/>
-            </el-input>
-            <el-button size="mini" icon="el-icon-refresh" @click="handleSearch"/>
-          </div>
+            <el-button size="mini" slot="append" icon="el-icon-search" @click="handleSearch"/>
+          </el-input>
+          <el-button size="mini" icon="el-icon-refresh" @click="handleSearch"/>
         </div>
       </div>
     </h4>
