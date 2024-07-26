@@ -36,8 +36,8 @@
               <el-option v-for="i in periodOption" :key="i.value" :label="i.name" :value="i.value"></el-option>
             </el-select>
             <span>&nbsp;&nbsp;&nbsp;</span>
-            <template
-              v-if="form.period !== 'once' && form.period !== 'day' && form.period !== 'two-day' && form.period !== 'weekly'">
+<!--            <template v-if="form.period !== 'once' && form.period !== 'day' && form.period !== 'two-day' && form.period !== 'weekly'">-->
+            <template v-if="policyNeedSetExecuteDate(form.period)">
               <span>执行一次，当月第&nbsp;</span>
               <el-input-number prop="period" v-model="form.day" :min="1" :max="31" placeholder=""></el-input-number>
               <span>&nbsp;日执行&nbsp;</span>
@@ -122,8 +122,7 @@
             <el-select v-model="form.period" placeholder="请选择">
               <el-option v-for="i in periodOption" :key="i.value" :label="i.name" :value="i.value"></el-option>
             </el-select>
-            <template
-              v-if="form.period !== 'once' && form.period !== 'day' && form.period !== 'two-day' && form.period !== 'weekly'">
+            <template v-if="policyNeedSetExecuteDate(form.period)">
               <span>&nbsp;执行一次，当月第&nbsp;</span>
               <el-input-number prop="period" v-model="form.day" :min="1" :max="31" placeholder=""></el-input-number>
               <span>&nbsp;日执行&nbsp;</span>
@@ -332,6 +331,7 @@ import {
   tableExpandContentStyle,
   gotoPolicyDetail,
   copyText, Policy,
+  policyNeedSetExecuteDate,
 } from "../common/utils";
 
 export default {
@@ -407,6 +407,7 @@ export default {
     }
   },
   methods: {
+    policyNeedSetExecuteDate,
     copyText,
     gotoPolicyDetail,
     getOptionName,

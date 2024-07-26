@@ -192,7 +192,7 @@ export const sourceSearchOption = [
   {name: "集群名称", value: "cluster_name"},
   {name: "集群ID", value: "cluster_id"},
   {name: "源库名", value: "database_name"},
-  {name: "源表名", value: "table_name"}
+  {name: "源表名", value: "tables_name"}
 ]
 
 export const policySearchOption = [
@@ -224,11 +224,17 @@ export const periodOption = [
   {name: "每天", value: "day"},
   {name: "两天", value: "two-day"},
   {name: "每周", value: "weekly"},
+  {name: "双周", value: "two-week"},
   {name: "每月", value: "monthly"},
   {name: "每季", value: "quarterly"},
   {name: "半年", value: "six-months"},
   {name: "每年", value: "yearly"},
 ]
+
+export function policyNeedSetExecuteDate(period) {
+  const support = ["monthly", "quarterly", "six-months", "yearly"]
+  return support.indexOf(period) !== -1
+}
 
 export const governOption = [
   {name: "清空数据", value: "truncate", background: "#FFAAAA"},
@@ -252,13 +258,13 @@ export const notifyPolicyOption = [
 ]
 
 export const taskStatusOption = [
-  {name: "已排期", value: "scheduled", background: "#eee"},
-  {name: "填充信息失败", value: "supplement_failed", background: "#FFAAAA"},
   {name: "等待执行", value: "waiting", background: "#ADD8E6"},
-  {name: "执行前检查失败", value: "exec_check_failed", background: "#FFAAAA"},
+  {name: "已排期", value: "scheduled", background: "#eee"},
   {name: "执行中", value: "executing", background: "#aaccff"},
   {name: "执行成功", value: "success", background: "#90EE90"},
   {name: "执行失败", value: "failed", background: "#FFAAAA"},
+  {name: "填充信息失败", value: "supplement_failed", background: "#FFAAAA"},
+  {name: "执行前检查失败", value: "exec_check_failed", background: "#FFAAAA"},
   {name: "执行超时", value: "timeout", background: "#FFAAAA"},
 ]
 
@@ -438,3 +444,5 @@ export function gotoTaskDetail(task_id){
 export function gotoPolicyDetail(policy_id){
   this.$router.push({path: "/policy/detail?policy_id=" + policy_id});
 }
+
+

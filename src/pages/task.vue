@@ -6,7 +6,7 @@
         <div class="content-header-right">
           <div class="content-header-right-filter">
             <el-radio-group size="mini" @input="taskStatusRadioChanged" v-model="taskStatusRadio">
-              <el-radio :label="1">未执行</el-radio>
+              <el-radio :label="1">待执行</el-radio>
               <el-radio :label="2">执行中</el-radio>
               <el-radio :label="3">已执行</el-radio>
               <el-radio :label="0">全部</el-radio>
@@ -135,7 +135,7 @@
 
               <el-descriptions-item label="源端ID">{{ props.row.src_id }}</el-descriptions-item>
               <el-descriptions-item label="源端名称">{{ props.row.src_name }}</el-descriptions-item>
-              <el-descriptions-item label="集群ID">{{ props.row.cluster_id }}</el-descriptions-item>
+              <el-descriptions-item label="集群ID">{{ props.row.src_cluster_id }}</el-descriptions-item>
               <el-descriptions-item label="集群名称">{{ props.row.src_cluster_name }}</el-descriptions-item>
               <el-descriptions-item label="源库名">{{ props.row.src_database_name }}</el-descriptions-item>
               <el-descriptions-item label="源表名">
@@ -413,7 +413,7 @@ export default {
     taskStatusRadioChanged() {
       switch (this.taskStatusRadio) {
         case 1:
-          this.searchTaskStatus = ["scheduled", "supplement_failed", "waiting", "exec_check_failed"];
+          this.searchTaskStatus = ["supplement_failed", "waiting", "exec_check_failed"];
           break
         case 2:
           this.searchTaskStatus = ["executing"];
@@ -514,7 +514,7 @@ export default {
 
     switch (this.taskStatusRadio) {
       case 1:
-        this.searchTaskStatus = ["scheduled", "supplement_failed", "waiting", "exec_check_failed"];
+        this.searchTaskStatus = ["supplement_failed", "waiting", "exec_check_failed"];
         break
       case 2:
         this.searchTaskStatus = ["executing"];

@@ -146,7 +146,7 @@
           <el-descriptions-item label="治理方式"> {{ getOptionName(governOption, taskInfo.govern) }}</el-descriptions-item>
           <el-descriptions-item label="治理条件"> {{ taskInfo.condition}} </el-descriptions-item>
           <el-descriptions-item label="治理速度">{{ getOptionName(cleaningSpeedOption, taskInfo.cleaning_speed) }}</el-descriptions-item>
-          <el-descriptions-item label="是否重建表">{{ taskInfo.rebuild_flag ? "是" : "否" }}</el-descriptions-item>
+          <el-descriptions-item label="窗口外重建表">{{ taskInfo.rebuild_flag ? "是" : "否" }}</el-descriptions-item>
           <el-descriptions-item label="原因">{{ taskInfo.task_reason }}</el-descriptions-item>
           <el-descriptions-item label="详情">{{ taskInfo.task_detail }}</el-descriptions-item>
           <el-descriptions-item label="任务开始时间">{{ taskInfo.task_start_time }}</el-descriptions-item>

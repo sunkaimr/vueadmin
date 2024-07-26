@@ -136,7 +136,7 @@
             <el-descriptions-item label="压缩存储">{{ policyInfo.dest_compress ? "是" : "否" }}</el-descriptions-item>
             <el-descriptions-item label=""></el-descriptions-item>
           </template>
-          <el-descriptions-item label="是否重建表">{{ policyInfo.rebuild_flag ? "是" : "否" }}</el-descriptions-item>
+          <el-descriptions-item label="窗口外重建表">{{ policyInfo.rebuild_flag ? "是" : "否" }}</el-descriptions-item>
           <el-descriptions-item label="治理方式"> {{ getOptionName(governOption, policyInfo.govern) }}</el-descriptions-item>
           <el-descriptions-item label="治理条件"> {{ policyInfo.condition }}</el-descriptions-item>
           <el-descriptions-item label="治理速度">{{ getOptionName(cleaningSpeedOption, policyInfo.cleaning_speed) }}</el-descriptions-item>
