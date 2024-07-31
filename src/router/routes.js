@@ -27,12 +27,12 @@ const routes = [
     path: '', component: app, children:
       [
         {path: '/dashboard', component: dashboard},
-        {path: '/source', component: source},
         {path: '/policy', component: policy},
         {path: '/policy/detail', component: policyDetail},
         {path: '/task', component: task},
         {path: '/task/detail', component: taskDetail},
         {path: '/index', component: task},
+        {path: '/manage/source', component: source},
         {path: '/manage/cluster', component: cluster},
         {path: '/manage/user', component: sysUser},
         {path: '/manage/dest', component: dest},

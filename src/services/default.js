@@ -11,16 +11,6 @@ export default {
       "isShow": "1"
     },
     {
-      "id": 21,
-      "parentId": null,
-      "sort": 21,
-      "name": "源端管理",
-      "href": "/source",
-      "icon": "fa fa-database",
-      "children": [],
-      "isShow": "1"
-    },
-    {
       "id": 31,
       "parentId": null,
       "sort": 31,
@@ -70,6 +60,16 @@ export default {
       "href": "/manage",
       "icon": "fa fa-cog",
       "children": [
+        {
+          "id": 21,
+          "parentId": null,
+          "sort": 21,
+          "name": "源端管理",
+          "href": "/manage/source",
+          "icon": "fa fa-database",
+          "children": [],
+          "isShow": "1"
+        },
         {
           "id": 52,
           "parentId": 51,

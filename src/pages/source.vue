@@ -282,7 +282,6 @@ export default {
       }).then(res => {
         this.clusterList = res.data.items;
       });
-
     },
     handleEdit(index, row) {
       this.dialogEditFormVisible = true;

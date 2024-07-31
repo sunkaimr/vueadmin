@@ -496,6 +496,10 @@ export default {
       sysApi.getTaskStatisticSummary({
         end_date: moment().format('YYYY-MM-DD'),
         start_date: moment().subtract(1, 'months').format('YYYY-MM-DD'),
+
+        // start_date: moment().startOf('month').format('YYYY-MM-DD'),
+        // end_date: moment().endOf('month').format('YYYY-MM-DD'),
+
       }).then(res => {
         this.statisticLastMonth = res.data;
         this.statisticLastMonth.successRate = this.statisticLastMonth.success / (this.statisticLastMonth.fail + this.statisticLastMonth.success) * 100

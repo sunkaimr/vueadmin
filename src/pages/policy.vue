@@ -23,106 +23,188 @@
       </div>
     </h4>
     <div slot="body">
-      <el-dialog title="添加策略" :visible.sync="dialogAddFormVisible" :close-on-click-modal="false" :rules="rules"
-                 style="width: 100%;">
-        <el-form size="mini" :model="form" :rules="rules" ref="form">
-          <!--          <el-form-item class="el-form-item-label" label="策略名称" label-width="80px" prop="name">-->
-          <!--            <el-input v-model="form.name" autocomplete="off" clearable/>-->
-          <!--          </el-form-item>-->
-          <!--          <el-form-item label="说明" label-width="80px">-->
-          <!--            <el-input type="textarea" :rows="2" v-model="form.description" clearable/>-->
-          <!--          </el-form-item>-->
-          <el-form-item label="开启" prop="enable" label-width="80px">
-            <el-switch size="mini" v-model="form.enable"/>
-          </el-form-item>
-          <el-form-item label="治理频率" prop="period" label-width="80px">
-            <el-select v-model="form.period" placeholder="请选择">
-              <el-option v-for="i in periodOption" :key="i.value" :label="i.name" :value="i.value"></el-option>
-            </el-select>
-            <span>&nbsp;&nbsp;&nbsp;</span>
-            <!--            <template v-if="form.period !== 'once' && form.period !== 'day' && form.period !== 'two-day' && form.period !== 'weekly'">-->
-            <template v-if="policyNeedSetExecuteDate(form.period)">
-              <span>执行一次，当月第&nbsp;</span>
-              <el-input-number prop="period" v-model="form.day" :min="1" :max="31" placeholder=""></el-input-number>
-              <span>&nbsp;日执行&nbsp;</span>
-            </template>
-          </el-form-item>
-          <el-form-item label="执行窗口" prop="execute_window" label-width="80px">
-            <template>
-              <el-time-picker
-                placeholder="起始时间"
-                v-model="form.execute_window[0]"
-                value-format="HH:mm:ss"
-                :picker-options="{selectableRange: '00:00:00 - 23:59:59'}">
-              </el-time-picker>
-              <span>&nbsp;-&nbsp;</span>
-              <el-time-picker
-                placeholder="结束时间"
-                v-model="form.execute_window[1]"
-                value-format="HH:mm:ss"
-                :picker-options="{selectableRange: '00:00:00 - 23:59:59'}">
-              </el-time-picker>
-            </template>
-          </el-form-item>
-          <el-form-item label="源端" prop="src_id" label-width="80px">
-            <el-select v-model="form.src_id" filterable placeholder="请选择" style="width: 100%;">
-              <el-option v-for="i in sourceList" :key="i.id" :label="i.id + ' | ' + i.name" :value="i.id"></el-option>
-            </el-select>
-          </el-form-item>
-          <el-form-item label="治理方式" prop="govern" label-width="80px">
-            <el-select v-model="form.govern" @change="governOptionChanged" placeholder="请选择" style="width: 100%;">
-              <el-option v-for="i in governOption" :key="i.value" :label="i.name" :value="i.value"></el-option>
-            </el-select>
-          </el-form-item>
-          <el-form-item v-if="form.govern === 'delete'" label="重建表" prop="rebuild_flag" label-width="80px">
-            <el-radio-group size="small" v-model="form.rebuild_flag" style="line-height: 30px">
-              <el-radio :label="true" style="line-height: 30px">在执行窗口外仍然重建</el-radio>
-              <el-radio :label="false" style="line-height: 30px">在执行窗口外跳过重建</el-radio>
-            </el-radio-group>
-          </el-form-item>
-          <el-form-item v-if="form.govern !=='truncate' && form.govern !=='rebuild'" label="治理条件" prop="condition"
-                        label-width="80px">
-            <el-input type="textarea" :rows="2" v-model="form.condition" clearable/>
-          </el-form-item>
-          <el-form-item label="治理速度" label-width="80px" prop="cleaning_speed">
-            <el-select v-model="form.cleaning_speed" placeholder="请选择" style="width: 100%;">
-              <el-option v-for="i in cleaningSpeedOption" :key="i.value" :label="i.name" :value="i.value"></el-option>
-            </el-select>
-          </el-form-item>
-          <el-form-item v-if="form.govern === 'archive'" label-width="80px" label="目标端">
-            <el-select v-model="form.dest_id" placeholder="请选择" style="width: 100%;">
-              <el-option v-for="i in destList" :key="i.id" :label="i.name" :value="i.id"></el-option>
-            </el-select>
-          </el-form-item>
-          <el-form-item label="通知策略" label-width="80px" prop="notify_policy">
-            <el-select v-model="form.notify_policy" placeholder="请选择" style="width: 100%;">
-              <el-option v-for="i in notifyPolicyOption" :key="i.value" :label="i.name" :value="i.value"></el-option>
-            </el-select>
-          </el-form-item>
-          <el-form-item label="关注人" label-width="80px">
-            <el-input v-model="form.relevant" clearable/>
-          </el-form-item>
+      <el-dialog title="添加策略" :visible.sync="dialogAddFormVisible" :close-on-click-modal="false" style="width: 100%;">
+        <el-steps :active="addPolicyStep" finish-status="success" simple style="margin-bottom: 20px">
+          <el-step title="选择源"></el-step>
+          <el-step title="配置策略"></el-step>
+          <el-step title="提交"></el-step>
+        </el-steps>
+        <el-form size="mini" :model="addPolicyForm" label-width="120px" :rules="addPolicyRules" ref="addPolicyForm">
+          <template v-if="addPolicyStep === 1">
+            <el-form-item label="集群ID" prop="source.cluster_id">
+              <el-select v-model="addPolicyForm.source.cluster_id" @change="clusterChange" filterable placeholder="请选择集群" style="width: 100%;">
+                <el-option
+                  v-for="item in addPolicyForm.clusterList" :key="item.cluster_id" :label="item.cluster_id + ' | ' + item.cluster_name"
+                  :value="item.cluster_id">
+                </el-option>
+              </el-select>
+            </el-form-item>
+            <el-form-item label="源库名" prop="source.database_name">
+              <el-select v-model="addPolicyForm.source.database_name" @change="databaseChange" filterable placeholder="请选择库名" style="width: 100%;">
+                <el-option v-for="item in addPolicyForm.databaseList" :key="item" :label="item" :value="item"/>
+              </el-select>
+            </el-form-item>
+            <el-form-item label="源表名" prop="source.tables_name">
+              <div style="display: flex; align-items: center;">
+                <el-input v-model="addPolicyForm.tableNameFilter" @blur="handleTableNameFilter" @clear="handleTableNameFilter"
+                          style="flex: 1;" clearable placeholder="使用正则表达式筛选所需表名"/>
+              </div>
+              <div style="display: flex; margin-top: 10px; align-items: center;">
+                <el-select v-model="addPolicyForm.source.tables_name" @visible-change="tablesNameChanged" multiple collapse-tags clearable
+                           style="flex: 1; margin-right: 10px;">
+                  <el-option
+                    v-for="item in addPolicyForm.filteredTableList" :key="item" :label="item" :value="item">
+                  </el-option>
+                </el-select>
+                <el-button size="mini" @click="selectAllFilter">全选</el-button>
+                <el-button size="mini" @click="clearSelected">清空</el-button>
+              </div>
+            </el-form-item>
+          </template>
+          <template v-else-if="addPolicyStep === 2">
+<!--            <el-form-item class="el-form-item-label" label="策略名称" prop="policy.name">-->
+<!--              <el-input v-model.trim="addPolicyForm.policy.name" autocomplete="off" clearable/>-->
+<!--            </el-form-item>-->
+<!--            <el-form-item label="说明">-->
+<!--              <el-input type="textarea" :rows="1" v-model.trim="addPolicyForm.policy.description" clearable/>-->
+<!--            </el-form-item>-->
+            <el-form-item label="开启" prop="policy.enable">
+              <el-switch size="mini" v-model="addPolicyForm.policy.enable"/>
+            </el-form-item>
+            <el-form-item label="治理频率" prop="policy.period">
+              <el-select v-model="addPolicyForm.policy.period" placeholder="请选择">
+                <el-option v-for="i in periodOption" :key="i.value" :label="i.name" :value="i.value"></el-option>
+              </el-select>
+              <span>&nbsp;&nbsp;&nbsp;</span>
+              <template v-if="policyNeedSetExecuteDate(addPolicyForm.policy.period)">
+                <span>执行一次，当月第&nbsp;</span>
+                <el-input-number v-model="addPolicyForm.policy.day" :min="1" :max="31"/>
+                <span>&nbsp;日执行&nbsp;</span>
+              </template>
+            </el-form-item>
+            <el-form-item label="执行窗口" prop="addPolicyForm.policy.execute_window">
+              <template>
+                <el-time-picker
+                  placeholder="起始时间"
+                  v-model="addPolicyForm.policy.execute_window[0]"
+                  value-format="HH:mm:ss"
+                  :picker-options="{selectableRange: '00:00:00 - 23:59:59'}">
+                </el-time-picker>
+                <span>&nbsp;-&nbsp;</span>
+                <el-time-picker
+                  placeholder="结束时间"
+                  v-model="addPolicyForm.policy.execute_window[1]"
+                  value-format="HH:mm:ss"
+                  :picker-options="{selectableRange: '00:00:00 - 23:59:59'}">
+                </el-time-picker>
+              </template>
+            </el-form-item>
+<!--            <el-form-item label="源端" prop="policy.src_id">-->
+<!--              <el-select v-model="addPolicyForm.policy.src_id" filterable placeholder="请选择" style="width: 100%;">-->
+<!--                <el-option v-for="i in sourceList" :key="i.id" :label="i.id + ' | ' + i.name" :value="i.id"></el-option>-->
+<!--              </el-select>-->
+<!--            </el-form-item>-->
+            <el-form-item label="治理方式" prop="policy.govern">
+              <el-select v-model="addPolicyForm.policy.govern" @change="governOptionChanged" placeholder="请选择" style="width: 100%;">
+                <el-option v-for="i in governOption" :key="i.value" :label="i.name" :value="i.value"></el-option>
+              </el-select>
+            </el-form-item>
+            <el-form-item v-if="addPolicyForm.policy.govern === 'delete'" class="header-icon el-icon-info" prop="policy.rebuild_flag">
+              <template slot="label">
+                窗口外重建表
+                <el-tooltip placement="top">
+                  <div slot="content">在执行窗口外是否执行重建表操作<br/>是：在执行窗口外仍然执行重建表操作<br/>否：在执行窗口外跳过重建表操作</div>
+                  <i class="el-icon-info"></i>
+                </el-tooltip>
+              </template>
+                <el-radio-group size="mini" style="align-items: center; height: 28px" v-model="addPolicyForm.policy.rebuild_flag">
+                  <el-radio :label="true">是</el-radio>
+                  <el-radio :label="false">否</el-radio>
+                </el-radio-group>
+            </el-form-item>
+            <el-form-item v-if="addPolicyForm.policy.govern ==='delete' || addPolicyForm.policy.govern ==='archive'" label="治理条件" prop="policy.condition">
+              <el-input type="textarea" :rows="2" v-model.trim="addPolicyForm.policy.condition" clearable/>
+            </el-form-item>
+            <el-form-item label="治理速度" prop="policy.cleaning_speed">
+              <el-select v-model="addPolicyForm.policy.cleaning_speed" placeholder="请选择" style="width: 100%;">
+                <el-option v-for="i in cleaningSpeedOption" :key="i.value" :label="i.name" :value="i.value"></el-option>
+              </el-select>
+            </el-form-item>
+            <el-form-item v-if="addPolicyForm.policy.govern === 'archive'" label="目标端">
+              <el-select v-model="addPolicyForm.policy.dest_id" placeholder="请选择" style="width: 100%;">
+                <el-option v-for="i in destList" :key="i.id" :label="i.name" :value="i.id"/>
+              </el-select>
+            </el-form-item>
+            <el-form-item label="通知策略" prop="policy.notify_policy">
+              <el-select v-model="addPolicyForm.policy.notify_policy" placeholder="请选择" style="width: 100%;">
+                <el-option v-for="i in notifyPolicyOption" :key="i.value" :label="i.name" :value="i.value"></el-option>
+              </el-select>
+            </el-form-item>
+            <el-form-item label="关注人">
+              <el-input v-model="addPolicyForm.policy.relevant" clearable/>
+            </el-form-item>
+          </template>
+          <template v-else-if="addPolicyStep === 3">
+            <el-descriptions
+              border
+              size="small"
+              :column='2'
+              :labelStyle="tableExpandLabelStyle"
+              :contentStyle='tableExpandContentStyle'
+              with="100%">
+<!--                <el-descriptions-item label="源端集群名称">{{ addPolicyForm.source.cluster_name }}</el-descriptions-item>-->
+                <el-descriptions-item label="源端集群ID">{{ addPolicyForm.source.cluster_id }}</el-descriptions-item>
+                <el-descriptions-item label="源库名">{{addPolicyForm.source.database_name }}</el-descriptions-item>
+                <el-descriptions-item label="源表名">
+                  <div class="ellipsis-container">
+                    <el-tooltip effect="light" :content="addPolicyForm.source.tables_name.join(' ')"
+                                :open-delay="500" placement="top">
+                      <div class="table-expand-cell-ellipsis" style="width: 20em">{{ addPolicyForm.source.tables_name.join(',') }}</div>
+                    </el-tooltip>
+                  </div>
+                </el-descriptions-item>
+                <el-descriptions-item label="开启">{{ addPolicyForm.policy.enable ? "开启" : "关闭" }}</el-descriptions-item>
+                <el-descriptions-item label="治理频率">{{ getOptionName(periodOption, addPolicyForm.policy.period) }}</el-descriptions-item>
+                <el-descriptions-item v-if="policyNeedSetExecuteDate(addPolicyForm.policy.period)" label="期望执行日">{{ addPolicyForm.policy.day }}</el-descriptions-item>
+                <el-descriptions-item label="执行窗口">
+                    {{ addPolicyForm.policy.execute_window[0] + ' - ' + addPolicyForm.policy.execute_window[1] }}
+                  </el-descriptions-item>
+                <el-descriptions-item label="治理方式">{{getOptionName(governOption, addPolicyForm.policy.govern)}}</el-descriptions-item>
+                <el-descriptions-item v-if="addPolicyForm.policy.govern === 'delete'" label="窗口外重建表" >{{ addPolicyForm.policy.rebuild_flag ? "是" : "否" }}</el-descriptions-item>
+                <el-descriptions-item label="治理条件"> {{ addPolicyForm.policy.condition }}</el-descriptions-item>
+                <el-descriptions-item label="治理速度">{{ getOptionName(cleaningSpeedOption, addPolicyForm.policy.cleaning_speed) }}</el-descriptions-item>
+                <el-descriptions-item label="通知策略">{{ getOptionName(notifyPolicyOption, addPolicyForm.policy.notify_policy) }}</el-descriptions-item>
+                <el-descriptions-item label="相关人">{{ addPolicyForm.policy.relevant }}</el-descriptions-item>
+            </el-descriptions>
+          </template>
         </el-form>
         <div slot="footer" class="dialog-footer">
-          <el-button size="mini" @click="cancelAddSubmit('form')">取 消</el-button>
-          <el-button size="mini" type="primary" @click="onAddSubmit('form')"
-                     v-loading.fullscreen.lock="fullscreenLoading">确 定
-          </el-button>
+          <template v-if="addPolicyStep>1">
+            <el-button size="mini" @click="prevStep">上一步</el-button>
+          </template>
+          <template v-if="addPolicyStep<3">
+            <el-button size="mini" @click="nextStep">下一步</el-button>
+          </template>
+          <template v-if="addPolicyStep===3">
+            <el-button size="mini" @click="cancelAddSubmit('addPolicyForm')">取 消</el-button>
+            <el-button size="mini" type="primary" @click="onAddSubmit('addPolicyForm')"
+                       v-loading.fullscreen.lock="fullscreenLoading">确 定
+            </el-button>
+          </template>
         </div>
       </el-dialog>
-      <el-dialog title="修改策略" :visible.sync="dialogEditFormVisible" :close-on-click-modal="false" :rules="rules"
-                 style="width: 100%;">
-        <el-form :model="form" :rules="rules" size="mini" ref="form">
-          <el-form-item class="el-form-item-label" label="策略名称" prop="name" label-width="80px">
+      <el-dialog title="修改策略" :visible.sync="dialogEditFormVisible" :close-on-click-modal="false" style="width: 100%;">
+        <el-form :model="form" :rules="addPolicyRules" size="mini" label-width="120px" ref="form">
+          <el-form-item class="el-form-item-label" label="策略名称" prop="name" >
             <el-input v-model="form.name" autocomplete="off" clearable/>
           </el-form-item>
-          <el-form-item label="说明" label-width="80px">
+          <el-form-item label="说明" >
             <el-input type="textarea" :rows="2" v-model="form.description" clearable/>
           </el-form-item>
-          <el-form-item label="开启" prop="enable" label-width="80px">
+          <el-form-item label="开启" prop="enable" >
             <el-switch size="mini" v-model="form.enable"/>
           </el-form-item>
-          <el-form-item label="治理频率" prop="period" label-width="80px">
+          <el-form-item label="治理频率" prop="period" >
             <el-select v-model="form.period" placeholder="请选择">
               <el-option v-for="i in periodOption" :key="i.value" :label="i.name" :value="i.value"></el-option>
             </el-select>
@@ -132,7 +214,7 @@
               <span>&nbsp;日执行&nbsp;</span>
             </template>
           </el-form-item>
-          <el-form-item label="执行窗口" prop="execute_window" label-width="80px">
+          <el-form-item label="执行窗口" prop="execute_window" >
             <template>
               <el-time-picker
                 placeholder="起始时间"
@@ -149,32 +231,32 @@
               </el-time-picker>
             </template>
           </el-form-item>
-          <el-form-item label="治理方式" prop="govern" label-width="80px">
+          <el-form-item label="治理方式" prop="govern" >
             <el-select v-model="form.govern" disabled placeholder="请选择">
               <el-option v-for="i in governOption" :key="i.value" :label="i.name" :value="i.value"></el-option>
             </el-select>
           </el-form-item>
-          <el-form-item v-if="form.govern === 'delete'" label="重建表" prop="rebuild_flag" label-width="80px">
+          <el-form-item v-if="form.govern === 'delete'" class="header-icon el-icon-info" label="窗口外重建表" prop="rebuild_flag" >
             <el-radio-group size="small" v-model="form.rebuild_flag">
               <el-radio :label="true" style="line-height: 30px">在执行窗口外仍然重建</el-radio>
               <el-radio :label="false" style="line-height: 30px">在执行窗口外跳过重建</el-radio>
             </el-radio-group>
           </el-form-item>
           <el-form-item v-if="form.govern !=='truncate' && form.govern !=='rebuild'" label="治理条件" prop="condition"
-                        label-width="80px">
+                        >
             <el-input type="textarea" :rows="2" v-model="form.condition" clearable/>
           </el-form-item>
-          <el-form-item label="治理速度" prop="cleaning_speed" label-width="80px">
+          <el-form-item label="治理速度" prop="cleaning_speed" >
             <el-select v-model="form.cleaning_speed" placeholder="请选择">
               <el-option v-for="i in cleaningSpeedOption" :key="i.value" :label="i.name" :value="i.value"></el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="通知策略" prop="notify_policy" label-width="80px">
+          <el-form-item label="通知策略" prop="notify_policy" >
             <el-select v-model="form.notify_policy" placeholder="请选择">
               <el-option v-for="i in notifyPolicyOption" :key="i.value" :label="i.name" :value="i.value"></el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="关注人" label-width="80px">
+          <el-form-item label="关注人" >
             <el-input v-model="form.relevant" clearable/>
           </el-form-item>
         </el-form>
@@ -197,7 +279,7 @@
             <el-descriptions
               border
               size="mini"
-              column=2
+              :column='2'
               :labelStyle="tableExpandLabelStyle"
               :contentStyle='tableExpandContentStyle'
               with="100%">
@@ -248,7 +330,7 @@
                   getOptionName(cleaningSpeedOption, props.row.cleaning_speed)
                 }}
               </el-descriptions-item>
-              <el-descriptions-item label="清理条件">{{ props.row.condition }}</el-descriptions-item>
+              <el-descriptions-item label="治理条件">{{ props.row.condition }}</el-descriptions-item>
               <el-descriptions-item label="通知策略">{{
                   getOptionName(notifyPolicyOption, props.row.notify_policy)
                 }}
@@ -295,7 +377,7 @@
             </el-tag>
           </template>
         </el-table-column>
-        <el-table-column prop="condition" label="清理条件" sortable>
+        <el-table-column prop="condition" label="治理条件" sortable>
           <template slot-scope="scope">
             <el-tooltip class="item" effect="dark" :content="scope.row.condition" :open-delay="500" placement="top">
               <div class="cell-ellipsis">{{ scope.row.condition }}</div>
@@ -375,11 +457,26 @@ export default {
       policyNameMap,
       searchKey: 'id',
       searchVal: '',
+      addPolicyStep: 1,
       dialogEditFormVisible: false,
       dialogAddFormVisible: false,
-      dialogRevisionFormVisible: false,
       fullscreenLoading: false,
       listLoading: false,
+      addPolicyForm:{
+        clusterList:[],
+        databaseList: [],
+        tableList: [],
+        selectedClusterId: "",
+        tableNameFilter: "",
+        filteredTableList: [],
+        source: {
+          cluster_name: "",
+          cluster_id: "",
+          database_name: "",
+          tables_name: [],
+        },
+        policy: new Policy(),
+      },
       form: new Policy(),
       tableData: {
         pagination: {
@@ -390,34 +487,47 @@ export default {
         },
         rows: []
       },
-      rules: {
-        // name: [
-        //   { required: true, message: '请输入策略名称', trigger: 'blur' },
-        // ],
-        enable: [
-          {required: true, message: '是否开启', trigger: 'blur'}
-        ],
-        period: [
-          {required: true, message: '请选择治理频率', trigger: 'blur'}
-        ],
-        execute_window: [
-          {required: true, message: '请选择执行窗口', trigger: 'blur'}
-        ],
-        src_id: [
-          {required: true, message: '请选择源端ID', trigger: 'blur'}
-        ],
-        govern: [
-          {required: true, message: '请选择数据治理方式', trigger: 'blur'}
-        ],
-        condition: [
-          // { required: true, message: '请输入数据治理条件', trigger: 'blur' }
-        ],
-        cleaning_speed: [
-          {required: true, message: '请选择数据治理速度', trigger: 'blur'}
-        ],
-        notify_policy: [
-          {required: true, message: '请选择通知策略', trigger: 'blur'}
-        ]
+      addPolicyRules: {
+        source: {
+          cluster_id: [
+            { required: true, message: '请选择集群ID', trigger: 'blur' },
+          ],
+          database_name: [
+            { required: true, message: '请选择源库名', trigger: 'blur' },
+          ],
+          tables_name: [
+            { required: true, message: '请选择源表名', trigger: 'blur' },
+          ],
+        },
+        policy: {
+          // name: [
+          //   { required: true, message: '请输入策略名称', trigger: 'blur' },
+          // ],
+          enable: [
+            {required: true, message: '是否开启', trigger: 'blur'}
+          ],
+          period: [
+            {required: true, message: '请选择治理频率', trigger: 'blur'}
+          ],
+          execute_window: [
+            {required: true, message: '请选择执行窗口', trigger: 'blur'}
+          ],
+          src_id: [
+            {required: true, message: '请选择源端ID', trigger: 'blur'}
+          ],
+          govern: [
+            {required: true, message: '请选择数据治理方式', trigger: 'blur'}
+          ],
+          condition: [
+            { required: true, message: '请输入数据治理条件', trigger: 'blur' }
+          ],
+          cleaning_speed: [
+            {required: true, message: '请选择数据治理速度', trigger: 'blur'}
+          ],
+          notify_policy: [
+            {required: true, message: '请选择通知策略', trigger: 'blur'}
+          ]
+        },
       },
       sourceList: [],
       destList: [],
@@ -429,6 +539,51 @@ export default {
     gotoPolicyDetail,
     getOptionName,
     getOptionBackground,
+    prevStep(){
+      this.addPolicyStep--;
+    },
+    nextStep(){
+      this.$refs.addPolicyForm.validate((valid) => {
+        if (!valid) {
+          return false
+        }
+        this.addPolicyStep++;
+      });
+    },
+    clusterChange(clusterID) {
+      this.addPolicyForm.selectedClusterId = clusterID;
+      this.addPolicyForm.source.database_name = "";
+      this.addPolicyForm.source.tables_name = [];
+      sysApi.clusterDatabaseList(clusterID).then(res => {
+        this.addPolicyForm.databaseList = res.data;
+      });
+    },
+    databaseChange(database) {
+      sysApi.clusterTableList(this.addPolicyForm.selectedClusterId, database).then(res => {
+        this.addPolicyForm.tableList = res.data;
+        this.addPolicyForm.filteredTableList = this.addPolicyForm.tableList;
+        this.addPolicyForm.source.tables_name = [];
+      });
+    },
+    handleTableNameFilter() {
+      let pattern = this.addPolicyForm.tableNameFilter.replace(/\*/g, '.*');
+      let regex = new RegExp(pattern, 'i');
+      this.addPolicyForm.filteredTableList = this.addPolicyForm.tableList.filter(item => regex.test(item));
+      this.addPolicyForm.source.tables_name = [];
+    },
+    tablesNameChanged(visible) {
+      if (!visible && this.addPolicyForm.source.tables_name.length !== 0) {
+        this.$notify({title: '提示', message: "已选择 " + this.addPolicyForm.source.tables_name.length + " 张表", type: 'info'});
+      }
+    },
+    selectAllFilter() {
+      this.addPolicyForm.source.tables_name = this.addPolicyForm.filteredTableList
+      this.$notify({title: '提示', message: "已选择 " + this.addPolicyForm.source.tables_name.length + " 张表", type: 'info'});
+    },
+    clearSelected() {
+      this.addPolicyForm.source.tables_name = [];
+      this.$notify({title: '提示', message: "已选择 " + this.addPolicyForm.source.tables_name.length + " 张表", type: 'info'});
+    },
     handleEnableChange(index, row) {
       const data = {
         id: row.id,
@@ -507,21 +662,34 @@ export default {
           this.fullscreenLoading = false;
         }, 30000);
 
-        let para = JSON.parse(JSON.stringify(this.form));
-        para.relevant = para.relevant != null ? para.relevant.split(/[ ,;]+/) : [];
-        this.$http.post(api.POLICY_ADD, JSON.stringify(para)).then(res => {
-          this.fullscreenLoading = false;
-          this.dialogAddFormVisible = false;
-          this.$refs[formName].resetFields();
-          this.$notify({title: '成功', message: "添加成功", type: 'success'});
-          this.loadData();
+        // 第一步创建源 第二步创建策略
+        let para = JSON.parse(JSON.stringify(this.addPolicyForm.source));
+        para.tables_name = para.tables_name.join(',');
+        this.$http.post(api.SOURCE_ADD, JSON.stringify(para)).then(res => {
+          // 源创建成功,接下来创建策略
+          para = JSON.parse(JSON.stringify(this.addPolicyForm.policy));
+          para.relevant = para.relevant != null ? para.relevant.split(/[ ,;]+/) : [];
+          para.src_id = res.data.data.id;
+          this.$http.post(api.POLICY_ADD, JSON.stringify(para)).then(res => {
+            this.fullscreenLoading = false;
+            this.dialogAddFormVisible = false;
+            this.$refs[formName].resetFields();
+            this.$notify({title: '成功', message: "添加成功", type: 'success'});
+            this.loadData();
+          }).catch(() => {
+            this.fullscreenLoading = false;
+          })
         }).catch(() => {
           this.fullscreenLoading = false;
         })
       })
     },
     addPolicy() {
-      this.form = {
+      this.dialogAddFormVisible = true;
+
+      this.addPolicyStep = 1;
+      this.addPolicyForm.source = {};
+      this.addPolicyForm.policy = {
         enable: false,
         period: "monthly",
         day: 1,
@@ -531,11 +699,15 @@ export default {
         cleaning_speed: "balanced",
         notify_policy: "always",
       };
-      this.dialogAddFormVisible = true;
-      sysApi.sourceList({
-        pageSize: -1,
+      this.addPolicyForm.databaseList = [];
+      this.addPolicyForm.tableList = [];
+      this.addPolicyForm.selectedClusterId = "";
+      this.addPolicyForm.tableNameFilter = "";
+      this.addPolicyForm.filteredTableList = [];
+      sysApi.clusterList({
+        pageSize: 10000,
       }).then(res => {
-        this.sourceList = res.data.items;
+        this.addPolicyForm.clusterList = res.data.items;
       });
     },
     governOptionChanged(op) {
