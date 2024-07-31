@@ -21,17 +21,17 @@
       </div>
     </div>
     <el-dialog title="修改策略" :visible.sync="dialogEditFormVisible" :close-on-click-modal="false">
-      <el-form :model="policyInfo" :rules="rules" size="mini" ref="form">
-        <el-form-item class="el-form-item-label" label="策略名称" prop="name" label-width="80px">
+      <el-form :model="policyInfo" :rules="rules" size="mini" ref="form" label-width="120px">
+        <el-form-item class="el-form-item-label" label="策略名称" prop="name">
           <el-input v-model="policyInfo.name" autocomplete="off" clearable/>
         </el-form-item>
-        <el-form-item label="说明" label-width="80px">
-          <el-input type="textarea" :rows="2" v-model="policyInfo.description" clearable/>
+        <el-form-item label="说明">
+          <el-input type="textarea" :rows="1" v-model="policyInfo.description" clearable/>
         </el-form-item>
-        <el-form-item label="开启" prop="enable" label-width="80px">
+        <el-form-item label="开启" prop="enable">
           <el-switch size="mini" v-model="policyInfo.enable"/>
         </el-form-item>
-        <el-form-item label="治理频率" prop="period" label-width="80px">
+        <el-form-item label="治理频率" prop="period">
           <el-select v-model="policyInfo.period" placeholder="请选择">
             <el-option v-for="i in periodOption" :key="i.value" :label="i.name" :value="i.value"></el-option>
           </el-select>
@@ -42,7 +42,7 @@
             <span>&nbsp;日执行&nbsp;</span>
           </template>
         </el-form-item>
-        <el-form-item label="执行窗口" prop="execute_window" label-width="80px">
+        <el-form-item label="执行窗口" prop="execute_window">
           <template>
             <el-time-picker
               placeholder="起始时间"
@@ -59,32 +59,38 @@
             </el-time-picker>
           </template>
         </el-form-item>
-        <el-form-item label="治理方式" prop="govern" label-width="80px">
+        <el-form-item label="治理方式" prop="govern">
           <el-select v-model="policyInfo.govern" disabled placeholder="请选择">
             <el-option v-for="i in governOption" :key="i.value" :label="i.name" :value="i.value"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item v-if="policyInfo.govern === 'delete'" label="重建表" prop="rebuild_flag" label-width="80px">
-          <el-radio-group size="small" v-model="policyInfo.rebuild_flag">
-            <el-radio :label="true" style="line-height: 30px">在执行窗口外仍然重建</el-radio>
-            <el-radio :label="false" style="line-height: 30px">在执行窗口外跳过重建</el-radio>
+        <el-form-item v-if="policyInfo.govern === 'delete'" label="重建表" prop="rebuild_flag">
+          <template slot="label">
+            窗口外重建表
+            <el-tooltip placement="top">
+              <div slot="content">在执行窗口外是否执行重建表操作<br/>是：在执行窗口外仍然执行重建表操作<br/>否：在执行窗口外跳过重建表操作</div>
+              <i class="el-icon-info"></i>
+            </el-tooltip>
+          </template>
+          <el-radio-group size="mini" v-model="policyInfo.rebuild_flag">
+            <el-radio :label="true">是</el-radio>
+            <el-radio :label="false">否</el-radio>
           </el-radio-group>
         </el-form-item>
-        <el-form-item v-if="policyInfo.govern !=='truncate' && policyInfo.govern !=='rebuild'" label="治理条件" prop="condition"
-                      label-width="80px">
+        <el-form-item v-if="policyInfo.govern !=='truncate' && policyInfo.govern !=='rebuild'" label="治理条件" prop="condition">
           <el-input type="textarea" :rows="2" v-model="policyInfo.condition" clearable/>
         </el-form-item>
-        <el-form-item label="治理速度" prop="cleaning_speed" label-width="80px">
+        <el-form-item label="治理速度" prop="cleaning_speed">
           <el-select v-model="policyInfo.cleaning_speed" placeholder="请选择">
             <el-option v-for="i in cleaningSpeedOption" :key="i.value" :label="i.name" :value="i.value"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="通知策略" prop="notify_policy" label-width="80px">
+        <el-form-item label="通知策略" prop="notify_policy">
           <el-select v-model="policyInfo.notify_policy" placeholder="请选择">
             <el-option v-for="i in notifyPolicyOption" :key="i.value" :label="i.name" :value="i.value"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="关注人" label-width="80px">
+        <el-form-item label="关注人">
           <el-input v-model="policyInfo.relevant" clearable/>
         </el-form-item>
       </el-form>
@@ -465,6 +471,11 @@ export default {
   .el-tag:first-child{
     width: 60px;
   }
+}
 
+.el-radio-group {
+  height: 28px;
+  display: flex;
+  align-items: center;
 }
 </style>

@@ -3,7 +3,7 @@ import * as api from "../api";
 import defaultValue from "./default";
 import {
   CLUSTER,
-  CLUSTER_DATABASE_LIST,
+  CLUSTER_DATABASE_LIST, CLUSTER_STATISTIC_BU,
   CLUSTER_TABLE_LIST, POLICY_CHANGELOG, TASK_CHANGELOG,
   TASK_PLAN,
   TASK_REVISION, TASK_STATISTIC_BU, TASK_STATISTIC_CLUSTER, TASK_STATISTIC_DATABASE,
@@ -228,7 +228,6 @@ export function getTaskPlan(params) {
   })
 }
 
-
 export function taskStatisticGroupByBu(params) {
   return new Promise((resolve, reject) => {
     axios.get(api.TASK_STATISTIC_BU, {params}).then(response => {
@@ -350,6 +349,59 @@ export function policyStatisticGroupByDatabase(params) {
 export function policyStatisticGroupByTable(params) {
   return new Promise((resolve, reject) => {
     axios.get(api.POLICY_STATISTIC_TABLE, {params}).then(response => {
+      resolve(response.data);
+    }, err => {
+      resolve([]);
+    })
+      .catch((error) => {
+        resolve([])
+      })
+  })
+}
+
+
+export function clusterStatisticGroupByBu(params) {
+  return new Promise((resolve, reject) => {
+    axios.get(api.CLUSTER_STATISTIC_BU, {params}).then(response => {
+      resolve(response.data);
+    }, err => {
+      resolve([]);
+    })
+      .catch((error) => {
+        resolve([])
+      })
+  })
+}
+
+export function clusterStatisticGroupByCluster(params) {
+  return new Promise((resolve, reject) => {
+    axios.get(api.CLUSTER_STATISTIC_CLUSTER, {params}).then(response => {
+      resolve(response.data);
+    }, err => {
+      resolve([]);
+    })
+      .catch((error) => {
+        resolve([])
+      })
+  })
+}
+
+export function clusterStatisticGroupByDatabase(params) {
+  return new Promise((resolve, reject) => {
+    axios.get(api.CLUSTER_STATISTIC_DATABASE, {params}).then(response => {
+      resolve(response.data);
+    }, err => {
+      resolve([]);
+    })
+      .catch((error) => {
+        resolve([])
+      })
+  })
+}
+
+export function clusterStatisticGroupByTable(params) {
+  return new Promise((resolve, reject) => {
+    axios.get(api.CLUSTER_STATISTIC_TABLE, {params}).then(response => {
       resolve(response.data);
     }, err => {
       resolve([]);

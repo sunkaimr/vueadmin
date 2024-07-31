@@ -33,4 +33,7 @@ export const POLICY_STATISTIC_BU = CONTEXT + '/policy/statistic/bu';
 export const POLICY_STATISTIC_CLUSTER = CONTEXT + '/policy/statistic/cluster';
 export const POLICY_STATISTIC_DATABASE = CONTEXT + '/policy/statistic/database';
 export const POLICY_STATISTIC_TABLE = CONTEXT + '/policy/statistic/table';
-
+export const CLUSTER_STATISTIC_BU = CONTEXT + '/cluster/statistic/bu';
+export const CLUSTER_STATISTIC_CLUSTER = CONTEXT + '/cluster/statistic/cluster';
+export const CLUSTER_STATISTIC_DATABASE = CONTEXT + '/cluster/statistic/database';
+export const CLUSTER_STATISTIC_TABLE = CONTEXT + '/cluster/statistic/table';

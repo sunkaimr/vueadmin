@@ -303,6 +303,93 @@
           </el-table>
         </div>
       </el-tab-pane>
+      <el-tab-pane label="大表统计" name="clusterStatistic">
+        <div class="header-all">
+          <div class="header-left">
+            <el-cascader
+              v-model="clusterCascaderValue"
+              size="mini"
+              :options="clusterStatisticFilterOption"
+              placeholder="请筛选bu、集群、库、表"
+              @change="clusterStatisticFilterChanged"
+            />
+            <el-date-picker
+              v-model="clusterStatisticDateRange"
+              size="mini"
+              type="monthrange"
+              value-format="yyyy-MM-dd"
+              range-separator="-"
+              @change="clusterStatisticDateRangeChanged"
+              start-placeholder="开始月份"
+              end-placeholder="结束月份"
+            />
+<!--            <el-select v-model="clusterStatisticFilter.tableSize"-->
+<!--                       multiple clearable-->
+<!--                       size="mini"-->
+<!--                       collapse-tags-->
+<!--                       @change="clusterStatisticDateRangeChanged"-->
+<!--                       placeholder="筛选表大小">-->
+<!--              <el-option v-for="i in clusterTableSizeFilterOption" :key="i.value" :label="i.name" :value="i.value"></el-option>-->
+<!--            </el-select>-->
+          </div>
+          <div class="header-rigth" style="display: flex; justify-content: flex-end">
+            <el-checkbox-group v-model="clusterStatisticShow" @change="clusterStatisticShowChanged" size="mini">
+              <el-checkbox-button label="bu">BU维度</el-checkbox-button>
+              <el-checkbox-button label="cluster">集群维度</el-checkbox-button>
+              <el-checkbox-button label="database">库维度</el-checkbox-button>
+              <el-checkbox-button label="table">表维度</el-checkbox-button>
+            </el-checkbox-group>
+          </div>
+        </div>
+        <div class="task-statistic-table" v-if="clusterStatisticShow.indexOf('bu') !== -1">
+          <el-table :data="clusterStatisticDataBU" size="mini" show-summary border stripe>
+            <el-table-column label="BU维度" align="center">
+              <el-table-column prop="date" label="统计日期" align="center" sortable></el-table-column>
+              <el-table-column prop="bu" label="BU" align="center" sortable></el-table-column>
+              <el-table-column prop="tables_num" label="大表个数" align="center" sortable></el-table-column>
+              <el-table-column prop="policies_num" label="生效策略个数" align="center" sortable></el-table-column>
+            </el-table-column>
+          </el-table>
+        </div>
+        <div class="task-statistic-table" v-if="clusterStatisticShow.indexOf('cluster') !== -1">
+          <el-table :data="clusterStatisticDataCluster" size="mini" show-summary border stripe>
+            <el-table-column label="集群维度" align="center">
+              <el-table-column prop="date" label="统计日期" align="center" sortable></el-table-column>
+              <el-table-column prop="bu" label="BU" align="center" sortable></el-table-column>
+              <el-table-column prop="cluster_name" label="集群名称" align="center" sortable></el-table-column>
+              <el-table-column prop="tables_num" label="大表个数" align="center" sortable></el-table-column>
+              <el-table-column prop="policies_num" label="生效策略个数" align="center" sortable></el-table-column>
+            </el-table-column>
+          </el-table>
+        </div>
+        <div class="task-statistic-table" v-if="clusterStatisticShow.indexOf('database') !== -1">
+          <el-table :data="clusterStatisticDataDatabase" size="mini" show-summary border stripe>
+            <el-table-column label="库维度" align="center">
+              <el-table-column prop="date" label="统计日期" align="center" sortable></el-table-column>
+              <el-table-column prop="bu" label="BU" align="center" sortable></el-table-column>
+              <el-table-column prop="cluster_name" label="集群名称" align="center" sortable></el-table-column>
+              <el-table-column prop="database" label="库名" align="center" sortable></el-table-column>
+              <el-table-column prop="tables_num" label="大表个数" align="center" sortable></el-table-column>
+              <el-table-column prop="policies_num" label="生效策略个数" align="center" sortable></el-table-column>
+            </el-table-column>
+          </el-table>
+        </div>
+        <div class="task-statistic-table" v-if="clusterStatisticShow.indexOf('table') !== -1">
+          <el-table :data="clusterStatisticDataTable" size="mini" show-summary border stripe>
+            <el-table-column label="表维度" align="center">
+              <el-table-column prop="date" label="统计日期" align="center" sortable></el-table-column>
+              <el-table-column prop="bu" label="BU" align="center" sortable></el-table-column>
+              <el-table-column prop="cluster_name" label="集群名称" align="center" sortable></el-table-column>
+              <el-table-column prop="database" label="库名" align="center" sortable></el-table-column>
+              <el-table-column prop="table" label="表名" align="center" sortable></el-table-column>
+              <el-table-column prop="tables_num" label="大表个数" align="center" sortable></el-table-column>
+              <el-table-column prop="table_size" label="表大小(GB)" align="center" sortable></el-table-column>
+              <el-table-column prop="policies_num" label="生效策略个数" align="center" sortable></el-table-column>
+              <el-table-column prop="policies" label="生效策略ID" align="center" sortable></el-table-column>
+            </el-table-column>
+          </el-table>
+        </div>
+      </el-tab-pane>
     </el-tabs>
   </imp-panel>
 </template>
@@ -319,11 +406,20 @@ export default {
     return {
       policyEnableRadio: 0,
       periodOption,
+      clusterStatisticShow: ['bu', 'cluster', 'database', 'table'],
       taskStatisticShow: ['bu', 'cluster', 'database', 'table'],
       policyStatisticShow: ['bu', 'cluster', 'database', 'table'],
       governOption,
+      clusterCascaderValue: "",
       taskCascaderValue: "",
       policyCascaderValue: "",
+      clusterStatisticFilter: {
+        bu: "",
+        cluster_name: "",
+        database: "",
+        table: "",
+        tableSize: [],
+      },
       taskStatisticFilter: {
         bu: "",
         cluster_name: "",
@@ -338,8 +434,10 @@ export default {
         table: "",
         govern: "",
       },
+      clusterStatisticFilterOption: [],
       taskStatisticFilterOption: [],
       policyStatisticFilterOption: [],
+      clusterStatisticDateRange: [],
       taskStatisticDateRange: [],
       activeTable: "taskStatisticSummary",
       statisticToday: TaskStatisticSummaryType,
@@ -389,6 +487,30 @@ export default {
           },
         ]
       },
+
+      clusterTableSizeFilterOption:[
+        {
+          name: "10-50GB",
+          value: 0,
+          filterFun: function (val) {
+            return val >= 10 && val <= 50
+          }
+        },
+        {
+          name: "50-100GB",
+          value: 1,
+          filterFun: function (val) {
+            return val > 50 && val <= 10
+          }
+        },
+        {
+          name: ">100GB",
+          value: 2,
+          filterFun: function (val) {
+            return val > 100
+          }
+        },
+      ],
       // chartData: [
       //   {
       //     "id": 434,
@@ -436,6 +558,10 @@ export default {
       //     "task_result_size": 0
       //   }
       // ],
+      clusterStatisticDataBU: [],
+      clusterStatisticDataCluster: [],
+      clusterStatisticDataDatabase: [],
+      clusterStatisticDataTable: [],
       taskStatisticDataBU: [],
       taskStatisticDataCluster: [],
       taskStatisticDataDatabase: [],
@@ -453,6 +579,9 @@ export default {
     getOptionName,
     taskStatisticShowChanged() {
       window.localStorage.setItem("taskStatisticShow", this.taskStatisticShow);
+    },
+    clusterStatisticShowChanged() {
+      window.localStorage.setItem("clusterStatisticShow", this.clusterStatisticShow);
     },
     policyEnableRadioChanged(){
       window.localStorage.setItem("policyEnableRadio", this.policyEnableRadio);
@@ -476,6 +605,9 @@ export default {
           break;
         case "policyStatistic":
           this.policyStatisticDateRangeChanged();
+          break;
+        case "clusterStatistic":
+          this.clusterStatisticDateRangeChanged();
           break;
       }
     },
@@ -536,6 +668,13 @@ export default {
         processedData[item.bu][item.cluster_name][item.database].push(item.table);
       });
 
+      const pushUnique = function (array, item, uniqueKey) {
+        const index = array.findIndex(existingItem => existingItem[uniqueKey] === item[uniqueKey]);
+        if (index === -1) {
+          array.push(item);
+        }
+      }
+
       const cascaderOptions = [];
       for (const bu in processedData) {
         const buItem = {
@@ -563,24 +702,64 @@ export default {
               if (databaseItem.children.length === 0) {
                 databaseItem.children.push({value: "", label: "*"});
               }
-              databaseItem.children.push(tableItem);
+              pushUnique(databaseItem.children,tableItem, "label")
             })
             if (clusterItem.children.length === 0) {
               clusterItem.children.push({value: "", label: "*"});
             }
-            clusterItem.children.push(databaseItem);
+            pushUnique(clusterItem.children, databaseItem, "label")
           }
           if (buItem.children.length === 0) {
             buItem.children.push({value: "", label: "*"});
           }
-          buItem.children.push(clusterItem);
+          pushUnique(buItem.children, clusterItem, "label")
         }
         if (cascaderOptions.length === 0) {
           cascaderOptions.push({value: "", label: "*"});
         }
-        cascaderOptions.push(buItem);
+        pushUnique(cascaderOptions, buItem, "label")
       }
       return cascaderOptions;
+    },
+
+    // tableSizeFilter(tableSize){
+    //   this.clusterStatisticFilter.tableSize.forEach((item, index)=>{
+    //     for (let i = 0; i < this.clusterTableSizeFilterOption.length; i++) {
+    //       if ( this.clusterTableSizeFilterOption[i].value == item ){
+    //         if (this.clusterTableSizeFilterOption[i].filterFun(tableSize)){
+    //           return true
+    //         }
+    //       }
+    //     }
+    //   });
+    //   return false
+    // },
+    clusterStatisticDateRangeChanged() {
+      const params = {
+        start_date: this.clusterStatisticDateRange[0],
+        end_date: this.clusterStatisticDateRange[1],
+        bu: this.clusterStatisticFilter.bu,
+        cluster_name: this.clusterStatisticFilter.cluster_name,
+        database: this.clusterStatisticFilter.database,
+        table: this.clusterStatisticFilter.table,
+      }
+
+      sysApi.clusterStatisticGroupByBu(params).then(res => {
+        this.clusterStatisticDataBU = res.data.data;
+      });
+
+      sysApi.clusterStatisticGroupByCluster(params).then(res => {
+        this.clusterStatisticDataCluster = res.data.data;
+      });
+
+      sysApi.clusterStatisticGroupByDatabase(params).then(res => {
+        this.clusterStatisticDataDatabase = res.data.data;
+      });
+
+      sysApi.clusterStatisticGroupByTable(params).then(res => {
+        this.clusterStatisticDataTable = res.data.data;
+        this.clusterStatisticFilterOption = this.transformData(this.clusterStatisticDataTable);
+      });
     },
 
     taskStatisticDateRangeChanged() {
@@ -649,6 +828,29 @@ export default {
     destroyed() {
       window.removeEventListener('resize', this.resizeCharts)
     },
+    clusterStatisticFilterChanged() {
+      const value = this.clusterCascaderValue;
+      switch (value) {
+        case 1:
+          this.clusterStatisticFilter.bu = value[0];
+          break;
+        case 2:
+          this.clusterStatisticFilter.bu = value[0];
+          this.clusterStatisticFilter.cluster_name = value[1];
+          break;
+        case 3:
+          this.clusterStatisticFilter.bu = value[0];
+          this.clusterStatisticFilter.cluster_name = value[1];
+          this.clusterStatisticFilter.database = value[2];
+          break;
+        default:
+          this.clusterStatisticFilter.bu = value[0];
+          this.clusterStatisticFilter.cluster_name = value[1];
+          this.clusterStatisticFilter.database = value[2];
+          this.clusterStatisticFilter.table = value[3];
+      }
+      this.clusterStatisticDateRangeChanged();
+    },
     taskStatisticFilterChanged() {
       const value = this.taskCascaderValue;
       switch (value) {
@@ -706,12 +908,18 @@ export default {
     this.policyStatisticShow = window.localStorage.getItem("policyStatisticShow");
     this.policyStatisticShow = this.policyStatisticShow === null ? ['bu', 'cluster', 'database', 'table'] : this.policyStatisticShow.split(',');
 
+    this.clusterStatisticShow = window.localStorage.getItem("clusterStatisticShow");
+    this.clusterStatisticShow = this.clusterStatisticShow === null ? ['bu', 'cluster', 'database', 'table'] : this.clusterStatisticShow.split(',');
+
     this.activeTable = window.localStorage.getItem("taskStatisticActiveTable");
     this.activeTable = this.activeTable === null ? 'taskStatisticSummary' : this.activeTable
     this.activeTableChanged({name:this.activeTable})
 
     this.taskStatisticDateRange[0] = moment().subtract(1, 'months').format('YYYY-MM-DD');
     this.taskStatisticDateRange[1] = moment().format('YYYY-MM-DD');
+
+    this.clusterStatisticDateRange[0] = moment().format('YYYY-MM-DD');
+    this.clusterStatisticDateRange[1] = moment().format('YYYY-MM-DD');
   },
 }
 </script>
@@ -752,11 +960,12 @@ export default {
     align-items: center;
 
     .el-select {
-      width: 150px
+      width: 180px;
+      margin: 0 10px;
     }
 
     .el-cascader {
-      margin: 0 5px;
+      margin-right: 10px;
 
       /deep/ .el-cascader-node__label, .el-select-dropdown__item, .el-cascader-panel {
         font-size: 12px !important;

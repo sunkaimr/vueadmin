@@ -24,7 +24,7 @@ module.exports = {
       '/mysql-enhance-pack/api/v1': {
         target: 'http://10.2.7.26:31009/',
         // target: 'http://10.2.7.26:30428/',
-        // target: 'http://127.0.0.1:8080/',
+        //  target: 'http://127.0.0.1:8080/',
         changeOrigin: true,
         pathRewrite: {
           // '^/api' : '',     // rewrite path

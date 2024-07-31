@@ -117,7 +117,7 @@
                   <i class="el-icon-info"></i>
                 </el-tooltip>
               </template>
-                <el-radio-group size="mini" style="align-items: center; height: 28px" v-model="addPolicyForm.policy.rebuild_flag">
+                <el-radio-group size="mini" v-model="addPolicyForm.policy.rebuild_flag">
                   <el-radio :label="true">是</el-radio>
                   <el-radio :label="false">否</el-radio>
                 </el-radio-group>
@@ -199,7 +199,7 @@
             <el-input v-model="form.name" autocomplete="off" clearable/>
           </el-form-item>
           <el-form-item label="说明" >
-            <el-input type="textarea" :rows="2" v-model="form.description" clearable/>
+            <el-input type="textarea" :rows="1" v-model="form.description" clearable/>
           </el-form-item>
           <el-form-item label="开启" prop="enable" >
             <el-switch size="mini" v-model="form.enable"/>
@@ -237,9 +237,16 @@
             </el-select>
           </el-form-item>
           <el-form-item v-if="form.govern === 'delete'" class="header-icon el-icon-info" label="窗口外重建表" prop="rebuild_flag" >
-            <el-radio-group size="small" v-model="form.rebuild_flag">
-              <el-radio :label="true" style="line-height: 30px">在执行窗口外仍然重建</el-radio>
-              <el-radio :label="false" style="line-height: 30px">在执行窗口外跳过重建</el-radio>
+            <template slot="label">
+              窗口外重建表
+              <el-tooltip placement="top">
+                <div slot="content">在执行窗口外是否执行重建表操作<br/>是：在执行窗口外仍然执行重建表操作<br/>否：在执行窗口外跳过重建表操作</div>
+                <i class="el-icon-info"></i>
+              </el-tooltip>
+            </template>
+            <el-radio-group size="mini" v-model="form.rebuild_flag">
+              <el-radio :label="true">是</el-radio>
+              <el-radio :label="false">否</el-radio>
             </el-radio-group>
           </el-form-item>
           <el-form-item v-if="form.govern !=='truncate' && form.govern !=='rebuild'" label="治理条件" prop="condition"
@@ -817,6 +824,10 @@ export default {
 
 <style lang="css" scoped>
 @import "../../static/css/main.less";
-
+  .el-radio-group {
+    height: 28px;
+    display: flex;
+    align-items: center;
+  }
 </style>
 
