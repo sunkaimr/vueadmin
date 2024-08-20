@@ -154,12 +154,12 @@
           <el-descriptions-item label="治理条件"> {{ taskInfo.condition}} </el-descriptions-item>
           <el-descriptions-item label="治理速度">{{ getOptionName(cleaningSpeedOption, taskInfo.cleaning_speed) }}</el-descriptions-item>
           <el-descriptions-item label="窗口外重建表">{{ taskInfo.rebuild_flag ? "是" : "否" }}</el-descriptions-item>
-          <el-descriptions-item label="原因">{{ taskInfo.task_reason }}</el-descriptions-item>
-          <el-descriptions-item label="详情">{{ taskInfo.task_detail }}</el-descriptions-item>
+          <el-descriptions-item label="任务状态说明">{{ taskInfo.task_reason }}</el-descriptions-item>
+          <el-descriptions-item label="任务状态详情">{{ taskInfo.task_detail }}</el-descriptions-item>
           <el-descriptions-item label="任务开始时间">{{ taskInfo.task_start_time }}</el-descriptions-item>
           <el-descriptions-item label="任务结束时间">{{ taskInfo.task_end_time }}</el-descriptions-item>
-          <el-descriptions-item label="治理数据行数">{{ taskInfo.task_result_quantity }}</el-descriptions-item>
-          <el-descriptions-item label="治理数据大小(MB)">{{ taskInfo.task_result_size }}</el-descriptions-item>
+          <el-descriptions-item label="治理数据量">{{ taskInfo.task_result_quantity }}</el-descriptions-item>
+          <el-descriptions-item label="治理容量(MB)">{{ taskInfo.task_result_size }}</el-descriptions-item>
           <el-descriptions-item label="任务执行时长">{{ formatSecondsPrecisely(taskInfo.task_duration) }} </el-descriptions-item>
           <el-descriptions-item label="通知策略">{{ getOptionName(notifyPolicyOption, taskInfo.notify_policy)}}</el-descriptions-item>
           <el-descriptions-item label="相关人">{{ taskInfo.relevant }}</el-descriptions-item>
@@ -353,7 +353,7 @@ export default {
       this.revisionTableData.rows = [];
       sysApi.getTaskRevision({
         task_id,
-        pageSize: 50,
+        pageSize: 100,
         page: 0,
       }).then(res => {
         this.revisionTableData.rows = res.data.items;
@@ -362,7 +362,9 @@ export default {
     getChangelog(task_id) {
       this.changelog = [];
       sysApi.getTaskChangelog({
-        task_id
+        task_id,
+        pageSize: 100,
+        page: 0,
       }).then(res => {
         this.changelog = res.data.items;
       });

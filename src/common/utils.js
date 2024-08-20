@@ -221,7 +221,7 @@ export const taskSearchOption = [
   {name: "源库名", value: "src_database_name"},
   {name: "源表名", value: "src_tables_name"},
   {name: "目标端ID", value: "dest_id"},
-  {name: "原因", value: "task_reason"},
+  {name: "任务状态说明", value: "task_reason"},
 ]
 
 export const periodOption = [

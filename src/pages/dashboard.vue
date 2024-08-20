@@ -142,7 +142,7 @@
                 </template>
               </el-table-column>
               <el-table-column prop="total_quantity" label="治理数据量" align="center" sortable></el-table-column>
-              <el-table-column prop="total_size" label="治理容量大小" align="center" sortable></el-table-column>
+              <el-table-column prop="total_size" label="治理容量" align="center" sortable></el-table-column>
               <el-table-column prop="count" label="运行任务次数" align="center" sortable></el-table-column>
             </el-table-column>
           </el-table>
@@ -158,7 +158,7 @@
                 </template>
               </el-table-column>
               <el-table-column prop="total_quantity" label="治理数据量" align="center" sortable></el-table-column>
-              <el-table-column prop="total_size" label="治理容量大小" align="center" sortable></el-table-column>
+              <el-table-column prop="total_size" label="治理容量" align="center" sortable></el-table-column>
               <el-table-column prop="count" label="运行任务次数" align="center" sortable></el-table-column>
             </el-table-column>
           </el-table>
@@ -175,7 +175,7 @@
                 </template>
               </el-table-column>
               <el-table-column prop="total_quantity" label="治理数据量" align="center" sortable></el-table-column>
-              <el-table-column prop="total_size" label="治理容量大小" align="center" sortable></el-table-column>
+              <el-table-column prop="total_size" label="治理容量" align="center" sortable></el-table-column>
               <el-table-column prop="count" label="运行任务次数" align="center" sortable></el-table-column>
             </el-table-column>
           </el-table>
@@ -193,7 +193,7 @@
                 </template>
               </el-table-column>
               <el-table-column prop="total_quantity" label="治理数据量" align="center" sortable></el-table-column>
-              <el-table-column prop="total_size" label="治理容量大小" align="center" sortable></el-table-column>
+              <el-table-column prop="total_size" label="治理容量" align="center" sortable></el-table-column>
               <el-table-column prop="count" label="运行任务次数" align="center" sortable></el-table-column>
             </el-table-column>
           </el-table>
@@ -323,14 +323,14 @@
               start-placeholder="开始月份"
               end-placeholder="结束月份"
             />
-<!--            <el-select v-model="clusterStatisticFilter.tableSize"-->
-<!--                       multiple clearable-->
-<!--                       size="mini"-->
-<!--                       collapse-tags-->
-<!--                       @change="clusterStatisticDateRangeChanged"-->
-<!--                       placeholder="筛选表大小">-->
-<!--              <el-option v-for="i in clusterTableSizeFilterOption" :key="i.value" :label="i.name" :value="i.value"></el-option>-->
-<!--            </el-select>-->
+            <el-select v-model="clusterStatisticFilter.tableSize"
+                       clearable
+                       size="mini"
+                       collapse-tags
+                       @change="clusterStatisticDateRangeChanged"
+                       placeholder="筛选表大小">
+              <el-option v-for="i in clusterTableSizeFilterOption" :key="i.name" :label="i.name" :value="i.value"></el-option>
+            </el-select>
           </div>
           <div class="header-rigth" style="display: flex; justify-content: flex-end">
             <el-checkbox-group v-model="clusterStatisticShow" @change="clusterStatisticShowChanged" size="mini">
@@ -341,51 +341,58 @@
             </el-checkbox-group>
           </div>
         </div>
-        <div class="task-statistic-table" v-if="clusterStatisticShow.indexOf('bu') !== -1">
+        <div class="task-statistic-table" v-show="clusterStatisticShow.indexOf('bu') !== -1">
           <el-table :data="clusterStatisticDataBU" size="mini" show-summary border stripe>
             <el-table-column label="BU维度" align="center">
-              <el-table-column prop="date" label="统计日期" align="center" sortable></el-table-column>
+              <el-table-column prop="date" label="统计日期" width="150px" align="center" sortable></el-table-column>
               <el-table-column prop="bu" label="BU" align="center" sortable></el-table-column>
               <el-table-column prop="tables_num" label="大表个数" align="center" sortable></el-table-column>
-              <el-table-column prop="policies_num" label="生效策略个数" align="center" sortable></el-table-column>
+              <el-table-column prop="policies_num" label="覆盖策略表个数" align="center" sortable></el-table-column>
+              <el-table-column prop="policy_coverage" label="策略覆盖率" align="center" sortable></el-table-column>
             </el-table-column>
           </el-table>
         </div>
-        <div class="task-statistic-table" v-if="clusterStatisticShow.indexOf('cluster') !== -1">
+        <div class="task-statistic-table" v-show="clusterStatisticShow.indexOf('cluster') !== -1">
           <el-table :data="clusterStatisticDataCluster" size="mini" show-summary border stripe>
             <el-table-column label="集群维度" align="center">
-              <el-table-column prop="date" label="统计日期" align="center" sortable></el-table-column>
+              <el-table-column prop="date" label="统计日期" width="150px" align="center" sortable></el-table-column>
               <el-table-column prop="bu" label="BU" align="center" sortable></el-table-column>
               <el-table-column prop="cluster_name" label="集群名称" align="center" sortable></el-table-column>
               <el-table-column prop="tables_num" label="大表个数" align="center" sortable></el-table-column>
-              <el-table-column prop="policies_num" label="生效策略个数" align="center" sortable></el-table-column>
+              <el-table-column prop="policies_num" label="覆盖策略表个数" align="center" sortable></el-table-column>
+              <el-table-column prop="policy_coverage" label="策略覆盖率" align="center" sortable></el-table-column>
             </el-table-column>
           </el-table>
         </div>
-        <div class="task-statistic-table" v-if="clusterStatisticShow.indexOf('database') !== -1">
+        <div class="task-statistic-table" v-show="clusterStatisticShow.indexOf('database') !== -1">
           <el-table :data="clusterStatisticDataDatabase" size="mini" show-summary border stripe>
             <el-table-column label="库维度" align="center">
-              <el-table-column prop="date" label="统计日期" align="center" sortable></el-table-column>
+              <el-table-column prop="date" label="统计日期" width="150px" align="center" sortable></el-table-column>
               <el-table-column prop="bu" label="BU" align="center" sortable></el-table-column>
               <el-table-column prop="cluster_name" label="集群名称" align="center" sortable></el-table-column>
               <el-table-column prop="database" label="库名" align="center" sortable></el-table-column>
               <el-table-column prop="tables_num" label="大表个数" align="center" sortable></el-table-column>
-              <el-table-column prop="policies_num" label="生效策略个数" align="center" sortable></el-table-column>
+              <el-table-column prop="policies_num" label="覆盖策略表个数" align="center" sortable></el-table-column>
+              <el-table-column prop="policy_coverage" label="策略覆盖率" align="center" sortable></el-table-column>
             </el-table-column>
           </el-table>
         </div>
-        <div class="task-statistic-table" v-if="clusterStatisticShow.indexOf('table') !== -1">
-          <el-table :data="clusterStatisticDataTable" size="mini" show-summary border stripe>
+        <div class="task-statistic-table" v-show="clusterStatisticShow.indexOf('table') !== -1">
+          <el-table :data="clusterStatisticDataTable" size="mini" border stripe>
             <el-table-column label="表维度" align="center">
-              <el-table-column prop="date" label="统计日期" align="center" sortable></el-table-column>
+              <el-table-column prop="date" label="统计日期" width="150px" align="center" sortable></el-table-column>
               <el-table-column prop="bu" label="BU" align="center" sortable></el-table-column>
               <el-table-column prop="cluster_name" label="集群名称" align="center" sortable></el-table-column>
               <el-table-column prop="database" label="库名" align="center" sortable></el-table-column>
               <el-table-column prop="table" label="表名" align="center" sortable></el-table-column>
-              <el-table-column prop="tables_num" label="大表个数" align="center" sortable></el-table-column>
+<!--              <el-table-column prop="tables_num" label="大表个数" align="center" sortable></el-table-column>-->
               <el-table-column prop="table_size" label="表大小(GB)" align="center" sortable></el-table-column>
-              <el-table-column prop="policies_num" label="生效策略个数" align="center" sortable></el-table-column>
-              <el-table-column prop="policies" label="生效策略ID" align="center" sortable></el-table-column>
+              <el-table-column prop="policies_num" label="覆盖策略表个数" align="center" sortable></el-table-column>
+              <el-table-column label="已有策略ID" align="center">
+                <template slot-scope="scope">
+                  <a v-for="(item, index) in scope.row.policies.split(',')" :key="index" @click="gotoPolicyDetail(item)">{{ " "+item+" " }}</a>
+                </template>
+              </el-table-column>
             </el-table-column>
           </el-table>
         </div>
@@ -398,7 +405,7 @@
 
 import moment from 'moment';
 import * as sysApi from "../services/sys";
-import {TaskStatisticSummaryType, governOption, getOptionName, periodOption} from "../common/utils";
+import {TaskStatisticSummaryType, governOption, getOptionName, periodOption, gotoPolicyDetail} from "../common/utils";
 
 export default {
   name: 'project-progress',
@@ -487,28 +494,22 @@ export default {
           },
         ]
       },
-
       clusterTableSizeFilterOption:[
         {
-          name: "10-50GB",
-          value: 0,
-          filterFun: function (val) {
-            return val >= 10 && val <= 50
-          }
+          name: "10-30GB",
+          value: ["10", "30"],
+        },
+        {
+          name: "30-50GB",
+          value: ["30", "50"],
         },
         {
           name: "50-100GB",
-          value: 1,
-          filterFun: function (val) {
-            return val > 50 && val <= 10
-          }
+          value: ["50", "100"],
         },
         {
           name: ">100GB",
-          value: 2,
-          filterFun: function (val) {
-            return val > 100
-          }
+          value: ["100", ""],
         },
       ],
       // chartData: [
@@ -576,7 +577,15 @@ export default {
 
   },
   methods: {
+    formatPolicyCoverage(row){
+      if (row.tables_num === 0) {
+        return ''; // 或者任何你想显示的值
+      }
+      const r = (row.policies_num *100 / row.tables_num).toFixed(0)
+      return (r > 100 ? 100 : r)*1 +"%";
+    },
     getOptionName,
+    gotoPolicyDetail,
     taskStatisticShowChanged() {
       window.localStorage.setItem("taskStatisticShow", this.taskStatisticShow);
     },
@@ -721,23 +730,14 @@ export default {
       }
       return cascaderOptions;
     },
-
-    // tableSizeFilter(tableSize){
-    //   this.clusterStatisticFilter.tableSize.forEach((item, index)=>{
-    //     for (let i = 0; i < this.clusterTableSizeFilterOption.length; i++) {
-    //       if ( this.clusterTableSizeFilterOption[i].value == item ){
-    //         if (this.clusterTableSizeFilterOption[i].filterFun(tableSize)){
-    //           return true
-    //         }
-    //       }
-    //     }
-    //   });
-    //   return false
-    // },
     clusterStatisticDateRangeChanged() {
       const params = {
-        start_date: this.clusterStatisticDateRange[0],
-        end_date: this.clusterStatisticDateRange[1],
+        start_date: moment(this.clusterStatisticDateRange[0]).startOf('month').format('YYYY-MM-DD'),
+        end_date: moment(this.clusterStatisticDateRange[1]).endOf('month').format('YYYY-MM-DD'),
+        start_size: this.clusterStatisticFilter.tableSize[0],
+        end_size: this.clusterStatisticFilter.tableSize[1],
+        // start_size: "10",
+        // end_size: "30",
         bu: this.clusterStatisticFilter.bu,
         cluster_name: this.clusterStatisticFilter.cluster_name,
         database: this.clusterStatisticFilter.database,
@@ -746,14 +746,23 @@ export default {
 
       sysApi.clusterStatisticGroupByBu(params).then(res => {
         this.clusterStatisticDataBU = res.data.data;
+        this.clusterStatisticDataBU.forEach((item, index)=>{
+          this.clusterStatisticDataBU[index].policy_coverage = this.formatPolicyCoverage(item)
+        })
       });
 
       sysApi.clusterStatisticGroupByCluster(params).then(res => {
         this.clusterStatisticDataCluster = res.data.data;
+        this.clusterStatisticDataCluster.forEach((item, index)=>{
+          this.clusterStatisticDataCluster[index].policy_coverage = this.formatPolicyCoverage(item)
+        })
       });
 
       sysApi.clusterStatisticGroupByDatabase(params).then(res => {
         this.clusterStatisticDataDatabase = res.data.data;
+        this.clusterStatisticDataDatabase.forEach((item, index)=>{
+          this.clusterStatisticDataDatabase[index].policy_coverage = this.formatPolicyCoverage(item)
+        })
       });
 
       sysApi.clusterStatisticGroupByTable(params).then(res => {
@@ -918,8 +927,8 @@ export default {
     this.taskStatisticDateRange[0] = moment().subtract(1, 'months').format('YYYY-MM-DD');
     this.taskStatisticDateRange[1] = moment().format('YYYY-MM-DD');
 
-    this.clusterStatisticDateRange[0] = moment().format('YYYY-MM-DD');
-    this.clusterStatisticDateRange[1] = moment().format('YYYY-MM-DD');
+    this.clusterStatisticDateRange[0] = moment().startOf('month').format('YYYY-MM-DD');
+    this.clusterStatisticDateRange[1] = moment().endOf('month').format('YYYY-MM-DD');
   },
 }
 </script>

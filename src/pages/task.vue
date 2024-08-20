@@ -172,10 +172,10 @@
                   getOptionName(taskStatusOption, props.row.task_status)
                 }}
               </el-descriptions-item>
-              <el-descriptions-item label="原因">{{ props.row.task_reason }}</el-descriptions-item>
-              <el-descriptions-item label="详情">{{ props.row.task_detail }}</el-descriptions-item>
-              <el-descriptions-item label="治理数据行数">{{ props.row.task_result_quantity }}</el-descriptions-item>
-              <el-descriptions-item label="治理数据大小(MB)">{{ props.row.task_result_size }}</el-descriptions-item>
+              <el-descriptions-item label="任务状态说明">{{ props.row.task_reason }}</el-descriptions-item>
+              <el-descriptions-item label="任务状态详情">{{ props.row.task_detail }}</el-descriptions-item>
+              <el-descriptions-item label="治理数据量">{{ props.row.task_result_quantity }}</el-descriptions-item>
+              <el-descriptions-item label="治理容量(MB)">{{ props.row.task_result_size }}</el-descriptions-item>
               <el-descriptions-item label="任务开始时间">{{ props.row.task_start_time }}</el-descriptions-item>
               <el-descriptions-item label="任务结束时间">{{ props.row.task_end_time }}</el-descriptions-item>
               <el-descriptions-item label="任务执行时长">{{ formatSecondsPrecisely(props.row.task_duration) }} </el-descriptions-item>
