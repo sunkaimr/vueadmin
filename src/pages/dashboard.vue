@@ -348,7 +348,7 @@
                 <el-table-column label="BU维度" align="center">
                   <el-table-column prop="date" label="统计日期" width="150px" align="center" sortable></el-table-column>
                   <el-table-column prop="bu" label="BU" align="center" sortable></el-table-column>
-                  <el-table-column prop="tables_num" label="大表个数" align="center" sortable></el-table-column>
+                  <el-table-column prop="big_table_num" label="大表个数(>10GB)" align="center" sortable></el-table-column>
                   <el-table-column prop="policies_num" label="覆盖策略表个数" align="center" sortable></el-table-column>
                   <el-table-column prop="policy_coverage" label="策略覆盖率" align="center" sortable></el-table-column>
                 </el-table-column>
@@ -360,7 +360,7 @@
                   <el-table-column prop="date" label="统计日期" width="150px" align="center" sortable></el-table-column>
                   <el-table-column prop="bu" label="BU" align="center" sortable></el-table-column>
                   <el-table-column prop="cluster_name" label="集群名称" align="center" sortable></el-table-column>
-                  <el-table-column prop="tables_num" label="大表个数" align="center" sortable></el-table-column>
+                  <el-table-column prop="big_table_num" label="大表个数(>10GB)" align="center" sortable></el-table-column>
                   <el-table-column prop="policies_num" label="覆盖策略表个数" align="center" sortable></el-table-column>
                   <el-table-column prop="policy_coverage" label="策略覆盖率" align="center" sortable></el-table-column>
                 </el-table-column>
@@ -373,7 +373,7 @@
                   <el-table-column prop="bu" label="BU" align="center" sortable></el-table-column>
                   <el-table-column prop="cluster_name" label="集群名称" align="center" sortable></el-table-column>
                   <el-table-column prop="database" label="库名" align="center" sortable></el-table-column>
-                  <el-table-column prop="tables_num" label="大表个数" align="center" sortable></el-table-column>
+                  <el-table-column prop="big_table_num" label="大表个数(>10GB)" align="center" sortable></el-table-column>
                   <el-table-column prop="policies_num" label="覆盖策略表个数" align="center" sortable></el-table-column>
                   <el-table-column prop="policy_coverage" label="策略覆盖率" align="center" sortable></el-table-column>
                 </el-table-column>
@@ -387,8 +387,8 @@
                   <el-table-column prop="cluster_name" label="集群名称" align="center" sortable></el-table-column>
                   <el-table-column prop="database" label="库名" align="center" sortable></el-table-column>
                   <el-table-column prop="table" label="表名" align="center" sortable></el-table-column>
-                  <!--              <el-table-column prop="tables_num" label="大表个数" align="center" sortable></el-table-column>-->
-                  <el-table-column prop="table_size" label="表大小(GB)" align="center" sortable></el-table-column>
+                  <!--              <el-table-column prop="big_table_num" label="大表个数" align="center" sortable></el-table-column>-->
+                  <el-table-column prop="table_size" label="表大小(MB)" align="center" sortable></el-table-column>
 <!--                  <el-table-column prop="policies_num" label="覆盖策略表个数" align="center" sortable></el-table-column>-->
                   <el-table-column label="已有策略ID" align="center">
                     <template slot-scope="scope">
@@ -405,8 +405,8 @@
                 <el-table-column label="BU维度" align="center">
                   <el-table-column prop="date" label="统计日期" width="150px" align="center" sortable></el-table-column>
                   <el-table-column prop="bu" label="BU" align="center" sortable></el-table-column>
-                  <el-table-column prop="big_table_size_sum" label=">10GB表总容量" align="center" sortable></el-table-column>
-                  <el-table-column prop="table_size_sum" :label="sumTableSizeLabelName" align="center" sortable></el-table-column>
+                  <el-table-column prop="table_size_sum" label="BU维度表总容量(MB)" align="center" sortable></el-table-column>
+                  <el-table-column prop="filter_table_size_sum" :label="sumTableSizeLabelName" align="center" sortable></el-table-column>
                   <el-table-column prop="big_table_percentage" :label="sumTableSizePercentageLabelName" align="center" sortable></el-table-column>
                 </el-table-column>
               </el-table>
@@ -417,8 +417,8 @@
                   <el-table-column prop="date" label="统计日期" width="150px" align="center" sortable></el-table-column>
                   <el-table-column prop="bu" label="BU" align="center" sortable></el-table-column>
                   <el-table-column prop="cluster_name" label="集群名称" align="center" sortable></el-table-column>
-                  <el-table-column prop="big_table_size_sum" label=">10GB表总容量" align="center" sortable></el-table-column>
-                  <el-table-column prop="table_size_sum" :label="sumTableSizeLabelName" align="center" sortable></el-table-column>
+                  <el-table-column prop="table_size_sum" label="集群维度表总容量(MB)" align="center" sortable></el-table-column>
+                  <el-table-column prop="filter_table_size_sum" :label="sumTableSizeLabelName" align="center" sortable></el-table-column>
                   <el-table-column prop="big_table_percentage" :label="sumTableSizePercentageLabelName" align="center" sortable></el-table-column>
                 </el-table-column>
               </el-table>
@@ -430,8 +430,8 @@
                   <el-table-column prop="bu" label="BU" align="center" sortable></el-table-column>
                   <el-table-column prop="cluster_name" label="集群名称" align="center" sortable></el-table-column>
                   <el-table-column prop="database" label="库名" align="center" sortable></el-table-column>
-                  <el-table-column prop="big_table_size_sum" label=">10GB表总容量" align="center" sortable></el-table-column>
-                  <el-table-column prop="table_size_sum" :label="sumTableSizeLabelName" align="center" sortable></el-table-column>
+                  <el-table-column prop="table_size_sum" label="集群维度表总容量(MB)" align="center" sortable></el-table-column>
+                  <el-table-column prop="filter_table_size_sum" :label="sumTableSizeLabelName" align="center" sortable></el-table-column>
                   <el-table-column prop="big_table_percentage" :label="sumTableSizePercentageLabelName" align="center" sortable></el-table-column>
                 </el-table-column>
               </el-table>
@@ -444,8 +444,8 @@
                   <el-table-column prop="cluster_name" label="集群名称" align="center" sortable></el-table-column>
                   <el-table-column prop="database" label="库名" align="center" sortable></el-table-column>
                   <el-table-column prop="table" label="表名" align="center" sortable></el-table-column>
-                  <el-table-column prop="big_table_size_sum" label=">10GB表总容量" align="center" sortable></el-table-column>
-                  <el-table-column prop="table_size_sum" :label="sumTableSizeLabelName" align="center" sortable></el-table-column>
+                  <el-table-column prop="table_size_sum" label="集群维度表总容量(MB)" align="center" sortable></el-table-column>
+                  <el-table-column prop="filter_table_size_sum" :label="sumTableSizeLabelName" align="center" sortable></el-table-column>
                   <el-table-column prop="big_table_percentage" :label="sumTableSizePercentageLabelName" align="center" sortable></el-table-column>
                 </el-table-column>
               </el-table>
@@ -468,7 +468,7 @@ export default {
   computed: {
     sumTableSizeLabelName() {
       if (!this.clusterStatisticFilter.tableSize.value) {
-        return ">10GB表容量";
+        return ">10GB表容量(MB)";
       }
       return this.clusterStatisticFilter.tableSize.name+"表容量";
     },
@@ -569,20 +569,36 @@ export default {
       },
       clusterTableSizeFilterOption:[
         {
+          name: ">10GB",
+          value: ["10240", ""],
+        },
+        {
           name: "10-30GB",
-          value: ["10", "30"],
+          value: ["10240", "30720"],
+        },
+        {
+          name: "10-50GB",
+          value: ["10240", "51200"],
+        },
+        {
+          name: "10-100GB",
+          value: ["10240", "102400"],
         },
         {
           name: "30-50GB",
-          value: ["30", "50"],
+          value: ["30720", "51200"],
+        },
+        {
+          name: "30-100GB",
+          value: ["30720", "102400"],
         },
         {
           name: "50-100GB",
-          value: ["50", "100"],
+          value: ["51200", "102400"],
         },
         {
           name: ">100GB",
-          value: ["100", ""],
+          value: ["102400", ""],
         },
       ],
       // chartData: [
@@ -656,17 +672,17 @@ export default {
   },
   methods: {
     formatPolicyCoverage(row){
-      if (row.tables_num === 0) {
+      if (row.big_table_num === 0) {
         return ''; // 或者任何你想显示的值
       }
-      const r = (row.policies_num *100 / row.tables_num).toFixed(0)
+      const r = (row.policies_num *100 / row.big_table_num).toFixed(0)
       return (r > 100 ? 100 : r)*1 +"%";
     },
     formatBigTablePercentage(row){
-      if (row.big_table_size_sum === 0) {
+      if (row.table_size_sum === 0) {
         return ''; // 或者任何你想显示的值
       }
-      const r = (row.table_size_sum *100 / row.big_table_size_sum).toFixed(2)
+      const r = (row.filter_table_size_sum *100 / row.table_size_sum).toFixed(2)
       return (r > 100 ? 100 : r)*1 +"%";
     },
     getOptionName,
@@ -816,18 +832,21 @@ export default {
       return cascaderOptions;
     },
     clusterStatisticDateRangeChanged() {
-      console.log(this.clusterStatisticFilter.tableSize);
-      console.log(this.clusterStatisticFilter.tableSize.value);
       const params = {
         start_date: moment(this.clusterStatisticDateRange[0]).startOf('month').format('YYYY-MM-DD'),
         end_date: moment(this.clusterStatisticDateRange[1]).endOf('month').format('YYYY-MM-DD'),
-        start_size: this.clusterStatisticFilter.tableSize.value ? this.clusterStatisticFilter.tableSize.value[0] : "",
+        start_size: this.clusterStatisticFilter.tableSize.value ? this.clusterStatisticFilter.tableSize.value[0] : "10240",
         end_size: this.clusterStatisticFilter.tableSize.value ? this.clusterStatisticFilter.tableSize.value[1] : "",
         bu: this.clusterStatisticFilter.bu,
         cluster_name: this.clusterStatisticFilter.cluster_name,
         database: this.clusterStatisticFilter.database,
         table: this.clusterStatisticFilter.table,
       }
+
+      this.clusterStatisticDataBU = [];
+      this.clusterStatisticDataCluster = [];
+      this.clusterStatisticDataDatabase = [];
+      this.clusterStatisticDataTable = [];
 
       sysApi.clusterStatisticGroupByBu(params).then(res => {
         this.clusterStatisticDataBU = res.data.data;
